@@ -1,1 +1,44 @@
+import { lazy, Suspense } from "react";
+import { Switch, Route, Router as WouterRouter } from "wouter";
+import Layout from "@/components/Layout";
 
+const HomePage          = lazy(() => import("@/pages/home"));
+const MarketplacePage   = lazy(() => import("@/pages/marketplace"));
+const MarketplaceDetail = lazy(() => import("@/pages/marketplace-detail"));
+const PostItemPage      = lazy(() => import("@/pages/post-item"));
+const NotFound          = lazy(() => import("@/pages/not-found"));
+
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center animate-pulse">
+          <span className="text-white font-black text-sm">B</span>
+        </div>
+        <div className="flex gap-1">
+          <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+          <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+          <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <WouterRouter base="">
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <Switch>
+            <Route path="/"                   component={HomePage} />
+            <Route path="/marketplace"        component={MarketplacePage} />
+            <Route path="/marketplace/:id"    component={MarketplaceDetail} />
+            <Route path="/post-item"          component={PostItemPage} />
+            <Route                            component={NotFound} />
+          </Switch>
+        </Suspense>
+      </Layout>
+    </WouterRouter>
+  );
+}
