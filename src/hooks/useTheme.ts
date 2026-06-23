@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const KEY = "blinkbuy_theme";
+const KEY = "marketplace_theme";
 
 export function useTheme() {
   const [theme, setThemeState] = useState<"light" | "dark">("light");
