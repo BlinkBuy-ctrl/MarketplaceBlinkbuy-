@@ -55,7 +55,7 @@ export default function PostItemPage() {
 
         <h2 className="text-3xl font-black mb-2 text-foreground">🎉 Listing Posted!</h2>
         <p className="text-muted-foreground text-base mb-8 max-w-sm mx-auto leading-relaxed">
-          Your premium item has been successfully listed on the BlinkBuy marketplace. Start receiving offers from interested buyers!
+          Your premium item has been successfully listed on Marketplace Malawi. Start receiving offers from interested buyers!
         </p>
 
         <div className="grid grid-cols-2 gap-3">
@@ -97,7 +97,7 @@ export default function PostItemPage() {
         <div>
           <h1 className="text-3xl font-black text-foreground mb-1">Sell an Item</h1>
           <p className="text-muted-foreground text-sm font-medium">
-            List your premium items on BlinkBuy marketplace and reach buyers across Malawi
+            List your items on Marketplace Malawi and reach buyers across Malawi
           </p>
         </div>
       </div>
