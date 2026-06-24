@@ -1,39 +1,58 @@
-import { useState, useMemo } from "react";
-import { Link } from "wouter";
-import { Search, ShoppingBag, MapPin, SlidersHorizontal, X } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Link, useSearch } from "wouter";
+import { Search, ShoppingBag, MapPin, X, Heart, SlidersHorizontal } from "lucide-react";
 import { MOCK_ITEMS, CATEGORIES, CITIES } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
 
 const PAGE_SIZE = 12;
 
-const CATEGORY_COLORS: Record<string, string> = {
-  Electronics:   "#6babff",
-  Phones:        "#a78bfa",
-  Vehicles:      "#CE1126",
-  "Farm Produce":"#007A33",
-  Furniture:     "#f59e0b",
-  Clothing:      "#ec4899",
-  Food:          "#10b981",
-  Tools:         "#f97316",
-  Books:         "#06b6d4",
-  Other:         "rgba(255,255,255,0.45)",
+const CATEGORY_ICONS: Record<string, string> = {
+  "All Categories": "🛍️", "Electronics": "💻", "Phones": "📱",
+  "Clothing": "👗", "Food": "🥑", "Furniture": "🛋️",
+  "Tools": "🔧", "Vehicles": "🚗", "Farm Produce": "🌽",
+  "Books": "📚", "Other": "📦",
 };
 
 export default function MarketplacePage() {
-  const [search, setSearch]           = useState("");
-  const [category, setCategory]       = useState("All Categories");
-  const [loc, setLoc]                 = useState("");
-  const [locSearch, setLocSearch]     = useState("");
-  const [showLocDropdown, setShowLocDropdown] = useState(false);
-  const [page, setPage]               = useState(1);
+  const searchStr = useSearch();
+  const params = new URLSearchParams(searchStr);
 
-  const filteredCities = CITIES.filter(c =>
-    c.toLowerCase().includes(locSearch.toLowerCase())
-  );
+  const [search, setSearch] = useState(params.get("q") || "");
+  const [category, setCategory] = useState(params.get("cat") || "All Categories");
+  const [loc, setLoc] = useState("");
+  const [locSearch, setLocSearch] = useState("");
+  const [showLocDropdown, setShowLocDropdown] = useState(false);
+  const [page, setPage] = useState(1);
+  const [showFilters, setShowFilters] = useState(false);
+  const [wishlist, setWishlist] = useState<Set<string>>(() => {
+    try { return new Set(JSON.parse(localStorage.getItem("wishlist") || "[]")); }
+    catch { return new Set(); }
+  });
+
+  useEffect(() => {
+    const q = params.get("q") || "";
+    const cat = params.get("cat") || "All Categories";
+    setSearch(q);
+    setCategory(cat);
+    setPage(1);
+  }, [searchStr]);
+
+  const toggleWishlist = (id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    setWishlist(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      localStorage.setItem("wishlist", JSON.stringify([...next]));
+      return next;
+    });
+  };
+
+  const filteredCities = CITIES.filter(c => c.toLowerCase().includes(locSearch.toLowerCase()));
 
   const filtered = useMemo(() => {
     return MOCK_ITEMS.filter(item => {
-      if (search && !item.title.toLowerCase().includes(search.toLowerCase())) return false;
+      if (search && !item.title.toLowerCase().includes(search.toLowerCase()) &&
+          !item.description.toLowerCase().includes(search.toLowerCase())) return false;
       if (category !== "All Categories" && item.category !== category) return false;
       if (loc && item.location !== loc) return false;
       return true;
@@ -44,256 +63,254 @@ export default function MarketplacePage() {
   const totalPages = Math.ceil(total / PAGE_SIZE);
   const items = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const handleSearch  = (v: string) => { setSearch(v);   setPage(1); };
-  const handleCategory= (v: string) => { setCategory(v); setPage(1); };
-  const handleLoc     = (v: string) => { setLoc(v); setLocSearch(""); setShowLocDropdown(false); setPage(1); };
+  const handleSearch = (v: string) => { setSearch(v); setPage(1); };
+  const handleCategory = (v: string) => { setCategory(v); setPage(1); };
+  const handleLoc = (v: string) => { setLoc(v); setLocSearch(""); setShowLocDropdown(false); setPage(1); };
+  const clearAll = () => { setSearch(""); setCategory("All Categories"); setLoc(""); setPage(1); };
+
+  const hasFilters = search || category !== "All Categories" || loc;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 page-enter">
-
-      {/* ── Header ────────────────────────────────────────────── */}
+      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-black text-white mb-0.5">Marketplace</h1>
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
-            Buy and sell goods across Malawi 🇲🇼
+          <h1 className="text-2xl font-black text-foreground mb-0.5">Marketplace</h1>
+          <p className="text-muted-foreground text-xs font-medium">
+            {total} item{total !== 1 ? "s" : ""} available across Malawi
           </p>
         </div>
         <Link
           href="/post-item"
-          className="btn-primary px-4 py-2.5 rounded-xl text-sm flex items-center gap-1.5"
+          className="hidden sm:inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 shadow-lg hover:shadow-pink-500/50"
         >
           + Sell Something
         </Link>
       </div>
 
-      {/* ── Search & Filters ──────────────────────────────────── */}
-      <div
-        className="rounded-xl p-4 mb-6"
-        style={{
-          backgroundColor: "hsl(var(--card))",
-          border: "1px solid hsl(var(--card-border))",
-          boxShadow: "var(--shadow-card)",
-        }}
-      >
-        <div className="flex items-center gap-2 mb-3">
-          <SlidersHorizontal size={14} style={{ color: "#6babff" }} />
-          <span className="text-xs font-bold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.45)" }}>
-            Filter
-          </span>
+      {/* Search Bar */}
+      <div className="flex gap-2 mb-4">
+        <div className="flex-1 relative">
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+          <input
+            type="text"
+            value={search}
+            onChange={e => handleSearch(e.target.value)}
+            placeholder="Search items, brands, models..."
+            className="w-full pl-10 pr-4 py-3 rounded-xl border border-pink-500/20 bg-card text-sm outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/10 font-medium transition-all"
+          />
+          {search && (
+            <button onClick={() => handleSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+              <X size={14} />
+            </button>
+          )}
         </div>
-
-        <div className="flex flex-col sm:flex-row gap-3">
-          {/* Search */}
-          <div
-            className="flex-1 flex items-center gap-2 rounded-lg px-3 py-2.5"
-            style={{ backgroundColor: "hsl(var(--muted))", border: "1px solid hsl(var(--border))" }}
-          >
-            <Search size={14} style={{ color: "rgba(255,255,255,0.35)" }} className="shrink-0" />
-            <input
-              type="text"
-              value={search}
-              onChange={e => handleSearch(e.target.value)}
-              placeholder="Search items..."
-              className="flex-1 text-sm outline-none bg-transparent text-white placeholder:text-white/30"
-            />
-            {search && (
-              <button onClick={() => handleSearch("")} style={{ color: "rgba(255,255,255,0.40)" }}>
-                <X size={13} />
-              </button>
-            )}
-          </div>
-
-          {/* Category */}
-          <select
-            value={category}
-            onChange={e => handleCategory(e.target.value)}
-            className="px-3 py-2.5 rounded-lg text-sm outline-none sm:w-44 font-medium"
-            style={{
-              backgroundColor: "hsl(var(--muted))",
-              border: "1px solid hsl(var(--border))",
-              color: "rgba(255,255,255,0.80)",
-            }}
-          >
-            {CATEGORIES.map(c => <option key={c}>{c}</option>)}
-          </select>
-
-          {/* District dropdown */}
-          <div className="relative sm:w-44">
-            <div
-              className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm cursor-pointer"
-              style={{
-                backgroundColor: "hsl(var(--muted))",
-                border: loc ? "1px solid rgba(0,122,51,0.60)" : "1px solid hsl(var(--border))",
-                color: loc ? "#26d97a" : "rgba(255,255,255,0.45)",
-              }}
-              onClick={() => setShowLocDropdown(!showLocDropdown)}
-            >
-              <MapPin size={13} className="shrink-0" />
-              <span className="truncate">{loc || "All Districts"}</span>
-            </div>
-
-            {showLocDropdown && (
-              <div
-                className="absolute top-full mt-1 left-0 right-0 rounded-xl z-50 overflow-hidden"
-                style={{
-                  backgroundColor: "#0d0d0d",
-                  border: "1px solid hsl(var(--border))",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.80)",
-                }}
-              >
-                <div className="p-2" style={{ borderBottom: "1px solid hsl(var(--border))" }}>
-                  <input
-                    type="text"
-                    value={locSearch}
-                    onChange={e => setLocSearch(e.target.value)}
-                    placeholder="Search district..."
-                    autoFocus
-                    className="w-full px-2 py-1.5 rounded-lg text-xs outline-none bg-transparent text-white placeholder:text-white/30"
-                    style={{ border: "1px solid hsl(var(--border))" }}
-                  />
-                </div>
-                <div className="max-h-48 overflow-y-auto">
-                  <button
-                    onClick={() => handleLoc("")}
-                    className="w-full text-left px-3 py-2 text-xs transition-all"
-                    style={{ color: "rgba(255,255,255,0.45)" }}
-                  >
-                    All Districts
-                  </button>
-                  {filteredCities.map(c => (
-                    <button
-                      key={c}
-                      onClick={() => handleLoc(c)}
-                      className="w-full text-left px-3 py-2 text-xs transition-all"
-                      style={{
-                        color: loc === c ? "#26d97a" : "rgba(255,255,255,0.70)",
-                        backgroundColor: loc === c ? "rgba(0,122,51,0.12)" : "transparent",
-                        fontWeight: loc === c ? 600 : 400,
-                      }}
-                    >
-                      {c}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Active filter chips */}
-        {(loc || category !== "All Categories") && (
-          <div className="mt-3 flex items-center gap-2 flex-wrap">
-            <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>Active:</span>
-            {category !== "All Categories" && (
-              <span className="badge-blue text-xs px-2 py-0.5 rounded-full flex items-center gap-1 font-medium">
-                {category}
-                <button onClick={() => handleCategory("All Categories")} className="ml-1 hover:text-white">×</button>
-              </span>
-            )}
-            {loc && (
-              <span className="badge-green text-xs px-2 py-0.5 rounded-full flex items-center gap-1 font-medium">
-                <MapPin size={9} /> {loc}
-                <button onClick={() => handleLoc("")} className="ml-1 hover:text-white">×</button>
-              </span>
-            )}
-          </div>
-        )}
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-sm font-semibold transition-all ${
+            hasFilters ? "border-pink-500 text-pink-500 bg-pink-500/10" : "border-border text-foreground hover:border-pink-500/40"
+          }`}
+        >
+          <SlidersHorizontal size={15} />
+          <span className="hidden sm:inline">Filters</span>
+          {hasFilters && <span className="w-2 h-2 rounded-full bg-pink-500" />}
+        </button>
       </div>
 
-      {/* ── Grid ──────────────────────────────────────────────── */}
+      {/* Filters Dropdown */}
+      {showFilters && (
+        <div className="bg-card border border-pink-500/20 rounded-xl p-4 mb-4 space-y-4">
+          {/* Category Filter */}
+          <div>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Category</p>
+            <div className="flex gap-2 flex-wrap">
+              {CATEGORIES.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => handleCategory(cat)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 ${
+                    category === cat
+                      ? "border-pink-500 bg-pink-500/15 text-pink-500"
+                      : "border-border text-muted-foreground hover:border-pink-500/40 hover:text-foreground"
+                  }`}
+                >
+                  {CATEGORY_ICONS[cat]} {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* District Filter */}
+          <div>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">District</p>
+            <div className="relative">
+              <div
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-pink-500/20 bg-background text-sm cursor-pointer hover:border-pink-500/40 font-medium"
+                onClick={() => setShowLocDropdown(!showLocDropdown)}
+              >
+                <MapPin size={13} className="text-muted-foreground shrink-0" />
+                <span className={loc ? "text-foreground" : "text-muted-foreground"}>{loc || "All Districts"}</span>
+              </div>
+              {showLocDropdown && (
+                <div className="absolute top-full mt-2 left-0 right-0 bg-card border border-pink-500/30 rounded-xl shadow-xl z-50 overflow-hidden">
+                  <div className="p-2 border-b border-border">
+                    <input
+                      type="text"
+                      value={locSearch}
+                      onChange={e => setLocSearch(e.target.value)}
+                      placeholder="Search district..."
+                      className="w-full px-3 py-2 rounded-lg border border-pink-500/20 bg-background text-xs outline-none focus:border-pink-500"
+                      autoFocus
+                    />
+                  </div>
+                  <div className="max-h-48 overflow-y-auto">
+                    <button onClick={() => handleLoc("")} className="w-full text-left px-4 py-2.5 text-sm hover:bg-pink-500/10 text-muted-foreground font-medium">All Districts</button>
+                    {filteredCities.map(c => (
+                      <button
+                        key={c}
+                        onClick={() => handleLoc(c)}
+                        className={`w-full text-left px-4 py-2.5 text-sm hover:bg-pink-500/10 font-medium ${loc === c ? "text-pink-500 font-bold" : "text-foreground"}`}
+                      >{c}</button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {hasFilters && (
+            <button onClick={clearAll} className="flex items-center gap-1.5 text-xs text-pink-500 font-bold hover:text-pink-600 transition-colors">
+              <X size={12} /> Clear all filters
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Active Filter Pills */}
+      {hasFilters && !showFilters && (
+        <div className="flex items-center gap-2 flex-wrap mb-4">
+          {search && (
+            <div className="inline-flex items-center gap-1.5 bg-pink-500/10 text-pink-600 text-xs px-3 py-1.5 rounded-full border border-pink-500/30 font-medium">
+              <Search size={10} /> "{search}"
+              <button onClick={() => handleSearch("")} className="ml-1 hover:text-pink-800">×</button>
+            </div>
+          )}
+          {category !== "All Categories" && (
+            <div className="inline-flex items-center gap-1.5 bg-pink-500/10 text-pink-600 text-xs px-3 py-1.5 rounded-full border border-pink-500/30 font-medium">
+              {CATEGORY_ICONS[category]} {category}
+              <button onClick={() => handleCategory("All Categories")} className="ml-1 hover:text-pink-800">×</button>
+            </div>
+          )}
+          {loc && (
+            <div className="inline-flex items-center gap-1.5 bg-pink-500/10 text-pink-600 text-xs px-3 py-1.5 rounded-full border border-pink-500/30 font-medium">
+              <MapPin size={10} /> {loc}
+              <button onClick={() => handleLoc("")} className="ml-1 hover:text-pink-800">×</button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* PRODUCTS GRID */}
       {items.length === 0 ? (
         <div className="text-center py-20">
-          <ShoppingBag size={48} className="mx-auto mb-3" style={{ color: "rgba(255,255,255,0.15)" }} />
-          <h3 className="text-lg font-bold text-white mb-1">No items found</h3>
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.40)" }}>Try adjusting your search or filters.</p>
+          <div className="w-16 h-16 rounded-full bg-pink-500/10 border border-pink-500/30 flex items-center justify-center mx-auto mb-4">
+            <ShoppingBag size={28} className="text-muted-foreground opacity-50" />
+          </div>
+          <h3 className="text-lg font-bold mb-2">No items found</h3>
+          <p className="text-muted-foreground text-sm max-w-sm mx-auto mb-6">Try adjusting your search or filters.</p>
+          <button
+            onClick={clearAll}
+            className="inline-flex items-center gap-2 bg-pink-500/10 text-pink-600 hover:bg-pink-500/20 px-4 py-2.5 rounded-xl text-sm font-bold transition-all border border-pink-500/30"
+          >
+            <X size={14} /> Clear Filters
+          </button>
         </div>
       ) : (
         <>
-          <p className="text-xs font-medium mb-3" style={{ color: "rgba(255,255,255,0.35)" }}>
-            {total} item{total !== 1 ? "s" : ""} found
+          <p className="text-xs text-muted-foreground font-semibold mb-4">
+            Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, total)} of {total} items
           </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-            {items.map(item => {
-              const catColor = CATEGORY_COLORS[item.category] ?? "rgba(255,255,255,0.45)";
-              return (
-                <Link key={item.id} href={`/marketplace/${item.id}`}>
-                  <div
-                    className="rounded-xl overflow-hidden card-hover cursor-pointer"
-                    style={{
-                      backgroundColor: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--card-border))",
-                      boxShadow: "var(--shadow-card)",
-                    }}
-                  >
-                    <div className="aspect-square flex items-center justify-center overflow-hidden" style={{ backgroundColor: "hsl(var(--muted))" }}>
-                      {item.images?.[0] ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3.5 mb-8">
+            {items.map((item, i) => (
+              <Link key={item.id} href={`/marketplace/${item.id}`}>
+                <div
+                  className="bg-card border border-pink-500/20 hover:border-pink-500/50 rounded-xl overflow-hidden card-hover cursor-pointer group relative"
+                  style={{ animationDelay: `${(i % 6) * 30}ms` }}
+                >
+                  <div className="aspect-square bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center overflow-hidden relative">
+                    {item.images?.[0] ? (
+                      <>
                         <img
                           src={item.images[0]}
                           alt={item.title}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                           onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
                         />
-                      ) : (
-                        <ShoppingBag size={28} style={{ color: "rgba(255,255,255,0.18)" }} />
-                      )}
-                    </div>
-                    <div className="p-3">
-                      <h3 className="text-xs font-semibold line-clamp-2 mb-1 text-white leading-tight">{item.title}</h3>
-                      <div className="text-sm font-black mb-1.5" style={{ color: "#6babff" }}>{formatMK(item.price)}</div>
-                      <div className="flex items-center gap-1 text-xs mb-1.5" style={{ color: "rgba(255,255,255,0.38)" }}>
-                        <MapPin size={9} />{item.location}
-                      </div>
-                      <div className="flex items-center gap-1 flex-wrap">
-                        <span
-                          className="text-[10px] font-bold px-1.5 py-0.5 rounded-full"
-                          style={{
-                            backgroundColor: `${catColor}18`,
-                            color: catColor,
-                            border: `1px solid ${catColor}35`,
-                          }}
-                        >
-                          {item.category}
-                        </span>
-                        {item.is_featured && (
-                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full badge-amber">★</span>
-                        )}
-                      </div>
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-all duration-300" />
+                      </>
+                    ) : (
+                      <ShoppingBag size={24} className="text-muted-foreground opacity-30" />
+                    )}
+
+                    {item.is_featured && (
+                      <div className="absolute top-2 left-2 badge-featured text-[10px] px-1.5 py-0.5">⭐</div>
+                    )}
+
+                    <button
+                      onClick={e => toggleWishlist(item.id, e)}
+                      className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-all opacity-0 group-hover:opacity-100"
+                    >
+                      <Heart
+                        size={12}
+                        className={wishlist.has(item.id) ? "text-pink-400 fill-pink-400" : "text-white"}
+                        strokeWidth={2}
+                      />
+                    </button>
+                  </div>
+
+                  <div className="p-3">
+                    <h3 className="text-xs font-bold line-clamp-2 mb-1.5 group-hover:text-pink-500 transition-colors">{item.title}</h3>
+                    <div className="text-sm font-black text-pink-500 mb-1">{formatMK(item.price)}</div>
+                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
+                      <MapPin size={9} />
+                      <span className="line-clamp-1">{item.location}</span>
                     </div>
                   </div>
-                </Link>
-              );
-            })}
+                </div>
+              </Link>
+            ))}
           </div>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex justify-center items-center gap-2 mt-8">
               <button
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="px-4 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-30"
-                style={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  color: "rgba(255,255,255,0.70)",
-                }}
+                className="px-4 py-2.5 rounded-xl border border-pink-500/20 text-sm font-bold hover:border-pink-500 hover:text-pink-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               >
                 ← Prev
               </button>
-              <span className="px-4 py-2 text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
-                {page} / {totalPages}
-              </span>
+              <div className="flex items-center gap-1.5">
+                {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
+                  const pn = i + 1;
+                  return (
+                    <button
+                      key={pn}
+                      onClick={() => setPage(pn)}
+                      className={`w-9 h-9 rounded-xl font-bold text-sm transition-all ${
+                        page === pn
+                          ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white"
+                          : "border border-border hover:border-pink-500 hover:text-pink-500"
+                      }`}
+                    >{pn}</button>
+                  );
+                })}
+              </div>
               <button
                 onClick={() => setPage(p => p + 1)}
                 disabled={page >= totalPages}
-                className="px-4 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-30"
-                style={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  color: "rgba(255,255,255,0.70)",
-                }}
+                className="px-4 py-2.5 rounded-xl border border-pink-500/20 text-sm font-bold hover:border-pink-500 hover:text-pink-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               >
                 Next →
               </button>
@@ -302,10 +319,7 @@ export default function MarketplacePage() {
         </>
       )}
 
-      {/* Close dropdown backdrop */}
-      {showLocDropdown && (
-        <div className="fixed inset-0 z-40" onClick={() => setShowLocDropdown(false)} />
-      )}
+      {showLocDropdown && <div className="fixed inset-0 z-40" onClick={() => setShowLocDropdown(false)} />}
     </div>
   );
 }
