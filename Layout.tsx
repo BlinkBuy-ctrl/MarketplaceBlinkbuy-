@@ -3,12 +3,13 @@ import { Link, useLocation } from "wouter";
 import { useTheme } from "@/hooks/useTheme";
 import {
   ShoppingBag, Home, Search, Settings, Sun, Moon, Plus, Store,
-  Menu, X, Download,
+  Menu, X, Download, MessageCircle,
 } from "lucide-react";
 
 const NAV = [
   { label: "Home",        href: "/",            icon: Home },
   { label: "Marketplace", href: "/marketplace", icon: ShoppingBag },
+  { label: "Messages",    href: "/messages",    icon: MessageCircle },
   { label: "Settings",    href: "/settings",    icon: Settings },
 ];
 
@@ -16,7 +17,7 @@ const BOTTOM_NAV = [
   { label: "Home",      href: "/",            icon: Home },
   { label: "Search",    href: "/marketplace", icon: Search },
   { label: "Sell",      href: "/post-item",   icon: Plus,   isAction: true },
-  { label: "Settings",  href: "/settings",    icon: Settings },
+  { label: "Messages",  href: "/messages",    icon: MessageCircle },
 ];
 
 interface BeforeInstallPromptEvent extends Event {

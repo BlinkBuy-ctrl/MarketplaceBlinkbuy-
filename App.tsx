@@ -7,6 +7,7 @@ const MarketplacePage   = lazy(() => import("@/pages/marketplace"));
 const MarketplaceDetail = lazy(() => import("@/pages/marketplace-detail"));
 const PostItemPage      = lazy(() => import("@/pages/post-item"));
 const SettingsPage      = lazy(() => import("@/pages/settings"));
+const MessagesPage      = lazy(() => import("@/pages/messages"));
 const NotFound          = lazy(() => import("@/pages/not-found"));
 
 function PageLoader() {
@@ -36,6 +37,7 @@ export default function App() {
             <Route path="/marketplace"        component={MarketplacePage} />
             <Route path="/marketplace/:id"    component={MarketplaceDetail} />
             <Route path="/post-item"          component={PostItemPage} />
+            <Route path="/messages"           component={MessagesPage} />
             <Route path="/settings"           component={SettingsPage} />
             <Route                            component={NotFound} />
           </Switch>

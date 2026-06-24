@@ -1,19 +1,39 @@
-import { useState } from "react";
-import { Link, useParams } from "wouter";
-import { MapPin, Phone, ArrowLeft, Tag, CheckCircle, Share2, Heart, MessageCircle, Star, Shield } from "lucide-react";
-import { MOCK_ITEMS } from "@/lib/mockData";
+import { useState, useEffect } from "react";
+import { Link, useParams, useLocation } from "wouter";
+import { MapPin, ArrowLeft, Tag, CheckCircle, Share2, Heart, MessageCircle, Star, Shield, X } from "lucide-react";
+import { getListingById, CATEGORIES } from "@/lib/mockData";
+import { startConversation } from "@/lib/messages";
 import { formatMK } from "@/lib/utils";
+import type { MarketplaceItem } from "@/lib/mockData";
 
 export default function MarketplaceDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const [, navigate] = useLocation();
+  const [item, setItem] = useState<MarketplaceItem | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [messageText, setMessageText] = useState("");
+  const [currentUserId] = useState("user_" + Math.random().toString(36).substr(2, 9));
+  const [currentUserName, setCurrentUserName] = useState("");
   const [wishlist, setWishlist] = useState<Set<string>>(() => {
     try { return new Set(JSON.parse(localStorage.getItem("wishlist") || "[]")); }
     catch { return new Set(); }
   });
 
-  const item = MOCK_ITEMS.find(i => i.id === id);
+  useEffect(() => {
+    if (id) {
+      const listing = getListingById(id);
+      setItem(listing || null);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("currentUserName");
+    if (stored) {
+      setCurrentUserName(stored);
+    }
+  }, []);
 
   if (!item) {
     return (
@@ -57,10 +77,37 @@ export default function MarketplaceDetailPage() {
     }
   };
 
-  const whatsappMsg = encodeURIComponent(`Hi, I saw your listing on Marketplace Malawi: "${item.title}" for ${formatMK(item.price)}. Is it still available?`);
-  const whatsappUrl = `https://wa.me/265${seller.whatsapp.replace(/^0/, "")}?text=${whatsappMsg}`;
+  const handleSendMessage = () => {
+    if (!messageText.trim()) return;
 
-  const related = MOCK_ITEMS.filter(i => i.id !== item.id && i.category === item.category).slice(0, 4);
+    const conversationId = startConversation(
+      currentUserId,
+      currentUserName || "Buyer",
+      seller.id,
+      seller.name,
+      item.id,
+      item.title
+    );
+
+    // Send the initial message
+    const { sendMessage } = require("@/lib/messages");
+    sendMessage(
+      conversationId,
+      currentUserId,
+      currentUserName || "Buyer",
+      seller.id,
+      seller.name,
+      item.id,
+      item.title,
+      messageText
+    );
+
+    setMessageText("");
+    setShowMessageModal(false);
+    navigate("/messages");
+  };
+
+  const related = getListingById(item.id) ? [] : [];
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 page-enter">
@@ -183,27 +230,22 @@ export default function MarketplaceDetailPage() {
               </div>
 
               <div className="space-y-2.5">
-                {/* WhatsApp - Primary CTA */}
-                {seller.whatsapp && (
-                  <a
-                    href={whatsappUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3.5 rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-green-500/30"
-                  >
-                    <MessageCircle size={17} strokeWidth={2.5} />
-                    WhatsApp Seller
-                  </a>
-                )}
+                {/* Message Seller - Primary CTA */}
+                <button
+                  onClick={() => setShowMessageModal(true)}
+                  className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white py-3.5 rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-pink-500/30"
+                >
+                  <MessageCircle size={17} strokeWidth={2.5} />
+                  Message Seller
+                </button>
 
-                {/* Call */}
-                {seller.phone && (
+                {/* Email Contact */}
+                {seller.email && (
                   <a
-                    href={`tel:${seller.phone}`}
+                    href={`mailto:${seller.email}`}
                     className="w-full flex items-center justify-center gap-2.5 border-2 border-pink-500/30 text-pink-500 hover:bg-pink-500/10 py-3 rounded-xl text-sm font-bold transition-all"
                   >
-                    <Phone size={15} strokeWidth={2.5} />
-                    Call: {seller.phone}
+                    Email: {seller.email}
                   </a>
                 )}
               </div>
@@ -229,29 +271,45 @@ export default function MarketplaceDetailPage() {
         </div>
       </div>
 
-      {/* Related Items */}
-      {related.length > 0 && (
-        <div>
-          <h3 className="font-black text-lg mb-4">More in {item.category}</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {related.map(rel => (
-              <Link key={rel.id} href={`/marketplace/${rel.id}`}>
-                <div className="bg-card border border-pink-500/20 hover:border-pink-500/50 rounded-xl overflow-hidden card-hover cursor-pointer group">
-                  <div className="aspect-square overflow-hidden">
-                    <img
-                      src={rel.images[0]}
-                      alt={rel.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
-                    />
-                  </div>
-                  <div className="p-3">
-                    <h4 className="text-xs font-bold line-clamp-2 mb-1 group-hover:text-pink-500 transition-colors">{rel.title}</h4>
-                    <div className="text-sm font-black text-pink-500">{formatMK(rel.price)}</div>
-                  </div>
-                </div>
-              </Link>
-            ))}
+      {/* Message Modal */}
+      {showMessageModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card border border-pink-500/20 rounded-2xl max-w-md w-full p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold">Message {seller.name}</h3>
+              <button
+                onClick={() => setShowMessageModal(false)}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={e => { e.preventDefault(); handleSendMessage(); }} className="space-y-4">
+              <textarea
+                value={messageText}
+                onChange={e => setMessageText(e.target.value)}
+                placeholder="Hi, I'm interested in this item. Is it still available?"
+                className="w-full px-4 py-3 rounded-xl bg-background border border-pink-500/20 text-sm outline-none focus:border-pink-500 transition-all resize-none h-24"
+              />
+
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowMessageModal(false)}
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-border text-foreground font-semibold hover:bg-muted transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={!messageText.trim()}
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold hover:from-pink-600 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Send Message
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

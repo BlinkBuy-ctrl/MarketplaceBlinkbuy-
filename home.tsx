@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { ShoppingBag, ArrowRight, Tag, MapPin, Zap, Sparkles, TrendingUp, Heart, Search, ChevronRight } from "lucide-react";
-import { MOCK_ITEMS, CATEGORIES } from "@/lib/mockData";
+import { CATEGORIES, getListings } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
+import type { MarketplaceItem } from "@/lib/mockData";
 
 const CATEGORY_ICONS: Record<string, string> = {
   "Electronics": "💻",
@@ -19,11 +20,16 @@ const CATEGORY_ICONS: Record<string, string> = {
 
 export default function HomePage() {
   const [, navigate] = useLocation();
+  const [listings, setListings] = useState<MarketplaceItem[]>([]);
   const [wishlist, setWishlist] = useState<Set<string>>(() => {
     try { return new Set(JSON.parse(localStorage.getItem("wishlist") || "[]")); }
     catch { return new Set(); }
   });
   const [searchQ, setSearchQ] = useState("");
+
+  useEffect(() => {
+    setListings(getListings());
+  }, []);
 
   const toggleWishlist = (id: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -41,8 +47,8 @@ export default function HomePage() {
     else navigate("/marketplace");
   };
 
-  const featured = MOCK_ITEMS.filter(i => i.is_featured).slice(0, 4);
-  const recent = MOCK_ITEMS.slice(0, 8);
+  const featured = listings.filter(i => i.is_featured).slice(0, 4);
+  const recent = listings.slice(0, 8);
   const categories = CATEGORIES.filter(c => c !== "All Categories");
 
   return (
@@ -115,7 +121,7 @@ export default function HomePage() {
       {/* STATS */}
       <div className="grid grid-cols-3 gap-3 mb-10">
         {[
-          { label: "Active Listings", value: "1,200+", icon: Tag },
+          { label: "Active Listings", value: listings.length.toString(), icon: Tag },
           { label: "Districts", value: "28", icon: MapPin },
           { label: "Daily Deals", value: "Fast", icon: TrendingUp },
         ].map(s => (
@@ -163,112 +169,136 @@ export default function HomePage() {
       </div>
 
       {/* FEATURED */}
-      <div className="mb-10 slide-up">
-        <div className="flex items-center justify-between mb-5">
-          <div>
-            <h2 className="font-black text-xl mb-0.5">⭐ Featured Listings</h2>
-            <p className="text-xs text-muted-foreground font-medium">Premium items handpicked for you</p>
-          </div>
-          <Link href="/marketplace" className="text-xs text-pink-500 hover:text-pink-600 font-bold flex items-center gap-1">
-            View All <ChevronRight size={12} />
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {featured.map((item, i) => (
-            <Link key={item.id} href={`/marketplace/${item.id}`}>
-              <div
-                className="bg-card border border-pink-500/20 hover:border-pink-500/50 rounded-xl overflow-hidden card-hover cursor-pointer group relative"
-                style={{ animationDelay: `${i * 50}ms` }}
-              >
-                <div className="aspect-square bg-gradient-to-br from-muted to-muted/50 overflow-hidden relative">
-                  <img
-                    src={item.images[0]}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
-                  <div className="absolute top-2 left-2 badge-featured text-[10px] px-2 py-0.5">⭐ Featured</div>
-                  <button
-                    onClick={e => toggleWishlist(item.id, e)}
-                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-all"
-                  >
-                    <Heart
-                      size={13}
-                      className={wishlist.has(item.id) ? "text-pink-400 fill-pink-400" : "text-white"}
-                      strokeWidth={2}
-                    />
-                  </button>
-                </div>
-                <div className="p-3">
-                  <h3 className="text-xs font-bold line-clamp-2 mb-1.5 group-hover:text-pink-500 transition-colors">{item.title}</h3>
-                  <div className="text-base font-black text-pink-500 mb-1">{formatMK(item.price)}</div>
-                  <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
-                    <MapPin size={10} />{item.location}
-                  </div>
-                </div>
-              </div>
+      {featured.length > 0 && (
+        <div className="mb-10 slide-up">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h2 className="font-black text-xl mb-0.5">⭐ Featured Listings</h2>
+              <p className="text-xs text-muted-foreground font-medium">Premium items handpicked for you</p>
+            </div>
+            <Link href="/marketplace" className="text-xs text-pink-500 hover:text-pink-600 font-bold flex items-center gap-1">
+              View All <ChevronRight size={12} />
             </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* RECENTLY LISTED */}
-      <div className="slide-up">
-        <div className="flex items-center justify-between mb-5">
-          <div>
-            <h2 className="font-black text-xl mb-0.5">🆕 Recently Listed</h2>
-            <p className="text-xs text-muted-foreground font-medium">Latest items added today</p>
           </div>
-          <Link href="/marketplace" className="text-xs text-pink-500 hover:text-pink-600 font-bold flex items-center gap-1">
-            See More <ChevronRight size={12} />
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {recent.map((item, i) => (
-            <Link key={item.id} href={`/marketplace/${item.id}`}>
-              <div
-                className="bg-card border border-pink-500/20 hover:border-pink-500/50 rounded-xl overflow-hidden card-hover cursor-pointer group"
-                style={{ animationDelay: `${i * 50}ms` }}
-              >
-                <div className="aspect-square bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center overflow-hidden relative">
-                  {item.images[0] ? (
-                    <>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {featured.map((item, i) => (
+              <Link key={item.id} href={`/marketplace/${item.id}`}>
+                <div
+                  className="bg-card border border-pink-500/20 hover:border-pink-500/50 rounded-xl overflow-hidden card-hover cursor-pointer group relative"
+                  style={{ animationDelay: `${i * 50}ms` }}
+                >
+                  <div className="aspect-square bg-gradient-to-br from-muted to-muted/50 overflow-hidden relative">
+                    {item.images && item.images.length > 0 ? (
                       <img
                         src={item.images[0]}
                         alt={item.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
                       />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
-                    </>
-                  ) : (
-                    <ShoppingBag size={28} className="text-muted-foreground opacity-30" />
-                  )}
-                  <button
-                    onClick={e => toggleWishlist(item.id, e)}
-                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-all"
-                  >
-                    <Heart
-                      size={13}
-                      className={wishlist.has(item.id) ? "text-pink-400 fill-pink-400" : "text-white"}
-                      strokeWidth={2}
-                    />
-                  </button>
-                  <div className="absolute top-2 left-2 badge-new text-[10px] px-2 py-0.5">NEW</div>
-                </div>
-                <div className="p-3">
-                  <h3 className="text-xs font-bold line-clamp-2 mb-1.5 group-hover:text-pink-500 transition-colors">{item.title}</h3>
-                  <div className="text-base font-black text-pink-500 mb-1">{formatMK(item.price)}</div>
-                  <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
-                    <MapPin size={10} />{item.location}
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">No image</div>
+                    )}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+                    <div className="absolute top-2 left-2 badge-featured text-[10px] px-2 py-0.5">⭐ Featured</div>
+                    <button
+                      onClick={e => toggleWishlist(item.id, e)}
+                      className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-all"
+                    >
+                      <Heart
+                        size={13}
+                        className={wishlist.has(item.id) ? "text-pink-400 fill-pink-400" : "text-white"}
+                        strokeWidth={2}
+                      />
+                    </button>
+                  </div>
+                  <div className="p-3">
+                    <h3 className="text-xs font-bold line-clamp-2 mb-1.5 group-hover:text-pink-500 transition-colors">{item.title}</h3>
+                    <div className="text-base font-black text-pink-500 mb-1">{formatMK(item.price)}</div>
+                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
+                      <MapPin size={10} />{item.location}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* RECENTLY LISTED */}
+      {recent.length > 0 && (
+        <div className="slide-up">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h2 className="font-black text-xl mb-0.5">🆕 Recently Listed</h2>
+              <p className="text-xs text-muted-foreground font-medium">Latest items added today</p>
+            </div>
+            <Link href="/marketplace" className="text-xs text-pink-500 hover:text-pink-600 font-bold flex items-center gap-1">
+              See More <ChevronRight size={12} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {recent.map((item, i) => (
+              <Link key={item.id} href={`/marketplace/${item.id}`}>
+                <div
+                  className="bg-card border border-pink-500/20 hover:border-pink-500/50 rounded-xl overflow-hidden card-hover cursor-pointer group"
+                  style={{ animationDelay: `${i * 50}ms` }}
+                >
+                  <div className="aspect-square bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center overflow-hidden relative">
+                    {item.images && item.images.length > 0 ? (
+                      <>
+                        <img
+                          src={item.images[0]}
+                          alt={item.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+                      </>
+                    ) : (
+                      <ShoppingBag size={28} className="text-muted-foreground opacity-30" />
+                    )}
+                    <button
+                      onClick={e => toggleWishlist(item.id, e)}
+                      className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-all"
+                    >
+                      <Heart
+                        size={13}
+                        className={wishlist.has(item.id) ? "text-pink-400 fill-pink-400" : "text-white"}
+                        strokeWidth={2}
+                      />
+                    </button>
+                    <div className="absolute top-2 left-2 badge-new text-[10px] px-2 py-0.5">NEW</div>
+                  </div>
+                  <div className="p-3">
+                    <h3 className="text-xs font-bold line-clamp-2 mb-1.5 group-hover:text-pink-500 transition-colors">{item.title}</h3>
+                    <div className="text-base font-black text-pink-500 mb-1">{formatMK(item.price)}</div>
+                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
+                      <MapPin size={10} />{item.location}
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {listings.length === 0 && (
+        <div className="text-center py-16">
+          <ShoppingBag size={48} className="text-muted-foreground opacity-30 mx-auto mb-4" />
+          <h3 className="text-lg font-bold mb-2">No listings yet</h3>
+          <p className="text-muted-foreground text-sm mb-6">Be the first to post an item!</p>
+          <Link
+            href="/post-item"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white px-6 py-3 rounded-xl text-sm font-bold"
+          >
+            <Zap size={16} />
+            Post Your First Item
+          </Link>
+        </div>
+      )}
 
       {/* CTA */}
       <div className="mt-14 relative overflow-hidden rounded-2xl">
