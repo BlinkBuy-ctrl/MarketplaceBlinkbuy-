@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { Plus, Package, X, ImagePlus, CheckCircle, AlertCircle, Upload } from "lucide-react";
 import { CATEGORIES, CITIES, CONDITIONS } from "@/lib/mockData";
+import PaymentMethods from "@/components/PaymentMethods";
 
 export default function PostItemPage() {
   const [, setLocation] = useLocation();
@@ -18,6 +19,8 @@ export default function PostItemPage() {
     location: "Lilongwe",
     condition: "Good",
   });
+
+  const [paymentMethod, setPaymentMethod] = useState("mobile_money");
 
   const set = (k: string, v: string) => setForm(p => ({ ...p, [k]: v }));
 
@@ -277,6 +280,11 @@ export default function PostItemPage() {
               </select>
             </div>
           </div>
+        </div>
+
+        {/* Payment Methods Section */}
+        <div className="bg-card border border-pink-500/20 rounded-xl p-6">
+          <PaymentMethods selectedMethod={paymentMethod} onSelect={setPaymentMethod} />
         </div>
 
         {/* Submit Button */}
