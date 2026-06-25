@@ -1,268 +1,306 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import { useTheme } from "@/hooks/useTheme";
 import {
-  ShoppingBag, Home, Briefcase, MessageCircle, User,
-  Menu, X, Plus, Bell,
+  Home, Search, Settings, Sun, Moon, Plus, Store,
+  Menu, X, Download, ShoppingBag,
 } from "lucide-react";
 
-const NAV = [
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+}
+
+const TOP_NAV = [
   { label: "Home",        href: "/",            icon: Home },
   { label: "Marketplace", href: "/marketplace", icon: ShoppingBag },
-  { label: "Jobs",        href: "#",            icon: Briefcase },
-  { label: "Messages",    href: "#",            icon: MessageCircle },
-];
-
-const BOTTOM_NAV = [
-  { label: "Home",     href: "/",            icon: Home },
-  { label: "Market",   href: "/marketplace", icon: ShoppingBag },
-  { label: "Jobs",     href: "#",            icon: Briefcase },
-  { label: "Messages", href: "#",            icon: MessageCircle },
-  { label: "Profile",  href: "#",            icon: User },
+  { label: "Settings",    href: "/settings",    icon: Settings },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const { theme, toggleTheme } = useTheme();
   const [loc] = useLocation();
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [showBanner, setShowBanner] = useState(false);
   const [pageVisible, setPageVisible] = useState(true);
-  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e as BeforeInstallPromptEvent);
+      setShowBanner(true);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
 
   useEffect(() => {
     setPageVisible(false);
     const t = setTimeout(() => setPageVisible(true), 80);
-    setOpen(false);
+    setMenuOpen(false);
     return () => clearTimeout(t);
   }, [loc]);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const handleInstall = async () => {
+    if (!installPrompt) return;
+    await installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice;
+    if (outcome === "accepted") setShowBanner(false);
+  };
+
+  const isActive = (href: string) =>
+    href === "/" ? loc === "/" : loc === href || loc.startsWith(href + "/");
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "hsl(var(--background))", color: "hsl(var(--foreground))" }}>
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
 
-      {/* ── Malawian top accent stripe ─────────────────────────── */}
-      <div className="h-[3px] w-full flex shrink-0">
-        <div className="flex-1" style={{ backgroundColor: "#121212" }} />
-        <div className="flex-1" style={{ backgroundColor: "#CE1126" }} />
-        <div className="flex-1" style={{ backgroundColor: "#007A33" }} />
-      </div>
+      {/* ── PWA Install Banner ── */}
+      {showBanner && (
+        <div className="sticky top-0 z-[60] bg-gradient-to-r from-pink-600 to-pink-500 text-white px-4 py-2.5 flex items-center justify-between gap-3 shadow-lg">
+          <div className="flex items-center gap-2 min-w-0">
+            <Download size={14} strokeWidth={2.5} className="shrink-0" />
+            <span className="text-xs font-bold truncate">Install Marketplace Malawi on your phone</span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={handleInstall}
+              className="bg-white text-pink-600 px-3 py-1 rounded-lg text-xs font-black hover:bg-pink-50 transition-all"
+            >
+              Install
+            </button>
+            <button onClick={() => setShowBanner(false)} className="text-white/70 hover:text-white">
+              <X size={14} />
+            </button>
+          </div>
+        </div>
+      )}
 
-      {/* ── HEADER ────────────────────────────────────────────── */}
-      <header
-        className="sticky top-0 z-50 transition-shadow duration-200"
-        style={{
-          backgroundColor: "#0d0d0d",
-          borderBottom: "1px solid rgba(255,255,255,0.07)",
-          boxShadow: scrolled ? "0 2px 24px rgba(0,0,0,0.70)" : "none",
-        }}
-      >
+      {/* ── Header ── */}
+      <header className="sticky top-0 z-50 bg-[#0f0f0f] text-white shadow-2xl border-b border-pink-500/20">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-15 py-2">
+          <div className="flex items-center justify-between h-16">
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-              <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-150"
-                style={{ background: "linear-gradient(135deg, #0047AB 0%, #007A33 100%)" }}
-              >
-                <span className="text-white font-black text-sm tracking-tighter">BB</span>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-pink-700 flex items-center justify-center shadow-lg group-hover:shadow-pink-500/50 transition-all duration-300">
+                <Store size={18} className="text-white" strokeWidth={2.5} />
               </div>
               <div className="flex flex-col leading-none">
-                <span className="font-black text-base tracking-tight text-white">BlinkBuy</span>
-                <span className="text-[10px] font-medium tracking-widest uppercase" style={{ color: "#007A33" }}>Malawi</span>
+                <span className="font-black text-lg tracking-tight text-white group-hover:text-pink-400 transition-colors">Marketplace</span>
+                <span className="text-[10px] font-bold text-pink-400 tracking-wider">MALAWI</span>
               </div>
             </Link>
 
-            {/* Desktop nav */}
+            {/* Desktop Nav */}
             <nav className="hidden lg:flex items-center gap-1">
-              {NAV.map(n => {
-                const active = loc === n.href;
+              {TOP_NAV.map(n => {
+                const active = isActive(n.href);
                 return (
                   <Link
                     key={n.href}
                     href={n.href}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all duration-150"
-                    style={{
-                      color: active ? "#fff" : "rgba(255,255,255,0.55)",
-                      backgroundColor: active ? "rgba(0,71,171,0.30)" : "transparent",
-                      borderBottom: active ? "2px solid #0047AB" : "2px solid transparent",
-                    }}
+                    data-tour={n.href === "/marketplace" ? "nav-marketplace" : n.href === "/settings" ? "nav-settings" : undefined}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                      active
+                        ? "text-pink-400 bg-pink-500/15 border border-pink-500/30"
+                        : "text-white/70 hover:text-white hover:bg-white/8"
+                    }`}
                   >
-                    <n.icon size={13} />
+                    <n.icon size={14} strokeWidth={2} />
                     {n.label}
                   </Link>
                 );
               })}
             </nav>
 
-            {/* Right actions */}
             <div className="flex items-center gap-2">
-              {/* Notification bell */}
+              {/* Theme Toggle */}
               <button
-                className="p-2 rounded-lg transition-all"
-                style={{ color: "rgba(255,255,255,0.45)" }}
-                aria-label="Notifications"
+                onClick={toggleTheme}
+                className="p-2.5 text-white/60 hover:text-pink-400 hover:bg-pink-500/10 rounded-lg transition-all duration-200 border border-white/10 hover:border-pink-500/30"
+                aria-label="Toggle theme"
               >
-                <Bell size={16} />
+                {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
               </button>
 
-              {/* Sell CTA */}
+              {/* Sell Button — desktop */}
               <Link
                 href="/post-item"
-                className="hidden sm:flex items-center gap-1.5 btn-primary px-4 py-2 rounded-xl text-xs"
+                data-tour="nav-sell"
+                className="hidden sm:flex items-center gap-1.5 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold transition-all duration-200 shadow-lg hover:shadow-pink-500/50"
               >
-                <Plus size={13} /> Sell Item
+                <Plus size={14} strokeWidth={3} />
+                Sell Item
               </Link>
 
               {/* Mobile hamburger */}
               <button
-                onClick={() => setOpen(!open)}
-                className="lg:hidden p-2 rounded-lg transition-all"
-                style={{ color: "rgba(255,255,255,0.55)" }}
-                aria-label="Menu"
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="lg:hidden p-2.5 text-white/60 hover:text-pink-400 hover:bg-pink-500/10 rounded-lg transition-all border border-white/10 hover:border-pink-500/30"
               >
-                {open ? <X size={18} /> : <Menu size={18} />}
+                {menuOpen ? <X size={18} strokeWidth={2.5} /> : <Menu size={18} strokeWidth={2} />}
               </button>
             </div>
           </div>
         </div>
 
-        {/* Mobile dropdown nav */}
-        {open && (
-          <div style={{ backgroundColor: "#0a0a0a", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-            <div className="px-4 py-3 flex flex-col gap-1">
-              {NAV.map(n => (
-                <Link
-                  key={n.href}
-                  href={n.href}
-                  className="flex items-center gap-3 p-3 rounded-xl text-sm font-medium transition-all"
-                  style={{ color: "rgba(255,255,255,0.65)" }}
-                  onClick={() => setOpen(false)}
+        {/* Mobile Drawer */}
+        {menuOpen && (
+          <div className="lg:hidden border-t border-pink-500/20 bg-black/95 backdrop-blur-sm">
+            <div className="px-4 py-4 flex flex-col gap-1">
+              {TOP_NAV.map(n => {
+                const active = isActive(n.href);
+                return (
+                  <Link
+                    key={n.href}
+                    href={n.href}
+                    className={`flex items-center gap-2.5 p-3 rounded-xl text-sm font-semibold transition-all ${
+                      active
+                        ? "text-pink-400 bg-pink-500/20 border border-pink-500/40"
+                        : "text-white/70 hover:text-white hover:bg-white/10"
+                    }`}
+                  >
+                    <n.icon size={16} strokeWidth={2} />
+                    {n.label}
+                  </Link>
+                );
+              })}
+              <Link
+                href="/post-item"
+                className="flex items-center gap-2.5 p-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-pink-500 to-pink-600 mt-2 shadow-lg"
+              >
+                <Plus size={16} strokeWidth={3} />
+                Sell an Item
+              </Link>
+              {installPrompt && (
+                <button
+                  onClick={() => { handleInstall(); setMenuOpen(false); }}
+                  className="flex items-center gap-2.5 p-3 rounded-xl text-sm font-semibold text-pink-400 bg-pink-500/10 border border-pink-500/30 mt-1"
                 >
-                  <n.icon size={16} />
-                  {n.label}
-                </Link>
-              ))}
-              <div className="pt-2 border-t" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
-                <Link
-                  href="/post-item"
-                  className="flex items-center gap-2 p-3 rounded-xl text-sm font-bold btn-primary mt-1"
-                  onClick={() => setOpen(false)}
-                >
-                  <Plus size={15} /> Sell an Item
-                </Link>
-              </div>
+                  <Download size={16} />
+                  Install App
+                </button>
+              )}
             </div>
           </div>
         )}
       </header>
 
-      {/* ── PAGE CONTENT ──────────────────────────────────────── */}
+      {/* ── Page Content ── */}
       <main
-        className="flex-1 pb-16 lg:pb-0"
-        style={{ opacity: pageVisible ? 1 : 0, transition: "opacity 130ms ease" }}
+        className="flex-1 pb-24 lg:pb-0"
+        style={{ opacity: pageVisible ? 1 : 0, transition: "opacity 120ms ease" }}
       >
         {children}
       </main>
 
-      {/* ── MOBILE BOTTOM NAV ─────────────────────────────────── */}
-      <nav
-        className="lg:hidden fixed bottom-0 inset-x-0 z-50"
-        style={{ backgroundColor: "#0d0d0d", borderTop: "1px solid rgba(255,255,255,0.08)" }}
+      {/* ── MOBILE BOTTOM NAV ── */}
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-[#0f0f0f] border-t border-pink-500/20"
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <div className="flex items-center justify-around h-14 px-1">
-          {BOTTOM_NAV.map(n => {
-            const active = n.href !== "#" && (loc === n.href || (n.href !== "/" && loc.startsWith(n.href)));
-            return (
-              <Link
-                key={n.label}
-                href={n.href}
-                className="flex flex-col items-center gap-0.5 px-2 py-2 rounded-xl transition-all duration-150 min-w-0 flex-1"
-                style={{ color: active ? "#6babff" : "rgba(255,255,255,0.35)" }}
-              >
-                <n.icon size={18} strokeWidth={active ? 2.5 : 1.8} />
-                <span className="text-[10px] font-medium whitespace-nowrap leading-none">{n.label}</span>
-                {active && (
-                  <span className="w-1 h-1 rounded-full mt-0.5" style={{ backgroundColor: "#0047AB" }} />
-                )}
-              </Link>
-            );
-          })}
+        {/* 5-column grid: Home | Search | [SELL] | Settings | (empty) */}
+        <div className="grid grid-cols-5 items-end h-16 px-2">
+
+          {/* Home */}
+          <NavItem href="/" label="Home" icon={Home} active={isActive("/")} />
+
+          {/* Search */}
+          <NavItem href="/marketplace" label="Search" icon={Search} active={isActive("/marketplace")} dataTour="nav-marketplace" />
+
+          {/* CENTER SELL BUTTON — col 3 */}
+          <div className="flex flex-col items-center justify-end pb-1">
+            <Link href="/post-item" data-tour="nav-sell" className="flex flex-col items-center gap-0.5 group">
+              {/* raised circle — sits above the nav bar */}
+              <div className="relative -mt-7">
+                <div className="absolute inset-0 rounded-full bg-pink-500/30 blur-md scale-110" />
+                <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-pink-400 to-pink-700 flex items-center justify-center shadow-xl shadow-pink-500/50 border-4 border-[#0f0f0f] group-hover:scale-105 transition-transform duration-200">
+                  <Plus size={26} strokeWidth={2.5} className="text-white" />
+                </div>
+              </div>
+              <span className="text-[9px] font-bold text-pink-400 mt-1 leading-none">Sell</span>
+            </Link>
+          </div>
+
+          {/* Settings */}
+          <NavItem href="/settings" label="Settings" icon={Settings} active={isActive("/settings")} dataTour="nav-settings" />
+
+          {/* 5th slot — empty spacer for visual balance */}
+          <div />
         </div>
       </nav>
 
-      {/* ── DESKTOP FOOTER ────────────────────────────────────── */}
-      <footer className="hidden lg:block" style={{ backgroundColor: "#080808", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-        {/* Malawian flag accent bar */}
-        <div className="h-[2px] w-full flex">
-          <div className="flex-1" style={{ backgroundColor: "#121212" }} />
-          <div className="flex-1" style={{ backgroundColor: "#CE1126" }} />
-          <div className="flex-1" style={{ backgroundColor: "#007A33" }} />
-        </div>
-
+      {/* ── Desktop Footer ── */}
+      <footer className="hidden lg:block bg-[#0f0f0f] text-white/70 border-t border-pink-500/20">
         <div className="max-w-7xl mx-auto px-4 py-10">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-8">
-
-            {/* Brand */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2.5 mb-3">
-                <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center"
-                  style={{ background: "linear-gradient(135deg, #0047AB 0%, #007A33 100%)" }}
-                >
-                  <span className="text-white font-black text-sm">BB</span>
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-pink-700 flex items-center justify-center">
+                  <Store size={16} className="text-white" />
                 </div>
                 <div>
-                  <span className="font-black text-white text-base">BlinkBuy</span>
-                  <span className="text-xs font-semibold tracking-widest uppercase ml-1.5" style={{ color: "#007A33" }}>Malawi</span>
+                  <span className="font-black text-white text-base block leading-none">Marketplace</span>
+                  <span className="text-xs text-pink-400 font-bold tracking-wider">MALAWI</span>
                 </div>
               </div>
-              <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.38)" }}>
-                Malawi's premium local marketplace. Buy and sell goods across all 28 districts.
+              <p className="text-xs text-white/40 leading-relaxed">
+                Malawi's premium local marketplace. Buy and sell across all 28 districts with confidence.
               </p>
             </div>
-
-            {/* Links */}
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.50)" }}>Marketplace</h4>
-              <div className="space-y-2 text-xs">
-                {[["Browse All", "/marketplace"], ["Sell an Item", "/post-item"]].map(([l, h]) => (
-                  <Link key={h} href={h} className="block transition-all" style={{ color: "rgba(255,255,255,0.40)" }}>
-                    {l}
-                  </Link>
-                ))}
+              <h4 className="text-xs font-black text-white uppercase tracking-widest mb-4">Marketplace</h4>
+              <div className="space-y-2.5 text-xs">
+                <Link href="/marketplace" className="block text-white/50 hover:text-pink-400 transition-colors font-medium">Browse All</Link>
+                <Link href="/post-item" className="block text-white/50 hover:text-pink-400 transition-colors font-medium">Sell an Item</Link>
               </div>
             </div>
-
-            {/* Payments */}
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.50)" }}>Payments</h4>
-              <div className="text-xs space-y-1.5" style={{ color: "rgba(255,255,255,0.40)" }}>
-                <p>Airtel Money: <strong className="text-white">0999 626 944</strong></p>
-                <p>TNM Mpamba: <strong className="text-white">0888 712 272</strong></p>
-                <p className="mt-2">
-                  <span
-                    className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide badge-green"
-                  >
-                    Featured: MK 5,000 / mo
-                  </span>
-                </p>
+              <h4 className="text-xs font-black text-white uppercase tracking-widest mb-4">Support</h4>
+              <div className="space-y-2.5 text-xs">
+                <Link href="/settings" className="block text-white/50 hover:text-pink-400 transition-colors font-medium">Help Center</Link>
+                <Link href="/settings" className="block text-white/50 hover:text-pink-400 transition-colors font-medium">Safety Tips</Link>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-xs font-black text-white uppercase tracking-widest mb-4">Payment</h4>
+              <div className="text-xs text-white/50 space-y-2">
+                <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-pink-400 shrink-0" />Airtel Money</div>
+                <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-pink-400 shrink-0" />TNM Mpamba</div>
               </div>
             </div>
           </div>
-
-          <div className="pt-6 flex items-center justify-between" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-            <p className="text-xs" style={{ color: "rgba(255,255,255,0.22)" }}>
-              Powered by{" "}
-              <span className="font-bold" style={{ color: "#0047AB" }}>O-techy</span>
-              {" "}· Built for Malawi 🇲🇼
-            </p>
-            <p className="text-xs" style={{ color: "rgba(255,255,255,0.15)" }}>© 2026 BlinkBuy Malawi.</p>
+          <div className="border-t border-pink-500/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p className="text-xs text-white/30">Marketplace Malawi · Connecting buyers &amp; sellers</p>
+            <p className="text-xs text-white/20">© 2026 Marketplace Malawi. All rights reserved.</p>
           </div>
         </div>
       </footer>
     </div>
+  );
+}
+
+/* ── Reusable nav item ── */
+function NavItem({
+  href, label, icon: Icon, active, dataTour,
+}: { href: string; label: string; icon: React.ElementType; active: boolean; dataTour?: string }) {
+  return (
+    <Link href={href} data-tour={dataTour} className="flex flex-col items-center justify-end gap-0.5 pb-2 group">
+      <div className={`w-8 h-8 flex items-center justify-center rounded-xl transition-all duration-200 ${
+        active ? "bg-pink-500/15" : "group-hover:bg-white/8"
+      }`}>
+        <Icon
+          size={19}
+          strokeWidth={active ? 2.5 : 1.8}
+          className={active ? "text-pink-400" : "text-white/40 group-hover:text-white/70"}
+        />
+      </div>
+      <span className={`text-[9px] font-bold leading-none transition-colors ${
+        active ? "text-pink-400" : "text-white/35 group-hover:text-white/60"
+      }`}>
+        {label}
+      </span>
+      {active && <span className="w-1 h-1 rounded-full bg-pink-500 mt-0.5" />}
+    </Link>
   );
 }
