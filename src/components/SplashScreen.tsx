@@ -77,8 +77,8 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
   /* ── phase timeline ── */
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("hold"), 400);
-    const t2 = setTimeout(() => setPhase("out"), 2200);
-    const t3 = setTimeout(() => onDone(), 2700);
+    const t2 = setTimeout(() => setPhase("out"), 4200);
+    const t3 = setTimeout(() => onDone(), 5000);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [onDone]);
 
