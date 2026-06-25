@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Link } from "wouter";
-import { ShoppingBag, ArrowRight, Tag, MapPin, Zap, Sparkles, TrendingUp, Heart, ChevronRight } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { ShoppingBag, ArrowRight, Tag, MapPin, Zap, Sparkles, TrendingUp, Heart, Search, ChevronRight } from "lucide-react";
 import { MOCK_ITEMS, CATEGORIES } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
-import FeaturedDeals from "@/components/FeaturedDeals";
 
 const CATEGORY_ICONS: Record<string, string> = {
   "Electronics": "💻",
@@ -24,6 +23,7 @@ export default function HomePage() {
     try { return new Set(JSON.parse(localStorage.getItem("wishlist") || "[]")); }
     catch { return new Set(); }
   });
+  const [searchQ, setSearchQ] = useState("");
 
   const toggleWishlist = (id: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -33,6 +33,12 @@ export default function HomePage() {
       localStorage.setItem("wishlist", JSON.stringify([...next]));
       return next;
     });
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQ.trim()) navigate(`/marketplace?q=${encodeURIComponent(searchQ.trim())}`);
+    else navigate("/marketplace");
   };
 
   const featured = MOCK_ITEMS.filter(i => i.is_featured).slice(0, 4);
@@ -61,9 +67,30 @@ export default function HomePage() {
             </span>
           </h1>
 
-          <p className="text-white/65 text-sm md:text-base mb-9 max-w-xl font-light">
+          <p className="text-white/65 text-sm md:text-base mb-7 max-w-xl font-light">
             Discover thousands of items from trusted local sellers. Fast, safe, and exclusively for Malawi.
           </p>
+
+          {/* Search Bar in Hero */}
+          <form onSubmit={handleSearch} className="flex gap-2 max-w-xl mb-6">
+            <div className="flex-1 relative">
+              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none" />
+              <input
+                type="text"
+                value={searchQ}
+                onChange={e => setSearchQ(e.target.value)}
+                placeholder="Search items, phones, clothes..."
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 text-sm outline-none focus:bg-white/15 focus:border-pink-400/60 transition-all font-medium backdrop-blur-sm"
+              />
+            </div>
+            <button
+              type="submit"
+              className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white px-5 py-3 rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-pink-500/40 border border-pink-400/20 whitespace-nowrap"
+            >
+              <Search size={15} strokeWidth={2.5} />
+              Search
+            </button>
+          </form>
 
           <div className="flex gap-3 flex-wrap">
             <Link
@@ -105,9 +132,6 @@ export default function HomePage() {
           </div>
         ))}
       </div>
-
-      {/* FLASH DEALS */}
-      <FeaturedDeals />
 
       {/* CATEGORIES */}
       <div className="mb-10">
