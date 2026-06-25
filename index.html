@@ -3,31 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1" />
+
     <title>Marketplace Malawi — Buy &amp; Sell Locally</title>
     <meta name="description" content="Malawi's premium local marketplace. Buy and sell electronics, clothing, food, furniture, phones and more across all 28 districts." />
-    <meta name="theme-color" content="#0f0f0f" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#ec4899" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Marketplace" />
-    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Marketplace Malawi" />
+    <meta property="og:description" content="Buy and sell across all 28 districts of Malawi" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/icon.svg" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
     <style>
-      html, body { overscroll-behavior: none; background: #0f0f0f; }
+      /* Prevent white flash before app loads */
+      html, body { background: #0a0a0a; margin: 0; padding: 0; }
       #root { min-height: 100dvh; }
-      body { opacity: 0; transition: opacity 0.18s; }
-      body.loaded { opacity: 1; }
     </style>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script>
-      window.addEventListener('DOMContentLoaded', () => {
-        requestAnimationFrame(() => document.body.classList.add('loaded'));
-      });
-    </script>
   </body>
 </html>

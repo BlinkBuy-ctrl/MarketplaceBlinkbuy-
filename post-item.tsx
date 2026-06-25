@@ -1,7 +1,16 @@
 import { useState, useRef } from "react";
 import { useLocation } from "wouter";
-import { Plus, Package, X, ImagePlus, CheckCircle, AlertCircle, Upload } from "lucide-react";
+import { Plus, Package, X, ImagePlus, CheckCircle, Upload } from "lucide-react";
 import { CATEGORIES, CITIES, CONDITIONS } from "@/lib/mockData";
+
+const fieldClass =
+  "w-full px-3 py-2.5 rounded-lg text-sm outline-none font-medium transition-all";
+
+const fieldStyle = {
+  backgroundColor: "hsl(var(--muted))",
+  border: "1px solid hsl(var(--border))",
+  color: "#fff",
+};
 
 export default function PostItemPage() {
   const [, setLocation] = useLocation();
@@ -11,74 +20,69 @@ export default function PostItemPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
-    title: "",
+    title:       "",
     description: "",
-    category: CATEGORIES[1],
-    price: "",
-    location: "Lilongwe",
-    condition: "Good",
+    category:    CATEGORIES[1],
+    price:       "",
+    location:    "Lilongwe",
+    condition:   "Good",
   });
 
   const set = (k: string, v: string) => setForm(p => ({ ...p, [k]: v }));
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+    const files     = Array.from(e.target.files || []);
     const remaining = 3 - previews.length;
-    const allowed = files.slice(0, remaining);
+    const allowed   = files.slice(0, remaining);
     const newPreviews = allowed.map(f => URL.createObjectURL(f));
     setPreviews(prev => [...prev, ...newPreviews]);
     e.target.value = "";
   };
 
-  const removeImage = (index: number) => {
+  const removeImage = (index: number) =>
     setPreviews(prev => prev.filter((_, i) => i !== index));
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
-    }, 1200);
+    setTimeout(() => { setLoading(false); setSubmitted(true); }, 1200);
   };
 
+  const reset = () => {
+    setSubmitted(false);
+    setForm({ title: "", description: "", category: CATEGORIES[1], price: "", location: "Lilongwe", condition: "Good" });
+    setPreviews([]);
+  };
+
+  /* ── Success screen ──────────────────────────────────────── */
   if (submitted) {
     return (
-      <div className="max-w-lg mx-auto px-4 py-16 text-center page-enter">
-        <div className="relative mb-6">
-          <div className="absolute inset-0 bg-pink-500/20 blur-2xl rounded-full" />
-          <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center mx-auto">
-            <CheckCircle size={40} className="text-white" strokeWidth={1.5} />
-          </div>
+      <div className="max-w-lg mx-auto px-4 py-20 text-center page-enter">
+        <div
+          className="w-20 h-20 rounded-2xl mx-auto mb-5 flex items-center justify-center"
+          style={{ background: "linear-gradient(135deg, #007A33 0%, #004d1f 100%)" }}
+        >
+          <CheckCircle size={36} className="text-white" />
         </div>
-
-        <h2 className="text-3xl font-black mb-2 text-foreground">🎉 Listing Posted!</h2>
-        <p className="text-muted-foreground text-base mb-8 max-w-sm mx-auto leading-relaxed">
-          Your premium item has been successfully listed on Marketplace Malawi. Start receiving offers from interested buyers!
+        <h2 className="text-2xl font-black text-white mb-2">Listing Posted!</h2>
+        <p className="text-sm mb-8" style={{ color: "rgba(255,255,255,0.50)" }}>
+          Your item has been listed on the BlinkBuy marketplace.
         </p>
-
-        <div className="grid grid-cols-2 gap-3">
+        <div className="flex gap-3 justify-center">
           <button
-            onClick={() => { 
-              setSubmitted(false); 
-              setForm({ 
-                title: "", 
-                description: "", 
-                category: CATEGORIES[1], 
-                price: "", 
-                location: "Lilongwe", 
-                condition: "Good" 
-              }); 
-              setPreviews([]); 
+            onClick={reset}
+            className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all"
+            style={{
+              border: "1px solid hsl(var(--border))",
+              color: "rgba(255,255,255,0.70)",
+              backgroundColor: "hsl(var(--card))",
             }}
-            className="px-5 py-3 rounded-xl border-2 border-pink-500/30 text-pink-600 font-bold hover:border-pink-500 hover:bg-pink-500/5 transition-all duration-200"
           >
             Post Another
           </button>
           <button
             onClick={() => setLocation("/marketplace")}
-            className="px-5 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold hover:from-pink-600 hover:to-pink-700 transition-all duration-200 shadow-lg hover:shadow-pink-500/50 border border-pink-400/30"
+            className="btn-primary px-5 py-2.5 rounded-xl text-sm"
           >
             Browse Marketplace
           </button>
@@ -87,43 +91,55 @@ export default function PostItemPage() {
     );
   }
 
+  /* ── Form ────────────────────────────────────────────────── */
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8 page-enter">
-      {/* Header */}
-      <div className="flex items-start gap-4 mb-8">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shrink-0">
-          <Package size={20} className="text-white" strokeWidth={2} />
+    <div className="max-w-2xl mx-auto px-4 py-6 page-enter">
+
+      {/* Page title */}
+      <div className="flex items-center gap-3 mb-6">
+        <div
+          className="w-11 h-11 rounded-xl flex items-center justify-center"
+          style={{ background: "linear-gradient(135deg, #0047AB 0%, #007A33 100%)" }}
+        >
+          <Package size={20} className="text-white" />
         </div>
         <div>
-          <h1 className="text-3xl font-black text-foreground mb-1">Sell an Item</h1>
-          <p className="text-muted-foreground text-sm font-medium">
-            List your items on Marketplace Malawi and reach buyers across Malawi
+          <h1 className="text-2xl font-black text-white">Sell an Item</h1>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+            List your item on the BlinkBuy marketplace
           </p>
         </div>
       </div>
 
-      {/* Demo Alert */}
-      <div className="bg-pink-50 dark:bg-pink-950/30 border border-pink-200 dark:border-pink-800 rounded-xl px-4 py-4 mb-6 flex gap-3">
-        <AlertCircle size={18} className="text-pink-600 dark:text-pink-400 shrink-0 mt-0.5" />
-        <p className="text-pink-700 dark:text-pink-300 text-sm font-medium">
-          🔒 Demo Mode — Listings are not saved. Connect a backend to enable real submissions and payments.
-        </p>
+      {/* Demo banner */}
+      <div
+        className="rounded-xl px-4 py-3 mb-5 text-xs font-medium"
+        style={{
+          backgroundColor: "rgba(206,17,38,0.12)",
+          border: "1px solid rgba(206,17,38,0.30)",
+          color: "#ff6b7a",
+        }}
+      >
+        🔒 Demo Mode — Listings are not saved. Connect a backend to enable real submissions.
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Item Details Section */}
-        <div className="bg-card border border-pink-500/20 rounded-xl p-6 space-y-5">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center">
-              <span className="text-pink-600 font-black text-sm">1</span>
-            </div>
-            <h2 className="text-lg font-bold text-foreground">Item Details</h2>
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+
+        {/* ── Item Details ───────────────────────────────────── */}
+        <section
+          className="rounded-2xl p-5 space-y-4"
+          style={{
+            backgroundColor: "hsl(var(--card))",
+            border: "1px solid hsl(var(--card-border))",
+            boxShadow: "var(--shadow-card)",
+          }}
+        >
+          <h2 className="text-sm font-bold text-white">Item Details</h2>
 
           {/* Title */}
           <div>
-            <label className="text-sm font-bold mb-2 block text-foreground">
-              Item Title <span className="text-pink-500">*</span>
+            <label className="text-xs font-semibold mb-1.5 block" style={{ color: "rgba(255,255,255,0.60)" }}>
+              Item Title *
             </label>
             <input
               type="text"
@@ -131,24 +147,22 @@ export default function PostItemPage() {
               onChange={e => set("title", e.target.value)}
               required
               placeholder="e.g. Samsung Galaxy A53 — Excellent Condition"
-              maxLength={80}
-              className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium placeholder:text-muted-foreground"
+              className={fieldClass}
+              style={fieldStyle}
             />
-            <p className="text-xs text-muted-foreground mt-1">
-              {form.title.length}/80 characters
-            </p>
           </div>
 
-          {/* Category & Condition */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* Category + Condition */}
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">
-                Category <span className="text-pink-500">*</span>
+              <label className="text-xs font-semibold mb-1.5 block" style={{ color: "rgba(255,255,255,0.60)" }}>
+                Category
               </label>
               <select
                 value={form.category}
                 onChange={e => set("category", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium cursor-pointer"
+                className={fieldClass}
+                style={fieldStyle}
               >
                 {CATEGORIES.filter(c => c !== "All Categories").map(c => (
                   <option key={c}>{c}</option>
@@ -156,13 +170,14 @@ export default function PostItemPage() {
               </select>
             </div>
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">
-                Condition <span className="text-pink-500">*</span>
+              <label className="text-xs font-semibold mb-1.5 block" style={{ color: "rgba(255,255,255,0.60)" }}>
+                Condition
               </label>
               <select
                 value={form.condition}
                 onChange={e => set("condition", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium cursor-pointer"
+                className={fieldClass}
+                style={fieldStyle}
               >
                 {CONDITIONS.map(c => <option key={c}>{c}</option>)}
               </select>
@@ -171,56 +186,56 @@ export default function PostItemPage() {
 
           {/* Description */}
           <div>
-            <label className="text-sm font-bold mb-2 block text-foreground">
-              Description <span className="text-pink-500">*</span>
+            <label className="text-xs font-semibold mb-1.5 block" style={{ color: "rgba(255,255,255,0.60)" }}>
+              Description *
             </label>
             <textarea
               value={form.description}
               onChange={e => set("description", e.target.value)}
               required
-              rows={5}
-              placeholder="Describe the item — condition, age, reason for selling, any defects, special features..."
-              maxLength={500}
-              className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium placeholder:text-muted-foreground resize-none"
+              rows={4}
+              placeholder="Describe the item — condition, age, reason for selling, any defects..."
+              className={fieldClass}
+              style={{ ...fieldStyle, resize: "none" }}
             />
-            <p className="text-xs text-muted-foreground mt-1">
-              {form.description.length}/500 characters
-            </p>
           </div>
 
-          {/* Image Upload */}
+          {/* Image upload */}
           <div>
-            <label className="text-sm font-bold mb-3 block text-foreground">
-              Photos <span className="text-pink-500">*</span>
-              <span className="text-xs font-normal text-muted-foreground ml-1">
-                (max 3) — {previews.length}/3
-              </span>
+            <label className="text-xs font-semibold mb-2 block" style={{ color: "rgba(255,255,255,0.60)" }}>
+              Photos (max 3) — {previews.length}/3
             </label>
             <div className="flex gap-3 flex-wrap">
               {previews.map((src, i) => (
-                <div 
-                  key={i} 
-                  className="relative w-24 h-24 rounded-xl overflow-hidden border-2 border-pink-500/30 group hover:border-pink-500 transition-all duration-200"
+                <div
+                  key={i}
+                  className="relative w-24 h-24 rounded-xl overflow-hidden"
+                  style={{ border: "1px solid hsl(var(--border))" }}
                 >
                   <img src={src} alt="" className="w-full h-full object-cover" />
                   <button
                     type="button"
                     onClick={() => removeImage(i)}
-                    className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                    className="absolute top-1 right-1 w-5 h-5 rounded-full flex items-center justify-center transition-all"
+                    style={{ backgroundColor: "rgba(0,0,0,0.70)", color: "#fff" }}
                   >
-                    <X size={20} className="text-white" strokeWidth={3} />
+                    <X size={11} />
                   </button>
                 </div>
               ))}
-
               {previews.length < 3 && (
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-24 h-24 rounded-xl border-2 border-dashed border-pink-500/40 hover:border-pink-500 hover:bg-pink-500/5 flex flex-col items-center justify-center gap-1 text-muted-foreground hover:text-pink-500 transition-all duration-200"
+                  className="w-24 h-24 rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-1.5 transition-all"
+                  style={{
+                    borderColor: "rgba(0,71,171,0.45)",
+                    color: "rgba(0,71,171,0.70)",
+                    backgroundColor: "rgba(0,71,171,0.06)",
+                  }}
                 >
-                  <ImagePlus size={20} strokeWidth={2} />
-                  <span className="text-xs font-bold">Add</span>
+                  <ImagePlus size={20} />
+                  <span className="text-xs font-medium">Add Photo</span>
                 </button>
               )}
             </div>
@@ -233,75 +248,61 @@ export default function PostItemPage() {
               className="hidden"
             />
           </div>
-        </div>
+        </section>
 
-        {/* Price & Location Section */}
-        <div className="bg-card border border-pink-500/20 rounded-xl p-6 space-y-5">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center">
-              <span className="text-pink-600 font-black text-sm">2</span>
-            </div>
-            <h2 className="text-lg font-bold text-foreground">Price & Location</h2>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+        {/* ── Price & Location ────────────────────────────────── */}
+        <section
+          className="rounded-2xl p-5 space-y-4"
+          style={{
+            backgroundColor: "hsl(var(--card))",
+            border: "1px solid hsl(var(--card-border))",
+            boxShadow: "var(--shadow-card)",
+          }}
+        >
+          <h2 className="text-sm font-bold text-white">Price &amp; Location</h2>
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">
-                Price (MK) <span className="text-pink-500">*</span>
+              <label className="text-xs font-semibold mb-1.5 block" style={{ color: "rgba(255,255,255,0.60)" }}>
+                Price (MK) *
               </label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">
-                  MK
-                </span>
-                <input
-                  type="number"
-                  value={form.price}
-                  onChange={e => set("price", e.target.value)}
-                  required
-                  placeholder="e.g. 120000"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium"
-                />
-              </div>
+              <input
+                type="number"
+                value={form.price}
+                onChange={e => set("price", e.target.value)}
+                required
+                placeholder="e.g. 120000"
+                className={fieldClass}
+                style={fieldStyle}
+              />
             </div>
-
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">
-                Location <span className="text-pink-500">*</span>
+              <label className="text-xs font-semibold mb-1.5 block" style={{ color: "rgba(255,255,255,0.60)" }}>
+                Location *
               </label>
               <select
                 value={form.location}
                 onChange={e => set("location", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium cursor-pointer"
+                className={fieldClass}
+                style={fieldStyle}
               >
                 {CITIES.map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <button
           type="submit"
-          disabled={loading || !form.title || !form.description || !form.price}
-          className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 disabled:from-pink-400 disabled:to-pink-500 disabled:cursor-not-allowed text-white py-4 rounded-xl font-bold text-base transition-all duration-300 shadow-lg hover:shadow-pink-500/50 border border-pink-400/30 flex items-center justify-center gap-2"
+          disabled={loading}
+          className="w-full btn-primary py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {loading ? (
-            <>
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              <span>Publishing...</span>
-            </>
+            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
           ) : (
-            <>
-              <Upload size={18} strokeWidth={2.5} />
-              <span>List for Sale</span>
-            </>
+            <><Upload size={16} /> List for Sale</>
           )}
         </button>
-
-        {/* Footer Note */}
-        <p className="text-xs text-muted-foreground text-center">
-          Your listing will be visible immediately after publication. You can manage your listings in your dashboard.
-        </p>
       </form>
     </div>
   );
