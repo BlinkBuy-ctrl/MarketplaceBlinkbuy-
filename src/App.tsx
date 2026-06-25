@@ -1,6 +1,7 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import Layout from "@/components/Layout";
+import SplashScreen from "@/components/SplashScreen";
 
 const HomePage          = lazy(() => import("@/pages/home"));
 const MarketplacePage   = lazy(() => import("@/pages/marketplace"));
@@ -27,20 +28,27 @@ function PageLoader() {
 }
 
 export default function App() {
+  const [splashDone, setSplashDone] = useState(false);
+
   return (
-    <WouterRouter base="">
-      <Layout>
-        <Suspense fallback={<PageLoader />}>
-          <Switch>
-            <Route path="/"                   component={HomePage} />
-            <Route path="/marketplace"        component={MarketplacePage} />
-            <Route path="/marketplace/:id"    component={MarketplaceDetail} />
-            <Route path="/post-item"          component={PostItemPage} />
-            <Route path="/settings"           component={SettingsPage} />
-            <Route                            component={NotFound} />
-          </Switch>
-        </Suspense>
-      </Layout>
-    </WouterRouter>
+    <>
+      {!splashDone && <SplashScreen onDone={() => setSplashDone(true)} />}
+      <div style={{ opacity: splashDone ? 1 : 0, transition: "opacity 0.4s ease" }}>
+        <WouterRouter base="">
+          <Layout>
+            <Suspense fallback={<PageLoader />}>
+              <Switch>
+                <Route path="/"                   component={HomePage} />
+                <Route path="/marketplace"        component={MarketplacePage} />
+                <Route path="/marketplace/:id"    component={MarketplaceDetail} />
+                <Route path="/post-item"          component={PostItemPage} />
+                <Route path="/settings"           component={SettingsPage} />
+                <Route                            component={NotFound} />
+              </Switch>
+            </Suspense>
+          </Layout>
+        </WouterRouter>
+      </div>
+    </>
   );
 }
