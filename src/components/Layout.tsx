@@ -197,8 +197,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-[#0f0f0f] border-t border-pink-500/20"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        {/* 5-column grid: Home | Search | [SELL] | Settings | (empty) */}
-        <div className="grid grid-cols-5 items-end h-16 px-2">
+        {/* 4-column grid: Home | Search | [SELL] | Settings — no empty 5th slot */}
+        <div className="grid grid-cols-4 items-end h-16 px-2">
 
           {/* Home */}
           <NavItem href="/" label="Home" icon={Home} active={isActive("/")} />
@@ -209,7 +209,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {/* CENTER SELL BUTTON — col 3 */}
           <div className="flex flex-col items-center justify-end pb-1">
             <Link href="/post-item" className="flex flex-col items-center gap-0.5 group">
-              {/* raised circle — sits above the nav bar */}
               <div className="relative -mt-7">
                 <div className="absolute inset-0 rounded-full bg-pink-500/30 blur-md scale-110" />
                 <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-pink-400 to-pink-700 flex items-center justify-center shadow-xl shadow-pink-500/50 border-4 border-[#0f0f0f] group-hover:scale-105 transition-transform duration-200">
@@ -222,9 +221,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           {/* Settings */}
           <NavItem href="/settings" label="Settings" icon={Settings} active={isActive("/settings")} />
-
-          {/* 5th slot — empty spacer for visual balance */}
-          <div />
         </div>
       </nav>
 
