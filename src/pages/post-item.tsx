@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useLocation } from "wouter";
-import { Plus, Package, X, ImagePlus, CheckCircle, AlertCircle, Upload } from "lucide-react";
+import { Package, X, ImagePlus, CheckCircle, AlertCircle, Upload, Phone, User } from "lucide-react";
 import { CATEGORIES, CITIES, CONDITIONS } from "@/lib/mockData";
 
 export default function PostItemPage() {
@@ -17,13 +17,16 @@ export default function PostItemPage() {
     price: "",
     location: "Lilongwe",
     condition: "Good",
+    sellerName: "",
+    sellerPhone: "",
+    negotiable: false,
   });
 
-  const set = (k: string, v: string) => setForm(p => ({ ...p, [k]: v }));
+  const set = (k: string, v: string | boolean) => setForm(p => ({ ...p, [k]: v }));
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const remaining = 3 - previews.length;
+    const remaining = 5 - previews.length;
     const allowed = files.slice(0, remaining);
     const newPreviews = allowed.map(f => URL.createObjectURL(f));
     setPreviews(prev => [...prev, ...newPreviews]);
@@ -43,6 +46,8 @@ export default function PostItemPage() {
     }, 1200);
   };
 
+  const isValid = form.title && form.description && form.price && form.sellerName && form.sellerPhone;
+
   if (submitted) {
     return (
       <div className="max-w-lg mx-auto px-4 py-16 text-center page-enter">
@@ -55,22 +60,15 @@ export default function PostItemPage() {
 
         <h2 className="text-3xl font-black mb-2 text-foreground">🎉 Listing Posted!</h2>
         <p className="text-muted-foreground text-base mb-8 max-w-sm mx-auto leading-relaxed">
-          Your premium item has been successfully listed on Marketplace Malawi. Start receiving offers from interested buyers!
+          Your item has been listed on Marketplace Malawi. Buyers will reach you on <strong>{form.sellerPhone}</strong>!
         </p>
 
         <div className="grid grid-cols-2 gap-3">
           <button
-            onClick={() => { 
-              setSubmitted(false); 
-              setForm({ 
-                title: "", 
-                description: "", 
-                category: CATEGORIES[1], 
-                price: "", 
-                location: "Lilongwe", 
-                condition: "Good" 
-              }); 
-              setPreviews([]); 
+            onClick={() => {
+              setSubmitted(false);
+              setForm({ title: "", description: "", category: CATEGORIES[1], price: "", location: "Lilongwe", condition: "Good", sellerName: "", sellerPhone: "", negotiable: false });
+              setPreviews([]);
             }}
             className="px-5 py-3 rounded-xl border-2 border-pink-500/30 text-pink-600 font-bold hover:border-pink-500 hover:bg-pink-500/5 transition-all duration-200"
           >
@@ -106,12 +104,12 @@ export default function PostItemPage() {
       <div className="bg-pink-50 dark:bg-pink-950/30 border border-pink-200 dark:border-pink-800 rounded-xl px-4 py-4 mb-6 flex gap-3">
         <AlertCircle size={18} className="text-pink-600 dark:text-pink-400 shrink-0 mt-0.5" />
         <p className="text-pink-700 dark:text-pink-300 text-sm font-medium">
-          🔒 Demo Mode — Listings are not saved. Connect a backend to enable real submissions and payments.
+          🔒 Demo Mode — Listings are not saved. Connect a backend to enable real submissions.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Item Details Section */}
+        {/* Section 1: Item Details */}
         <div className="bg-card border border-pink-500/20 rounded-xl p-6 space-y-5">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center">
@@ -134,36 +132,22 @@ export default function PostItemPage() {
               maxLength={80}
               className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium placeholder:text-muted-foreground"
             />
-            <p className="text-xs text-muted-foreground mt-1">
-              {form.title.length}/80 characters
-            </p>
+            <p className="text-xs text-muted-foreground mt-1">{form.title.length}/80 characters</p>
           </div>
 
           {/* Category & Condition */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">
-                Category <span className="text-pink-500">*</span>
-              </label>
-              <select
-                value={form.category}
-                onChange={e => set("category", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium cursor-pointer"
-              >
-                {CATEGORIES.filter(c => c !== "All Categories").map(c => (
-                  <option key={c}>{c}</option>
-                ))}
+              <label className="text-sm font-bold mb-2 block text-foreground">Category <span className="text-pink-500">*</span></label>
+              <select value={form.category} onChange={e => set("category", e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium cursor-pointer">
+                {CATEGORIES.filter(c => c !== "All Categories").map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">
-                Condition <span className="text-pink-500">*</span>
-              </label>
-              <select
-                value={form.condition}
-                onChange={e => set("condition", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium cursor-pointer"
-              >
+              <label className="text-sm font-bold mb-2 block text-foreground">Condition <span className="text-pink-500">*</span></label>
+              <select value={form.condition} onChange={e => set("condition", e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium cursor-pointer">
                 {CONDITIONS.map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
@@ -183,59 +167,38 @@ export default function PostItemPage() {
               maxLength={500}
               className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium placeholder:text-muted-foreground resize-none"
             />
-            <p className="text-xs text-muted-foreground mt-1">
-              {form.description.length}/500 characters
-            </p>
+            <p className="text-xs text-muted-foreground mt-1">{form.description.length}/500 characters</p>
           </div>
 
-          {/* Image Upload */}
+          {/* Image Upload — up to 5 */}
           <div>
             <label className="text-sm font-bold mb-3 block text-foreground">
               Photos <span className="text-pink-500">*</span>
-              <span className="text-xs font-normal text-muted-foreground ml-1">
-                (max 3) — {previews.length}/3
-              </span>
+              <span className="text-xs font-normal text-muted-foreground ml-1">(up to 5) — {previews.length}/5</span>
             </label>
             <div className="flex gap-3 flex-wrap">
               {previews.map((src, i) => (
-                <div 
-                  key={i} 
-                  className="relative w-24 h-24 rounded-xl overflow-hidden border-2 border-pink-500/30 group hover:border-pink-500 transition-all duration-200"
-                >
+                <div key={i} className="relative w-24 h-24 rounded-xl overflow-hidden border-2 border-pink-500/30 group hover:border-pink-500 transition-all duration-200">
                   <img src={src} alt="" className="w-full h-full object-cover" />
-                  <button
-                    type="button"
-                    onClick={() => removeImage(i)}
-                    className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-                  >
+                  <button type="button" onClick={() => removeImage(i)}
+                    className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <X size={20} className="text-white" strokeWidth={3} />
                   </button>
                 </div>
               ))}
-
-              {previews.length < 3 && (
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-24 h-24 rounded-xl border-2 border-dashed border-pink-500/40 hover:border-pink-500 hover:bg-pink-500/5 flex flex-col items-center justify-center gap-1 text-muted-foreground hover:text-pink-500 transition-all duration-200"
-                >
+              {previews.length < 5 && (
+                <button type="button" onClick={() => fileInputRef.current?.click()}
+                  className="w-24 h-24 rounded-xl border-2 border-dashed border-pink-500/40 hover:border-pink-500 hover:bg-pink-500/5 flex flex-col items-center justify-center gap-1 text-muted-foreground hover:text-pink-500 transition-all duration-200">
                   <ImagePlus size={20} strokeWidth={2} />
                   <span className="text-xs font-bold">Add</span>
                 </button>
               )}
             </div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageSelect}
-              className="hidden"
-            />
+            <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handleImageSelect} className="hidden" />
           </div>
         </div>
 
-        {/* Price & Location Section */}
+        {/* Section 2: Price & Location */}
         <div className="bg-card border border-pink-500/20 rounded-xl p-6 space-y-5">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center">
@@ -246,43 +209,69 @@ export default function PostItemPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">
-                Price (MK) <span className="text-pink-500">*</span>
-              </label>
+              <label className="text-sm font-bold mb-2 block text-foreground">Price (MK) <span className="text-pink-500">*</span></label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">
-                  MK
-                </span>
-                <input
-                  type="number"
-                  value={form.price}
-                  onChange={e => set("price", e.target.value)}
-                  required
-                  placeholder="e.g. 120000"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium"
-                />
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">MK</span>
+                <input type="number" value={form.price} onChange={e => set("price", e.target.value)} required placeholder="e.g. 120000"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium" />
               </div>
             </div>
-
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">
-                Location <span className="text-pink-500">*</span>
-              </label>
-              <select
-                value={form.location}
-                onChange={e => set("location", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium cursor-pointer"
-              >
+              <label className="text-sm font-bold mb-2 block text-foreground">Location <span className="text-pink-500">*</span></label>
+              <select value={form.location} onChange={e => set("location", e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium cursor-pointer">
                 {CITIES.map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
           </div>
+
+          {/* Negotiable toggle */}
+          <div className="flex items-center justify-between p-3 rounded-xl bg-background border border-pink-500/15">
+            <div>
+              <p className="text-sm font-semibold">Price Negotiable</p>
+              <p className="text-xs text-muted-foreground">Let buyers know the price can be discussed</p>
+            </div>
+            <button type="button" onClick={() => set("negotiable", !form.negotiable)}
+              className={`relative w-11 h-6 rounded-full transition-all duration-300 ${form.negotiable ? "bg-pink-500" : "bg-muted border border-border"}`}>
+              <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${form.negotiable ? "left-5.5" : "left-0.5"}`} />
+            </button>
+          </div>
         </div>
 
-        {/* Submit Button */}
+        {/* Section 3: Seller Contact */}
+        <div className="bg-card border border-pink-500/20 rounded-xl p-6 space-y-5">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center">
+              <span className="text-pink-600 font-black text-sm">3</span>
+            </div>
+            <h2 className="text-lg font-bold text-foreground">Your Contact Info</h2>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-bold mb-2 block text-foreground">Your Name <span className="text-pink-500">*</span></label>
+              <div className="relative">
+                <User size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <input type="text" value={form.sellerName} onChange={e => set("sellerName", e.target.value)} required placeholder="e.g. Chisomo Banda"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium placeholder:text-muted-foreground" />
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-bold mb-2 block text-foreground">Phone / WhatsApp <span className="text-pink-500">*</span></label>
+              <div className="relative">
+                <Phone size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <input type="tel" value={form.sellerPhone} onChange={e => set("sellerPhone", e.target.value)} required placeholder="e.g. 0999123456"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium placeholder:text-muted-foreground" />
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">Buyers will contact you directly. Use the number you check most.</p>
+        </div>
+
+        {/* Submit */}
         <button
           type="submit"
-          disabled={loading || !form.title || !form.description || !form.price}
+          disabled={loading || !isValid}
           className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 disabled:from-pink-400 disabled:to-pink-500 disabled:cursor-not-allowed text-white py-4 rounded-xl font-bold text-base transition-all duration-300 shadow-lg hover:shadow-pink-500/50 border border-pink-400/30 flex items-center justify-center gap-2"
         >
           {loading ? (
@@ -298,9 +287,8 @@ export default function PostItemPage() {
           )}
         </button>
 
-        {/* Footer Note */}
         <p className="text-xs text-muted-foreground text-center">
-          Your listing will be visible immediately after publication. You can manage your listings in your dashboard.
+          Your listing will be visible immediately. Buyers will contact you via phone or WhatsApp.
         </p>
       </form>
     </div>

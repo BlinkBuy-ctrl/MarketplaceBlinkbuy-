@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "@/hooks/useTheme";
+import { Link } from "wouter";
 import {
   Sun, Moon, Bell, Shield, Info, ChevronRight, Store,
   Globe, HelpCircle, Star, Download, Smartphone, Heart,
@@ -15,11 +16,32 @@ export default function SettingsPage() {
   const [notifications, setNotifications] = useState(true);
   const [currency] = useState("MWK");
   const [language] = useState("English");
-  const [installPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [wishlistCount, setWishlistCount] = useState(0);
+
+  // Capture PWA install prompt
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e as BeforeInstallPromptEvent);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
+  // Load wishlist count
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("wishlist") || "[]");
+      setWishlistCount(saved.length);
+    } catch { setWishlistCount(0); }
+  }, []);
 
   const handleInstall = async () => {
     if (!installPrompt) return;
     await installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice;
+    if (outcome === "accepted") setInstallPrompt(null);
   };
 
   const settingSection = (title: string, children: React.ReactNode) => (
@@ -74,18 +96,8 @@ export default function SettingsPage() {
             <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${theme === "dark" ? "left-5.5 translate-x-0" : "left-0.5"}`} />
           </button>
         )}
-        {settingRow(
-          <Globe size={15} />,
-          "Language",
-          language,
-          <span className="text-xs text-muted-foreground font-medium">{language}</span>
-        )}
-        {settingRow(
-          <Store size={15} />,
-          "Currency",
-          "Malawian Kwacha",
-          <span className="text-xs font-bold text-pink-500">{currency}</span>
-        )}
+        {settingRow(<Globe size={15} />, "Language", language, <span className="text-xs text-muted-foreground font-medium">{language}</span>)}
+        {settingRow(<Store size={15} />, "Currency", "Malawian Kwacha", <span className="text-xs font-bold text-pink-500">{currency}</span>)}
       </>)}
 
       {/* Notifications */}
@@ -108,16 +120,21 @@ export default function SettingsPage() {
         {settingRow(
           <Smartphone size={15} />,
           "Install App",
-          "Add to your home screen",
+          installPrompt ? "Tap to install on your home screen" : "Already installed or not available",
           undefined,
-          () => handleInstall()
+          installPrompt ? () => handleInstall() : undefined
         )}
         {settingRow(
           <Heart size={15} />,
           "Saved Items",
-          "View your wishlist",
-          undefined,
-          () => {}
+          `${wishlistCount} item${wishlistCount !== 1 ? "s" : ""} saved`,
+          <Link href="/marketplace" className="text-xs text-pink-500 font-bold hover:text-pink-600 transition-colors">Browse →</Link>
+        )}
+        {settingRow(
+          <Download size={15} />,
+          "App Version",
+          "Version 1.0.0",
+          <span className="text-xs text-green-600 font-bold">Up to date ✓</span>
         )}
       </>)}
 
@@ -126,8 +143,30 @@ export default function SettingsPage() {
         {settingRow(<HelpCircle size={15} />, "Help Center", "Get help and FAQs", undefined, () => {})}
         {settingRow(<Shield size={15} />, "Safety Tips", "Stay safe when buying & selling", undefined, () => {})}
         {settingRow(<Star size={15} />, "Rate the App", "Share your feedback", undefined, () => {})}
-        {settingRow(<Info size={15} />, "About", "Version 1.0.0", undefined, () => {})}
+        {settingRow(<Info size={15} />, "About", "Marketplace Malawi v1.0.0", undefined, () => {})}
       </>)}
+
+      {/* Safety Tips expanded */}
+      <div className="mb-6 bg-amber-500/8 border border-amber-500/20 rounded-2xl p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Shield size={16} className="text-amber-500" />
+          <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Safety Tips for Buyers & Sellers</p>
+        </div>
+        <ul className="space-y-2 text-xs text-amber-700 dark:text-amber-400">
+          {[
+            "Always meet in a public, well-lit place",
+            "Inspect items thoroughly before paying",
+            "Use Airtel Money or TNM Mpamba for safe payments",
+            "Never send money in advance to unknown sellers",
+            "Trust your instincts — if it seems too good to be true, be cautious",
+          ].map(tip => (
+            <li key={tip} className="flex items-start gap-2">
+              <span className="shrink-0 mt-0.5">•</span>
+              {tip}
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {/* Payment Info */}
       {settingSection("Payment Methods", <>

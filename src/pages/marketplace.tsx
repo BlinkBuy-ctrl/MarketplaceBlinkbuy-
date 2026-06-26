@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { Link, useSearch } from "wouter";
-import { Search, ShoppingBag, MapPin, X, Heart, SlidersHorizontal } from "lucide-react";
+import { Search, ShoppingBag, MapPin, X, Heart, SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import { MOCK_ITEMS, CATEGORIES, CITIES } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
 
@@ -13,6 +13,21 @@ const CATEGORY_ICONS: Record<string, string> = {
   "Books": "📚", "Other": "📦",
 };
 
+const SORT_OPTIONS = [
+  { value: "newest", label: "Newest First" },
+  { value: "price_asc", label: "Price: Low to High" },
+  { value: "price_desc", label: "Price: High to Low" },
+  { value: "featured", label: "Featured First" },
+];
+
+const PRICE_RANGES = [
+  { label: "Any", min: 0, max: Infinity },
+  { label: "Under MK 50k", min: 0, max: 50000 },
+  { label: "MK 50k–200k", min: 50000, max: 200000 },
+  { label: "MK 200k–500k", min: 200000, max: 500000 },
+  { label: "MK 500k+", min: 500000, max: Infinity },
+];
+
 export default function MarketplacePage() {
   const searchStr = useSearch();
   const params = new URLSearchParams(searchStr);
@@ -24,6 +39,8 @@ export default function MarketplacePage() {
   const [showLocDropdown, setShowLocDropdown] = useState(false);
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState("newest");
+  const [priceRange, setPriceRange] = useState(0); // index into PRICE_RANGES
   const [wishlist, setWishlist] = useState<Set<string>>(() => {
     try { return new Set(JSON.parse(localStorage.getItem("wishlist") || "[]")); }
     catch { return new Set(); }
@@ -50,14 +67,24 @@ export default function MarketplacePage() {
   const filteredCities = CITIES.filter(c => c.toLowerCase().includes(locSearch.toLowerCase()));
 
   const filtered = useMemo(() => {
-    return MOCK_ITEMS.filter(item => {
+    const range = PRICE_RANGES[priceRange];
+    let result = MOCK_ITEMS.filter(item => {
       if (search && !item.title.toLowerCase().includes(search.toLowerCase()) &&
           !item.description.toLowerCase().includes(search.toLowerCase())) return false;
       if (category !== "All Categories" && item.category !== category) return false;
       if (loc && item.location !== loc) return false;
+      const price = item.price ?? 0;
+      if (price < range.min || price > range.max) return false;
       return true;
     });
-  }, [search, category, loc]);
+
+    if (sortBy === "price_asc") result = [...result].sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+    else if (sortBy === "price_desc") result = [...result].sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
+    else if (sortBy === "featured") result = [...result].sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0));
+    else result = [...result].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+    return result;
+  }, [search, category, loc, sortBy, priceRange]);
 
   const total = filtered.length;
   const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -66,9 +93,9 @@ export default function MarketplacePage() {
   const handleSearch = (v: string) => { setSearch(v); setPage(1); };
   const handleCategory = (v: string) => { setCategory(v); setPage(1); };
   const handleLoc = (v: string) => { setLoc(v); setLocSearch(""); setShowLocDropdown(false); setPage(1); };
-  const clearAll = () => { setSearch(""); setCategory("All Categories"); setLoc(""); setPage(1); };
+  const clearAll = () => { setSearch(""); setCategory("All Categories"); setLoc(""); setPriceRange(0); setPage(1); };
 
-  const hasFilters = search || category !== "All Categories" || loc;
+  const hasFilters = search || category !== "All Categories" || loc || priceRange > 0;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 page-enter">
@@ -88,7 +115,7 @@ export default function MarketplacePage() {
         </Link>
       </div>
 
-      {/* Search Bar */}
+      {/* Single Search Bar + Controls Row */}
       <div className="flex gap-2 mb-4">
         <div className="flex-1 relative">
           <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
@@ -105,6 +132,19 @@ export default function MarketplacePage() {
             </button>
           )}
         </div>
+
+        {/* Sort */}
+        <div className="relative">
+          <select
+            value={sortBy}
+            onChange={e => { setSortBy(e.target.value); setPage(1); }}
+            className="appearance-none pl-9 pr-4 py-3 rounded-xl border border-pink-500/20 bg-card text-sm font-semibold outline-none focus:border-pink-500 cursor-pointer hidden sm:block"
+          >
+            {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+          </select>
+          <ArrowUpDown size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none hidden sm:block" />
+        </div>
+
         <button
           onClick={() => setShowFilters(!showFilters)}
           className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-sm font-semibold transition-all ${
@@ -135,6 +175,26 @@ export default function MarketplacePage() {
                   }`}
                 >
                   {CATEGORY_ICONS[cat]} {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Price Range Filter */}
+          <div>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Price Range</p>
+            <div className="flex gap-2 flex-wrap">
+              {PRICE_RANGES.map((r, i) => (
+                <button
+                  key={r.label}
+                  onClick={() => { setPriceRange(i); setPage(1); }}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 ${
+                    priceRange === i
+                      ? "border-pink-500 bg-pink-500/15 text-pink-500"
+                      : "border-border text-muted-foreground hover:border-pink-500/40 hover:text-foreground"
+                  }`}
+                >
+                  {r.label}
                 </button>
               ))}
             </div>
@@ -178,6 +238,20 @@ export default function MarketplacePage() {
             </div>
           </div>
 
+          {/* Mobile sort (inside filters) */}
+          <div className="sm:hidden">
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Sort By</p>
+            <div className="flex gap-2 flex-wrap">
+              {SORT_OPTIONS.map(o => (
+                <button key={o.value} onClick={() => { setSortBy(o.value); setPage(1); }}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                    sortBy === o.value ? "border-pink-500 bg-pink-500/15 text-pink-500" : "border-border text-muted-foreground"
+                  }`}
+                >{o.label}</button>
+              ))}
+            </div>
+          </div>
+
           {hasFilters && (
             <button onClick={clearAll} className="flex items-center gap-1.5 text-xs text-pink-500 font-bold hover:text-pink-600 transition-colors">
               <X size={12} /> Clear all filters
@@ -205,6 +279,12 @@ export default function MarketplacePage() {
             <div className="inline-flex items-center gap-1.5 bg-pink-500/10 text-pink-600 text-xs px-3 py-1.5 rounded-full border border-pink-500/30 font-medium">
               <MapPin size={10} /> {loc}
               <button onClick={() => handleLoc("")} className="ml-1 hover:text-pink-800">×</button>
+            </div>
+          )}
+          {priceRange > 0 && (
+            <div className="inline-flex items-center gap-1.5 bg-pink-500/10 text-pink-600 text-xs px-3 py-1.5 rounded-full border border-pink-500/30 font-medium">
+              💰 {PRICE_RANGES[priceRange].label}
+              <button onClick={() => setPriceRange(0)} className="ml-1 hover:text-pink-800">×</button>
             </div>
           )}
         </div>

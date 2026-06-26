@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { ShoppingBag, ArrowRight, Tag, MapPin, Zap, Sparkles, TrendingUp, Heart, Search, ChevronRight } from "lucide-react";
+import { ShoppingBag, ArrowRight, Tag, MapPin, Zap, Sparkles, TrendingUp, Heart, ChevronRight, Star, Shield, Users } from "lucide-react";
 import { MOCK_ITEMS, CATEGORIES } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
 
@@ -23,7 +23,6 @@ export default function HomePage() {
     try { return new Set(JSON.parse(localStorage.getItem("wishlist") || "[]")); }
     catch { return new Set(); }
   });
-  const [searchQ, setSearchQ] = useState("");
 
   const toggleWishlist = (id: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -33,12 +32,6 @@ export default function HomePage() {
       localStorage.setItem("wishlist", JSON.stringify([...next]));
       return next;
     });
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQ.trim()) navigate(`/marketplace?q=${encodeURIComponent(searchQ.trim())}`);
-    else navigate("/marketplace");
   };
 
   const featured = MOCK_ITEMS.filter(i => i.is_featured).slice(0, 4);
@@ -71,27 +64,6 @@ export default function HomePage() {
             Discover thousands of items from trusted local sellers. Fast, safe, and exclusively for Malawi.
           </p>
 
-          {/* Search Bar in Hero */}
-          <form onSubmit={handleSearch} className="flex gap-2 max-w-xl mb-6">
-            <div className="flex-1 relative">
-              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none" />
-              <input
-                type="text"
-                value={searchQ}
-                onChange={e => setSearchQ(e.target.value)}
-                placeholder="Search items, phones, clothes..."
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 text-sm outline-none focus:bg-white/15 focus:border-pink-400/60 transition-all font-medium backdrop-blur-sm"
-              />
-            </div>
-            <button
-              type="submit"
-              className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white px-5 py-3 rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-pink-500/40 border border-pink-400/20 whitespace-nowrap"
-            >
-              <Search size={15} strokeWidth={2.5} />
-              Search
-            </button>
-          </form>
-
           <div className="flex gap-3 flex-wrap">
             <Link
               href="/marketplace"
@@ -117,7 +89,7 @@ export default function HomePage() {
         {[
           { label: "Active Listings", value: "1,200+", icon: Tag },
           { label: "Districts", value: "28", icon: MapPin },
-          { label: "Daily Deals", value: "Fast", icon: TrendingUp },
+          { label: "Trusted Sellers", value: "500+", icon: Users },
         ].map(s => (
           <div
             key={s.label}
@@ -129,6 +101,21 @@ export default function HomePage() {
               <div className="text-xl font-black text-foreground">{s.value}</div>
               <div className="text-[10px] text-muted-foreground font-semibold mt-0.5">{s.label}</div>
             </div>
+          </div>
+        ))}
+      </div>
+
+      {/* TRUST BADGES */}
+      <div className="flex flex-wrap items-center justify-center gap-4 mb-10 py-4 px-6 bg-card border border-pink-500/15 rounded-xl">
+        {[
+          { icon: Shield, label: "Verified Sellers" },
+          { icon: Star, label: "Trusted Reviews" },
+          { icon: TrendingUp, label: "Fast Deals" },
+          { icon: MapPin, label: "Local First" },
+        ].map(b => (
+          <div key={b.label} className="flex items-center gap-2 text-xs text-muted-foreground font-semibold">
+            <b.icon size={13} className="text-pink-500" />
+            {b.label}
           </div>
         ))}
       </div>
@@ -270,8 +257,30 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* HOW IT WORKS */}
+      <div className="mt-14 mb-10">
+        <div className="text-center mb-7">
+          <h2 className="font-black text-2xl mb-1">How It Works</h2>
+          <p className="text-sm text-muted-foreground">Buying and selling made simple</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            { step: "1", title: "Browse & Search", desc: "Find items you love across all 28 districts of Malawi using our powerful search.", emoji: "🔍" },
+            { step: "2", title: "Contact Seller", desc: "Reach out directly via WhatsApp or phone. No middlemen, no commissions.", emoji: "💬" },
+            { step: "3", title: "Buy Safely", desc: "Meet in public, inspect items, pay via Airtel Money or TNM Mpamba.", emoji: "🛡️" },
+          ].map(s => (
+            <div key={s.step} className="bg-card border border-pink-500/15 rounded-xl p-5 text-center hover:border-pink-500/40 transition-all">
+              <div className="text-3xl mb-3">{s.emoji}</div>
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 text-white text-xs font-black flex items-center justify-center mx-auto mb-2">{s.step}</div>
+              <h3 className="font-bold text-sm mb-1">{s.title}</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* CTA */}
-      <div className="mt-14 relative overflow-hidden rounded-2xl">
+      <div className="mt-6 relative overflow-hidden rounded-2xl">
         <div className="absolute inset-0 bg-gradient-to-r from-[#1a1a1a] to-[#2a0a2a]" />
         <div className="absolute top-0 right-0 w-80 h-80 bg-pink-500/30 rounded-full blur-3xl opacity-20" />
         <div className="relative px-6 md:px-10 py-12 text-center">
