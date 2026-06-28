@@ -5,16 +5,16 @@ import { MOCK_ITEMS, CATEGORIES } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
 
 const CATEGORY_ICONS: Record<string, string> = {
-  "Electronics": "💻",
-  "Phones": "📱",
-  "Clothing": "👗",
-  "Food": "🥑",
-  "Furniture": "🛋️",
-  "Tools": "🔧",
-  "Vehicles": "🚗",
-  "Farm Produce": "🌽",
-  "Books": "📚",
-  "Other": "📦",
+  "Electronics": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=128&h=128&fit=crop",
+  "Phones": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=128&h=128&fit=crop",
+  "Clothing": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=128&h=128&fit=crop",
+  "Food": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=128&h=128&fit=crop",
+  "Furniture": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=128&h=128&fit=crop",
+  "Tools": "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=128&h=128&fit=crop",
+  "Vehicles": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=128&h=128&fit=crop",
+  "Farm Produce": "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=128&h=128&fit=crop",
+  "Books": "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=128&h=128&fit=crop",
+  "Other": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=128&h=128&fit=crop",
 };
 
 export default function HomePage() {
@@ -138,9 +138,7 @@ export default function HomePage() {
               href={`/marketplace?cat=${encodeURIComponent(cat)}`}
               className="group flex flex-col items-center gap-2 p-3 bg-card border border-pink-500/15 hover:border-pink-500/50 rounded-xl transition-all duration-200 hover:shadow-md hover:shadow-pink-500/10 cursor-pointer"
             >
-              <span className="text-2xl group-hover:scale-110 transition-transform duration-200">
-                {CATEGORY_ICONS[cat] || "📦"}
-              </span>
+              <img src={CATEGORY_ICONS[cat] || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=128&h=128&fit=crop"} alt={cat} className="w-12 h-12 rounded-xl object-cover shadow-md group-hover:scale-110 transition-transform duration-200" />
               <span className="text-[10px] font-bold text-center text-muted-foreground group-hover:text-pink-500 transition-colors leading-tight line-clamp-1">
                 {cat}
               </span>
@@ -153,7 +151,7 @@ export default function HomePage() {
       <div className="mb-10 slide-up">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="font-black text-xl mb-0.5">⭐ Featured Listings</h2>
+            <h2 className="font-black text-xl mb-0.5">Featured Listings</h2>
             <p className="text-xs text-muted-foreground font-medium">Premium items handpicked for you</p>
           </div>
           <Link href="/marketplace" className="text-xs text-pink-500 hover:text-pink-600 font-bold flex items-center gap-1">
@@ -175,7 +173,7 @@ export default function HomePage() {
                     onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
-                  <div className="absolute top-2 left-2 badge-featured text-[10px] px-2 py-0.5">⭐ Featured</div>
+                  <div className="absolute top-2 left-2 badge-featured text-[10px] px-2 py-0.5">Featured</div>
                   <button
                     onClick={e => toggleWishlist(item.id, e)}
                     className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-all"
@@ -204,7 +202,7 @@ export default function HomePage() {
       <div className="slide-up">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="font-black text-xl mb-0.5">🆕 Recently Listed</h2>
+            <h2 className="font-black text-xl mb-0.5">Recently Listed</h2>
             <p className="text-xs text-muted-foreground font-medium">Latest items added today</p>
           </div>
           <Link href="/marketplace" className="text-xs text-pink-500 hover:text-pink-600 font-bold flex items-center gap-1">
