@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getInstallPrompt, clearInstallPrompt } from "@/App";
 import { Link, useLocation } from "wouter";
 import { useTheme } from "@/hooks/useTheme";
 import {
@@ -6,10 +7,6 @@ import {
   Menu, X, Download, ShoppingBag,
 } from "lucide-react";
 
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-}
 
 const TOP_NAV = [
   { label: "Home",        href: "/",            icon: Home },
@@ -21,16 +18,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { theme, toggleTheme } = useTheme();
   const [loc] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showBanner, setShowBanner] = useState(false);
   const [pageVisible, setPageVisible] = useState(true);
 
   useEffect(() => {
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setInstallPrompt(e as BeforeInstallPromptEvent);
-      setShowBanner(true);
-    };
+    // Show banner if install prompt already captured at app start
+    if (getInstallPrompt()) setShowBanner(true);
+    // Also listen for late arrival
+    const handler = () => setShowBanner(true);
     window.addEventListener("beforeinstallprompt", handler);
     return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
@@ -43,10 +38,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [loc]);
 
   const handleInstall = async () => {
-    if (!installPrompt) return;
-    await installPrompt.prompt();
-    const { outcome } = await installPrompt.userChoice;
-    if (outcome === "accepted") setShowBanner(false);
+    const prompt = getInstallPrompt();
+    if (!prompt) return;
+    await prompt.prompt();
+    const { outcome } = await prompt.userChoice;
+    if (outcome === "accepted") { clearInstallPrompt(); setShowBanner(false); }
   };
 
   const isActive = (href: string) =>
@@ -171,7 +167,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <Plus size={16} strokeWidth={3} />
                 Sell an Item
               </Link>
-              {installPrompt && (
+              {showBanner && (
                 <button
                   onClick={() => { handleInstall(); setMenuOpen(false); }}
                   className="flex items-center gap-2.5 p-3 rounded-xl text-sm font-semibold text-pink-400 bg-pink-500/10 border border-pink-500/30 mt-1"
@@ -204,10 +200,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <NavItem href="/" label="Home" icon={Home} active={isActive("/")} />
 
           {/* Search */}
-          <NavItem href="/marketplace" label="Search" icon={Search} active={isActive("/marketplace")} />
+          <NavItem href="/marketplace" label="Search" icon={Search} active={isActive("/marketplace")} dataTour="nav-marketplace" />
 
           {/* CENTER SELL BUTTON — col 3 */}
-          <div className="flex flex-col items-center justify-end pb-1">
+          <div className="flex flex-col items-center justify-end pb-1" data-tour="nav-sell">
             <Link href="/post-item" className="flex flex-col items-center gap-0.5 group">
               <div className="relative -mt-7">
                 <div className="absolute inset-0 rounded-full bg-pink-500/30 blur-md scale-110" />
@@ -220,7 +216,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Settings */}
-          <NavItem href="/settings" label="Settings" icon={Settings} active={isActive("/settings")} />
+          <NavItem href="/settings" label="Settings" icon={Settings} active={isActive("/settings")} dataTour="nav-settings" />
         </div>
       </nav>
 
@@ -238,10 +234,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 /* ── Reusable nav item ── */
 function NavItem({
-  href, label, icon: Icon, active,
-}: { href: string; label: string; icon: React.ElementType; active: boolean }) {
+  href, label, icon: Icon, active, dataTour,
+}: { href: string; label: string; icon: React.ElementType; active: boolean; dataTour?: string }) {
   return (
-    <Link href={href} className="flex flex-col items-center justify-end gap-0.5 pb-2 group">
+    <Link href={href} className="flex flex-col items-center justify-end gap-0.5 pb-2 group" data-tour={dataTour}>
       <div className={`w-8 h-8 flex items-center justify-center rounded-xl transition-all duration-200 ${
         active ? "bg-pink-500/15" : "group-hover:bg-white/8"
       }`}>
