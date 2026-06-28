@@ -1,8 +1,24 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import Layout from "@/components/Layout";
 import SplashScreen from "@/components/SplashScreen";
 import OnboardingTour from "@/components/OnboardingTour";
+
+// Global store for the install prompt — captured as early as possible
+// so it's available when the user later navigates to Settings.
+export interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+}
+let _installPrompt: BeforeInstallPromptEvent | null = null;
+export function getInstallPrompt() { return _installPrompt; }
+export function clearInstallPrompt() { _installPrompt = null; }
+
+// Register the listener immediately (module load time) so we never miss it.
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  _installPrompt = e as BeforeInstallPromptEvent;
+});
 
 const HomePage          = lazy(() => import("@/pages/home"));
 const MarketplacePage   = lazy(() => import("@/pages/marketplace"));
@@ -35,6 +51,10 @@ function PageLoader() {
 
 export default function App() {
   const [splashDone, setSplashDone] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener("appinstalled", () => { _installPrompt = null; });
+  }, []);
 
   return (
     <>
