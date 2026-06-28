@@ -204,10 +204,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <NavItem href="/" label="Home" icon={Home} active={isActive("/")} />
 
           {/* Search */}
-          <NavItem href="/marketplace" label="Search" icon={Search} active={isActive("/marketplace")} />
+          <NavItem href="/marketplace" label="Search" icon={Search} active={isActive("/marketplace")} dataTour="nav-marketplace" />
 
           {/* CENTER SELL BUTTON — col 3 */}
-          <div className="flex flex-col items-center justify-end pb-1">
+          <div className="flex flex-col items-center justify-end pb-1" data-tour="nav-sell">
             <Link href="/post-item" className="flex flex-col items-center gap-0.5 group">
               <div className="relative -mt-7">
                 <div className="absolute inset-0 rounded-full bg-pink-500/30 blur-md scale-110" />
@@ -220,7 +220,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Settings */}
-          <NavItem href="/settings" label="Settings" icon={Settings} active={isActive("/settings")} />
+          <NavItem href="/settings" label="Settings" icon={Settings} active={isActive("/settings")} dataTour="nav-settings" />
         </div>
       </nav>
 
@@ -276,10 +276,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 /* ── Reusable nav item ── */
 function NavItem({
-  href, label, icon: Icon, active,
-}: { href: string; label: string; icon: React.ElementType; active: boolean }) {
+  href, label, icon: Icon, active, dataTour,
+}: { href: string; label: string; icon: React.ElementType; active: boolean; dataTour?: string }) {
   return (
-    <Link href={href} className="flex flex-col items-center justify-end gap-0.5 pb-2 group">
+    <Link href={href} className="flex flex-col items-center justify-end gap-0.5 pb-2 group" data-tour={dataTour}>
       <div className={`w-8 h-8 flex items-center justify-center rounded-xl transition-all duration-200 ${
         active ? "bg-pink-500/15" : "group-hover:bg-white/8"
       }`}>
