@@ -3,7 +3,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { Link } from "wouter";
 import {
   Sun, Moon, Bell, Shield, Info, ChevronRight, Store,
-  Globe, HelpCircle, Star, Download, Smartphone, Heart,
+  Globe, HelpCircle, Star, Download, Smartphone, Heart, CheckCircle,
 } from "lucide-react";
 
 interface BeforeInstallPromptEvent extends Event {
@@ -11,22 +11,43 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
+type InstallState = "prompt" | "installed" | "ios" | "unavailable";
+
 export default function SettingsPage() {
   const { theme, toggleTheme } = useTheme();
   const [notifications, setNotifications] = useState(true);
   const [currency] = useState("MWK");
   const [language] = useState("English");
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installState, setInstallState] = useState<InstallState>("unavailable");
   const [wishlistCount, setWishlistCount] = useState(0);
 
-  // Capture PWA install prompt
+  // Detect install state
   useEffect(() => {
+    // Already installed (standalone mode)
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      (window.navigator as any).standalone === true;
+    if (isStandalone) { setInstallState("installed"); return; }
+
+    // iOS — no beforeinstallprompt, show manual instructions
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    if (isIOS) { setInstallState("ios"); return; }
+
+    // Android/Chrome — wait for beforeinstallprompt
     const handler = (e: Event) => {
       e.preventDefault();
       setInstallPrompt(e as BeforeInstallPromptEvent);
+      setInstallState("prompt");
     };
     window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+
+    // Listen for successful install
+    window.addEventListener("appinstalled", () => setInstallState("installed"));
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handler);
+    };
   }, []);
 
   // Load wishlist count
@@ -41,7 +62,10 @@ export default function SettingsPage() {
     if (!installPrompt) return;
     await installPrompt.prompt();
     const { outcome } = await installPrompt.userChoice;
-    if (outcome === "accepted") setInstallPrompt(null);
+    if (outcome === "accepted") {
+      setInstallPrompt(null);
+      setInstallState("installed");
+    }
   };
 
   const settingSection = (title: string, children: React.ReactNode) => (
@@ -117,13 +141,58 @@ export default function SettingsPage() {
 
       {/* App */}
       {settingSection("App", <>
-        {settingRow(
-          <Smartphone size={15} />,
-          "Install App",
-          installPrompt ? "Tap to install on your home screen" : "Already installed or not available",
-          undefined,
-          installPrompt ? () => handleInstall() : undefined
-        )}
+        {/* Install App — full card */}
+        <div className="px-4 py-4">
+          {installState === "installed" && (
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-green-500/10 border border-green-500/25">
+              <CheckCircle size={18} className="text-green-500 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-green-600 dark:text-green-400">App Installed</p>
+                <p className="text-xs text-muted-foreground">You're using the installed version</p>
+              </div>
+            </div>
+          )}
+
+          {installState === "prompt" && (
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-pink-500/8 border border-pink-500/25">
+              <Smartphone size={18} className="text-pink-500 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold">Install App</p>
+                <p className="text-xs text-muted-foreground">Add to your home screen for the best experience</p>
+              </div>
+              <button
+                onClick={handleInstall}
+                className="shrink-0 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-md shadow-pink-500/30 active:scale-95"
+              >
+                Install
+              </button>
+            </div>
+          )}
+
+          {installState === "ios" && (
+            <div className="p-3 rounded-xl bg-pink-500/8 border border-pink-500/25 space-y-2">
+              <div className="flex items-center gap-2">
+                <Smartphone size={16} className="text-pink-500 shrink-0" />
+                <p className="text-sm font-bold">Install on iPhone / iPad</p>
+              </div>
+              <ol className="text-xs text-muted-foreground space-y-1 pl-1">
+                <li>1. Tap the <span className="font-bold text-foreground">Share</span> button at the bottom of Safari</li>
+                <li>2. Scroll down and tap <span className="font-bold text-foreground">Add to Home Screen</span></li>
+                <li>3. Tap <span className="font-bold text-foreground">Add</span> to confirm</li>
+              </ol>
+            </div>
+          )}
+
+          {installState === "unavailable" && (
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 border border-border">
+              <Download size={16} className="text-muted-foreground shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold">Install App</p>
+                <p className="text-xs text-muted-foreground">Open in Chrome or Safari to install</p>
+              </div>
+            </div>
+          )}
+        </div>
         {settingRow(
           <Heart size={15} />,
           "Saved Items",
