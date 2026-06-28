@@ -2,6 +2,7 @@ import { lazy, Suspense, useState } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import Layout from "@/components/Layout";
 import SplashScreen from "@/components/SplashScreen";
+import OnboardingTour from "@/components/OnboardingTour";
 
 const HomePage          = lazy(() => import("@/pages/home"));
 const MarketplacePage   = lazy(() => import("@/pages/marketplace"));
@@ -39,6 +40,7 @@ export default function App() {
     <>
       {!splashDone && <SplashScreen onDone={() => setSplashDone(true)} />}
       <div style={{ opacity: splashDone ? 1 : 0, transition: "opacity 0.4s ease" }}>
+        {splashDone && <OnboardingTour />}
         <WouterRouter base="">
           <Layout>
             <Suspense fallback={<PageLoader />}>
