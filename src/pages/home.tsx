@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 import { ShoppingBag, ArrowRight, Tag, MapPin, Zap, TrendingUp, Heart, ChevronRight, Star, Shield, Users } from "lucide-react";
 import { MOCK_ITEMS, CATEGORIES } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
@@ -18,7 +18,6 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 export default function HomePage() {
-  const [, navigate] = useLocation();
   const [wishlist, setWishlist] = useState<Set<string>>(() => {
     try { return new Set(JSON.parse(localStorage.getItem("wishlist") || "[]")); }
     catch { return new Set(); }

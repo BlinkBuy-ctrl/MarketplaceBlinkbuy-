@@ -24,21 +24,20 @@ export default function SettingsPage() {
       (window.navigator as any).standalone === true;
     if (isStandalone) { setInstallState("installed"); return; }
 
-    // iOS — no beforeinstallprompt support, show manual steps
+    // iOS — no beforeinstallprompt, show manual steps
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
     if (isIOS) { setInstallState("ios"); return; }
 
-    // Check if we already captured the prompt at app-load time
+    // Prompt already captured at app start
     if (getInstallPrompt()) { setInstallState("prompt"); return; }
 
-    // Still waiting — listen for it arriving late (rare but possible)
+    // Still waiting — listen for late arrival
     const onPrompt = () => setInstallState("prompt");
     window.addEventListener("beforeinstallprompt", onPrompt);
     window.addEventListener("appinstalled", () => setInstallState("installed"));
     return () => window.removeEventListener("beforeinstallprompt", onPrompt);
   }, []);
 
-  // Load wishlist count
   useEffect(() => {
     try {
       const saved = JSON.parse(localStorage.getItem("wishlist") || "[]");
@@ -90,7 +89,6 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 page-enter">
-      {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-black mb-1">Settings</h1>
         <p className="text-muted-foreground text-sm">Customize your marketplace experience</p>
@@ -130,7 +128,7 @@ export default function SettingsPage() {
 
       {/* App */}
       {settingSection("App", <>
-        {/* Install App card */}
+        {/* Install card */}
         <div className="px-4 py-4">
           {installState === "installed" && (
             <div className="flex items-center gap-3 p-3 rounded-xl bg-green-500/10 border border-green-500/25">
@@ -174,7 +172,7 @@ export default function SettingsPage() {
               <Download size={16} className="text-muted-foreground shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold">Install App</p>
-                <p className="text-xs text-muted-foreground">Visit this page in Chrome to install</p>
+                <p className="text-xs text-muted-foreground">Open in Chrome on Android to install</p>
               </div>
             </div>
           )}
@@ -201,7 +199,7 @@ export default function SettingsPage() {
         {settingRow(<Info size={15} />, "About", "Marketplace Malawi v1.0.0", undefined, () => {})}
       </>)}
 
-      {/* Safety Tips expanded */}
+      {/* Safety Tips */}
       <div className="mb-6 bg-amber-500/8 border border-amber-500/20 rounded-2xl p-4">
         <div className="flex items-center gap-2 mb-3">
           <Shield size={16} className="text-amber-500" />
@@ -223,7 +221,7 @@ export default function SettingsPage() {
         </ul>
       </div>
 
-      {/* Payment Info */}
+      {/* Payment Methods */}
       {settingSection("Payment Methods", <>
         <div className="px-4 py-4 space-y-3">
           <div className="flex items-center gap-3 p-3 rounded-xl bg-pink-500/5 border border-pink-500/15">
@@ -245,8 +243,8 @@ export default function SettingsPage() {
 
       {/* App Info */}
       <div className="text-center mt-8 mb-4">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-pink-700 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-pink-500/30">
-          <Store size={22} className="text-white" />
+        <div className="w-14 h-14 rounded-2xl overflow-hidden mx-auto mb-3 shadow-lg shadow-pink-500/30">
+          <img src="/icon.svg" alt="Marketplace Malawi" className="w-full h-full object-cover" />
         </div>
         <p className="font-black text-base">Marketplace Malawi</p>
         <p className="text-xs text-muted-foreground mt-1">Version 1.0.0 · Built for Malawi 🇲🇼</p>
