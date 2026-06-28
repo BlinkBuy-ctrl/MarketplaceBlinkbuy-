@@ -204,10 +204,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <NavItem href="/" label="Home" icon={Home} active={isActive("/")} />
 
           {/* Search */}
-          <NavItem href="/marketplace" label="Search" icon={Search} active={isActive("/marketplace")} dataTour="nav-marketplace" />
+          <NavItem href="/marketplace" label="Search" icon={Search} active={isActive("/marketplace")} />
 
           {/* CENTER SELL BUTTON — col 3 */}
-          <div className="flex flex-col items-center justify-end pb-1" data-tour="nav-sell">
+          <div className="flex flex-col items-center justify-end pb-1">
             <Link href="/post-item" className="flex flex-col items-center gap-0.5 group">
               <div className="relative -mt-7">
                 <div className="absolute inset-0 rounded-full bg-pink-500/30 blur-md scale-110" />
@@ -220,53 +220,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Settings */}
-          <NavItem href="/settings" label="Settings" icon={Settings} active={isActive("/settings")} dataTour="nav-settings" />
+          <NavItem href="/settings" label="Settings" icon={Settings} active={isActive("/settings")} />
         </div>
       </nav>
 
       {/* ── Desktop Footer ── */}
       <footer className="hidden lg:block bg-[#0f0f0f] text-white/70 border-t border-pink-500/20">
         <div className="max-w-7xl mx-auto px-4 py-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-pink-700 flex items-center justify-center">
-                  <Store size={16} className="text-white" />
-                </div>
-                <div>
-                  <span className="font-black text-white text-base block leading-none">Marketplace</span>
-                  <span className="text-xs text-pink-400 font-bold tracking-wider">MALAWI</span>
-                </div>
-              </div>
-              <p className="text-xs text-white/40 leading-relaxed">
-                Malawi's premium local marketplace. Buy and sell across all 28 districts with confidence.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-xs font-black text-white uppercase tracking-widest mb-4">Marketplace</h4>
-              <div className="space-y-2.5 text-xs">
-                <Link href="/marketplace" className="block text-white/50 hover:text-pink-400 transition-colors font-medium">Browse All</Link>
-                <Link href="/post-item" className="block text-white/50 hover:text-pink-400 transition-colors font-medium">Sell an Item</Link>
-              </div>
-            </div>
-            <div>
-              <h4 className="text-xs font-black text-white uppercase tracking-widest mb-4">Support</h4>
-              <div className="space-y-2.5 text-xs">
-                <Link href="/settings" className="block text-white/50 hover:text-pink-400 transition-colors font-medium">Help Center</Link>
-                <Link href="/settings" className="block text-white/50 hover:text-pink-400 transition-colors font-medium">Safety Tips</Link>
-              </div>
-            </div>
-            <div>
-              <h4 className="text-xs font-black text-white uppercase tracking-widest mb-4">Payment</h4>
-              <div className="text-xs text-white/50 space-y-2">
-                <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-pink-400 shrink-0" />Airtel Money</div>
-                <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-pink-400 shrink-0" />TNM Mpamba</div>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-pink-500/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <p className="text-xs text-white/30">Marketplace Malawi · Connecting buyers &amp; sellers</p>
-            <p className="text-xs text-white/20">© 2026 Marketplace Malawi. All rights reserved.</p>
+          <div className="py-2 text-center">
+            <p className="text-xs text-white/40">© Otechy 2026. All rights reserved.</p>
           </div>
         </div>
       </footer>
@@ -276,10 +238,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 /* ── Reusable nav item ── */
 function NavItem({
-  href, label, icon: Icon, active, dataTour,
-}: { href: string; label: string; icon: React.ElementType; active: boolean; dataTour?: string }) {
+  href, label, icon: Icon, active,
+}: { href: string; label: string; icon: React.ElementType; active: boolean }) {
   return (
-    <Link href={href} className="flex flex-col items-center justify-end gap-0.5 pb-2 group" data-tour={dataTour}>
+    <Link href={href} className="flex flex-col items-center justify-end gap-0.5 pb-2 group">
       <div className={`w-8 h-8 flex items-center justify-center rounded-xl transition-all duration-200 ${
         active ? "bg-pink-500/15" : "group-hover:bg-white/8"
       }`}>
