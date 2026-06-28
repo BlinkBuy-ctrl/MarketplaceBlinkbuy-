@@ -253,15 +253,14 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
           }} />
           <div style={{
             width: 90, height: 90, borderRadius: 22,
-            background: "linear-gradient(135deg, #ec4899 0%, #be185d 50%, #831843 100%)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: "0 0 32px rgba(236,72,153,0.65), 0 0 70px rgba(236,72,153,0.28), inset 0 1px 0 rgba(255,255,255,0.15)",
+            overflow: "hidden",
+            boxShadow: "0 0 32px rgba(236,72,153,0.65), 0 0 70px rgba(236,72,153,0.28)",
           }}>
-            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <path d="M16 10a4 4 0 0 1-8 0"/>
-            </svg>
+            <img
+              src="/icon.svg"
+              alt="Marketplace Malawi"
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            />
           </div>
         </div>
  
