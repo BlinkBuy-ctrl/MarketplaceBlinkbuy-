@@ -221,11 +221,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </nav>
 
       {/* ── Desktop Footer ── */}
-      <footer className="hidden lg:block bg-[#0f0f0f] text-white/70 border-t border-pink-500/20">
-        <div className="max-w-7xl mx-auto px-4 py-10">
-          <div className="py-2 text-center">
-            <p className="text-xs text-white/40">© Otechy 2026. All rights reserved.</p>
-          </div>
+      <footer className="hidden lg:block border-t border-pink-500/20">
+        <div
+          className="max-w-7xl mx-auto px-4 py-6 text-center"
+          style={{
+            background: "linear-gradient(90deg, #ec4899 50%, #3b82f6 50%)",
+          }}
+        >
+          <p className="text-sm font-bold text-blue-900">
+            © OTECHY. All Rights Reserved.
+          </p>
         </div>
       </footer>
     </div>
