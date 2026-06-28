@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { ShoppingBag, ArrowRight, Tag, MapPin, Zap, Sparkles, TrendingUp, Heart, ChevronRight, Star, Shield, Users } from "lucide-react";
+import { ShoppingBag, ArrowRight, Tag, MapPin, Zap, TrendingUp, Heart, ChevronRight, Star, Shield, Users } from "lucide-react";
 import { MOCK_ITEMS, CATEGORIES } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
 
@@ -48,11 +48,6 @@ export default function HomePage() {
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-pink-700/20 rounded-full blur-3xl opacity-30" />
 
         <div className="relative px-6 md:px-10 py-10 text-white">
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles size={14} className="text-pink-400" />
-            <span className="text-xs font-bold text-pink-400 uppercase tracking-widest">Premium Marketplace</span>
-          </div>
-
           <h1 className="text-3xl md:text-5xl font-black mb-3 leading-tight">
             Buy &amp; Sell Across<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-600">
