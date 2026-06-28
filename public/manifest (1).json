@@ -1,0 +1,51 @@
+{
+  "name": "Marketplace Malawi",
+  "short_name": "Marketplace",
+  "description": "Buy and sell locally across all 28 districts of Malawi",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f0f0f",
+  "theme_color": "#ec4899",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["shopping", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "Marketplace Malawi home screen"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse Marketplace",
+      "short_name": "Browse",
+      "url": "/marketplace",
+      "description": "Browse all listings"
+    },
+    {
+      "name": "Sell an Item",
+      "short_name": "Sell",
+      "url": "/post-item",
+      "description": "List something for sale"
+    }
+  ]
+}
