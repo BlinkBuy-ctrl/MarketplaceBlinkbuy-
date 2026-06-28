@@ -47,7 +47,7 @@ export default function HomePage() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl opacity-40" />
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-pink-700/20 rounded-full blur-3xl opacity-30" />
 
-        <div className="relative px-6 md:px-10 py-10 text-white">
+        <div className="relative px-6 md:px-10 py-10 text-white" data-tour="hero-search">
           <h1 className="text-3xl md:text-5xl font-black mb-3 leading-tight">
             Buy &amp; Sell Across<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-pink-600">
@@ -116,7 +116,7 @@ export default function HomePage() {
       </div>
 
       {/* CATEGORIES */}
-      <div className="mb-10">
+      <div className="mb-10" data-tour="categories">
         <div className="flex items-center justify-between mb-5">
           <div>
             <h2 className="font-black text-xl mb-0.5">Browse Categories</h2>
@@ -143,7 +143,7 @@ export default function HomePage() {
       </div>
 
       {/* FEATURED */}
-      <div className="mb-10 slide-up">
+      <div className="mb-10 slide-up" data-tour="featured">
         <div className="flex items-center justify-between mb-5">
           <div>
             <h2 className="font-black text-xl mb-0.5">Featured Listings</h2>
