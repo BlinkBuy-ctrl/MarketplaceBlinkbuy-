@@ -26,6 +26,7 @@ const HomePage          = lazy(() => import("@/pages/home"));
 const MarketplacePage   = lazy(() => import("@/pages/marketplace"));
 const MarketplaceDetail = lazy(() => import("@/pages/marketplace-detail"));
 const PostItemPage      = lazy(() => import("@/pages/post-item"));
+const MapPage            = lazy(() => import("@/pages/map"));
 const SettingsPage      = lazy(() => import("@/pages/settings"));
 const AdminPage         = lazy(() => import("@/pages/admin"));
 const NotFound          = lazy(() => import("@/pages/not-found"));
@@ -76,6 +77,7 @@ export default function App() {
                 <Route path="/marketplace"        component={MarketplacePage} />
                 <Route path="/marketplace/:id"    component={MarketplaceDetail} />
                 <Route path="/post-item"          component={PostItemPage} />
+                <Route path="/map"                component={MapPage} />
                 <Route path="/settings"           component={SettingsPage} />
                 <Route path="/admin"              component={AdminPage} />
                 <Route                            component={NotFound} />
