@@ -98,21 +98,21 @@ export default function SellerLiveStatus({
       {/* Seller Stats Grid */}
       <div className="grid grid-cols-3 gap-2">
         {/* Total Sales */}
-        <div className="bg-card border border-pink-500/20 rounded-lg p-3 text-center">
-          <TrendingUp size={16} className="text-pink-500 mx-auto mb-1.5" />
+        <div className="bg-card border border-red-500/20 rounded-lg p-3 text-center">
+          <TrendingUp size={16} className="text-red-500 mx-auto mb-1.5" />
           <div className="text-xl font-black text-foreground">{totalSales}+</div>
           <p className="text-[10px] text-muted-foreground font-semibold">Sales</p>
         </div>
 
         {/* Success Rate */}
-        <div className="bg-card border border-pink-500/20 rounded-lg p-3 text-center">
+        <div className="bg-card border border-red-500/20 rounded-lg p-3 text-center">
           <Award size={16} className="text-yellow-500 mx-auto mb-1.5" />
           <div className="text-xl font-black text-foreground">{successRate}%</div>
           <p className="text-[10px] text-muted-foreground font-semibold">Success</p>
         </div>
 
         {/* Member Since */}
-        <div className="bg-card border border-pink-500/20 rounded-lg p-3 text-center">
+        <div className="bg-card border border-red-500/20 rounded-lg p-3 text-center">
           <Circle size={16} className="text-blue-500 mx-auto mb-1.5" />
           <div className="text-sm font-black text-foreground">Member</div>
           <p className="text-[10px] text-muted-foreground font-semibold">Since {joinedDate.split(" ")[0]}</p>

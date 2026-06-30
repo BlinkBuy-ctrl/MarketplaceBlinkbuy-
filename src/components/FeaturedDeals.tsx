@@ -66,7 +66,7 @@ export default function FeaturedDeals({ deals = [] }: FeaturedDealsProps) {
           </div>
           <p className="text-xs text-muted-foreground font-medium">Limited time offers - Grab them before they're gone!</p>
         </div>
-        <Link href="/marketplace" className="text-xs text-pink-500 hover:text-pink-600 font-bold flex items-center gap-1">
+        <Link href="/marketplace" className="text-xs text-red-500 hover:text-red-600 font-bold flex items-center gap-1">
           View All →
         </Link>
       </div>
@@ -105,13 +105,13 @@ export default function FeaturedDeals({ deals = [] }: FeaturedDealsProps) {
 
               {/* Content */}
               <div className="p-3">
-                <h3 className="text-xs font-bold line-clamp-2 mb-2 group-hover:text-pink-500 transition-colors">
+                <h3 className="text-xs font-bold line-clamp-2 mb-2 group-hover:text-red-500 transition-colors">
                   {deal.title}
                 </h3>
 
                 {/* Price Section */}
                 <div className="mb-2">
-                  <div className="text-sm font-black text-pink-500">
+                  <div className="text-sm font-black text-red-500">
                     {(deal.dealPrice / 1000).toFixed(0)}k MK
                   </div>
                   <div className="text-[10px] text-muted-foreground line-through">
@@ -120,7 +120,7 @@ export default function FeaturedDeals({ deals = [] }: FeaturedDealsProps) {
                 </div>
 
                 <div className="flex items-center justify-between text-[10px]">
-                  <span className="px-2 py-0.5 rounded-full bg-pink-500/10 text-pink-600 font-semibold">
+                  <span className="px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 font-semibold">
                     {deal.category}
                   </span>
                   <span className="text-muted-foreground font-medium">{deal.location}</span>

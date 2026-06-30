@@ -82,7 +82,7 @@ export default function WhatsAppMessaging({
       {!showChat && (
         <button
           onClick={() => setShowChat(true)}
-          className="w-full flex items-center justify-center gap-2 bg-pink-500/10 hover:bg-pink-500/20 text-pink-600 dark:text-pink-400 px-4 py-2.5 rounded-lg font-bold text-sm transition-all duration-200 border border-pink-500/30"
+          className="w-full flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 px-4 py-2.5 rounded-lg font-bold text-sm transition-all duration-200 border border-red-500/30"
         >
           <MessageCircle size={14} />
           Type a Custom Message
@@ -91,7 +91,7 @@ export default function WhatsAppMessaging({
 
       {/* Chat Input */}
       {showChat && (
-        <div className="bg-card border border-pink-500/20 rounded-xl p-4 space-y-3">
+        <div className="bg-card border border-red-500/20 rounded-xl p-4 space-y-3">
           <div className="flex items-center justify-between mb-3">
             <h4 className="font-bold text-sm">Send Message via WhatsApp</h4>
             <button
@@ -107,7 +107,7 @@ export default function WhatsAppMessaging({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder={defaultMessage}
-              className="w-full px-3 py-2.5 rounded-lg border border-pink-500/20 bg-background text-sm outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/10 resize-none font-medium"
+              className="w-full px-3 py-2.5 rounded-lg border border-red-500/20 bg-background text-sm outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/10 resize-none font-medium"
               rows={3}
             />
 

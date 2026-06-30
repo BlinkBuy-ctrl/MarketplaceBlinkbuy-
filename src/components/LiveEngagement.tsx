@@ -71,14 +71,14 @@ export default function LiveEngagement({
         </div>
 
         {/* Saves/Wishlist */}
-        <div className="bg-gradient-to-br from-pink-500/10 to-pink-600/10 border border-pink-500/30 rounded-lg p-3">
+        <div className="bg-gradient-to-br from-red-500/10 to-red-600/10 border border-red-500/30 rounded-lg p-3">
           <div className="flex items-center gap-2 mb-1.5">
             <span className="text-lg">❤️</span>
-            <span className="text-[10px] font-bold text-pink-600 dark:text-pink-400 uppercase">Saved</span>
+            <span className="text-[10px] font-bold text-red-600 dark:text-red-400 uppercase">Saved</span>
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-xl font-black text-pink-600 dark:text-pink-400">{savesCount}</span>
-            <span className="text-[10px] text-pink-600/70 dark:text-pink-400/70">times</span>
+            <span className="text-xl font-black text-red-600 dark:text-red-400">{savesCount}</span>
+            <span className="text-[10px] text-red-600/70 dark:text-red-400/70">times</span>
           </div>
         </div>
       </div>
@@ -93,7 +93,7 @@ export default function LiveEngagement({
       </div>
 
       {/* Daily Views Trend */}
-      <div className="bg-card border border-pink-500/20 rounded-lg p-3">
+      <div className="bg-card border border-red-500/20 rounded-lg p-3">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <TrendingUp size={14} className="text-green-500" />
@@ -112,7 +112,7 @@ export default function LiveEngagement({
 
       {/* CTA - Buy Now Before Gone */}
       {(isHotDeal || stockLevel <= 3) && (
-        <div className="bg-gradient-to-r from-pink-500 to-pink-600 rounded-lg p-3.5 text-center">
+        <div className="bg-gradient-to-r from-red-500 to-red-600 rounded-lg p-3.5 text-center">
           <p className="text-white font-bold text-sm">⚡ Don't miss out - Limited availability!</p>
           <p className="text-white/80 text-xs mt-1">Items like this sell out fast</p>
         </div>

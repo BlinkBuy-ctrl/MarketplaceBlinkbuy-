@@ -56,7 +56,7 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
  
     const shootColors = [
       "#ffffff","#ffffff","#ffffff",
-      "#ffaadd","#ff77cc","#ec4899",  // pink shooting stars
+      "#ffb3b3","#ff7777","#E8203A",  // pink shooting stars
       "#ffddee",
     ];
  
@@ -94,10 +94,10 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
       /* ── nebulae — mostly pink / magenta ── */
       const nebulas: [number, number, number, number, string][] = [
         // PINK dominant clouds
-        [canvas.width * 0.20, canvas.height * 0.20, 260, 0.13, "236,72,153"],
+        [canvas.width * 0.20, canvas.height * 0.20, 260, 0.13, "232,32,58"],
         [canvas.width * 0.75, canvas.height * 0.15, 220, 0.11, "219,39,119"],
         [canvas.width * 0.50, canvas.height * 0.80, 300, 0.10, "244,114,182"],
-        [canvas.width * 0.88, canvas.height * 0.55, 240, 0.09, "236,72,153"],
+        [canvas.width * 0.88, canvas.height * 0.55, 240, 0.09, "232,32,58"],
         [canvas.width * 0.05, canvas.height * 0.60, 200, 0.09, "249,168,212"],
         // purple/violet accents
         [canvas.width * 0.60, canvas.height * 0.35, 180, 0.06, "124,58,237"],
@@ -243,18 +243,18 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
         <div style={{ position: "relative", marginBottom: 22 }}>
           <div style={{
             position: "absolute", inset: -16, borderRadius: "50%",
-            border: "1px solid rgba(236,72,153,0.4)",
+            border: "1px solid rgba(232,32,58,0.4)",
             animation: "ring-pulse 2.8s ease-in-out infinite",
           }} />
           <div style={{
             position: "absolute", inset: -28, borderRadius: "50%",
-            border: "1px solid rgba(236,72,153,0.18)",
+            border: "1px solid rgba(232,32,58,0.18)",
             animation: "ring-pulse 2.8s ease-in-out 0.5s infinite",
           }} />
           <div style={{
             width: 90, height: 90, borderRadius: 22,
             overflow: "hidden",
-            boxShadow: "0 0 32px rgba(236,72,153,0.65), 0 0 70px rgba(236,72,153,0.28)",
+            boxShadow: "0 0 32px rgba(232,32,58,0.65), 0 0 70px rgba(232,32,58,0.28)",
           }}>
             <img
               src="/icon.svg"
@@ -270,13 +270,13 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
             fontSize: 32, fontWeight: 900,
             color: "#ffffff", letterSpacing: "-0.5px", lineHeight: 1,
             fontFamily: "'Poppins', system-ui, sans-serif",
-            textShadow: "0 0 30px rgba(236,72,153,0.55)",
+            textShadow: "0 0 30px rgba(232,32,58,0.55)",
           }}>Market Hub</div>
           <div style={{
             fontSize: 12, fontWeight: 700,
-            color: "#f9a8d4", letterSpacing: "0.38em", marginTop: 5,
+            color: "#FF8A8A", letterSpacing: "0.38em", marginTop: 5,
             fontFamily: "'Poppins', system-ui, sans-serif",
-            textShadow: "0 0 12px rgba(236,72,153,0.7)",
+            textShadow: "0 0 12px rgba(232,32,58,0.7)",
           }}>MALAWI</div>
         </div>
  
@@ -299,14 +299,14 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
           <div style={{
             width: "100%", height: 9, borderRadius: 99,
             background: "rgba(180,40,100,0.15)",
-            border: "1px solid rgba(236,72,153,0.28)",
+            border: "1px solid rgba(232,32,58,0.28)",
             overflow: "hidden",
           }}>
             <div style={{
               height: "100%", width: `${progress}%`,
               borderRadius: 99,
-              background: "linear-gradient(90deg, #831843, #ec4899, #f472b6)",
-              boxShadow: "0 0 12px rgba(236,72,153,0.7)",
+              background: "linear-gradient(90deg, #7A0C1E, #E8203A, #F4475A)",
+              boxShadow: "0 0 12px rgba(232,32,58,0.7)",
               transition: "width 0.1s linear",
               position: "relative", overflow: "hidden",
             }}>
@@ -331,14 +331,14 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
  
         {/* ── Powered By Otechy — sparkle sweeps P→y ── */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 20 }}>
-          <div style={{ height: 1, width: 24, background: "linear-gradient(90deg, transparent, rgba(236,72,153,0.45))" }} />
+          <div style={{ height: 1, width: 24, background: "linear-gradient(90deg, transparent, rgba(232,32,58,0.45))" }} />
           <div style={{
             fontFamily: "'Poppins', system-ui, sans-serif",
             letterSpacing: "0.04em", whiteSpace: "nowrap",
           }}>
             <OtechySparkle progress={progress} />
           </div>
-          <div style={{ height: 1, width: 24, background: "linear-gradient(90deg, rgba(236,72,153,0.45), transparent)" }} />
+          <div style={{ height: 1, width: 24, background: "linear-gradient(90deg, rgba(232,32,58,0.45), transparent)" }} />
         </div>
       </div>
  
@@ -433,72 +433,72 @@ function WalkingTrolley({ x, frame }: { x: string; frame: number }) {
           <line x1={lKneeX} y1={lKneeY} x2={lFootX} y2={lFootY}
                 stroke="#be185d" strokeWidth="3" strokeLinecap="round"/>
           {/* Left shoe */}
-          <ellipse cx={lFootX + 2} cy={lFootY + 1} rx="4" ry="2.2" fill="#831843"/>
+          <ellipse cx={lFootX + 2} cy={lFootY + 1} rx="4" ry="2.2" fill="#7A0C1E"/>
  
           {/* ── Right leg (front) ── */}
           <line x1={rHipX} y1={rHipY} x2={rKneeX} y2={rKneeY}
-                stroke="#ec4899" strokeWidth="3.5" strokeLinecap="round"/>
+                stroke="#E8203A" strokeWidth="3.5" strokeLinecap="round"/>
           <line x1={rKneeX} y1={rKneeY} x2={rFootX} y2={rFootY}
-                stroke="#ec4899" strokeWidth="3" strokeLinecap="round"/>
+                stroke="#E8203A" strokeWidth="3" strokeLinecap="round"/>
           {/* Right shoe */}
           <ellipse cx={rFootX + 2} cy={rFootY + 1} rx="4" ry="2.2" fill="#be185d"/>
  
           {/* ── Torso ── */}
           <rect x={bx - 6} y={by - 1} width="12" height="14" rx="3"
-                fill="#ec4899"/>
+                fill="#E8203A"/>
           {/* shirt detail */}
           <line x1={bx} y1={by} x2={bx} y2={by + 13} stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
  
           {/* ── Left arm (swinging free) ── */}
           <line x1={lShoulderX} y1={lShoulderY} x2={lElbowX} y2={lElbowY}
-                stroke="#f9a8d4" strokeWidth="3" strokeLinecap="round"/>
+                stroke="#FF8A8A" strokeWidth="3" strokeLinecap="round"/>
  
           {/* ── Right arm (pushing trolley) ── */}
           <line x1={rShoulderX} y1={rShoulderY} x2={rElbowX} y2={rElbowY}
-                stroke="#f9a8d4" strokeWidth="3" strokeLinecap="round"/>
+                stroke="#FF8A8A" strokeWidth="3" strokeLinecap="round"/>
           <line x1={rElbowX} y1={rElbowY} x2={handleX} y2={handleY}
-                stroke="#f9a8d4" strokeWidth="2.5" strokeLinecap="round"/>
+                stroke="#FF8A8A" strokeWidth="2.5" strokeLinecap="round"/>
  
           {/* ── Head ── */}
           <circle cx={bx} cy={by - 8} r="7" fill="#fda4af"/>
           {/* hair */}
           <path d={`M ${bx-6} ${by-11} Q ${bx} ${by-19} ${bx+6} ${by-11}`}
-                fill="#831843" stroke="none"/>
+                fill="#7A0C1E" stroke="none"/>
           {/* face dots */}
-          <circle cx={bx - 2} cy={by - 9} r="1" fill="#831843"/>
-          <circle cx={bx + 2} cy={by - 9} r="1" fill="#831843"/>
+          <circle cx={bx - 2} cy={by - 9} r="1" fill="#7A0C1E"/>
+          <circle cx={bx + 2} cy={by - 9} r="1" fill="#7A0C1E"/>
           {/* smile */}
           <path d={`M ${bx-2.5} ${by-5.5} Q ${bx} ${by-3.5} ${bx+2.5} ${by-5.5}`}
-                stroke="#831843" strokeWidth="1" fill="none" strokeLinecap="round"/>
+                stroke="#7A0C1E" strokeWidth="1" fill="none" strokeLinecap="round"/>
  
           {/* ── Trolley ── */}
           {/* Handle bar */}
           <line x1={handleX} y1={handleY} x2={handleX} y2={handleY + 12}
-                stroke="#f472b6" strokeWidth="2.2" strokeLinecap="round"/>
+                stroke="#F4475A" strokeWidth="2.2" strokeLinecap="round"/>
           {/* Basket frame */}
           <rect x={handleX - 1} y={handleY + 8} width="18" height="11" rx="2"
-                fill="none" stroke="#f472b6" strokeWidth="1.8"/>
+                fill="none" stroke="#F4475A" strokeWidth="1.8"/>
           {/* Basket inner grid */}
           <line x1={handleX + 5} y1={handleY + 8} x2={handleX + 5} y2={handleY + 19}
-                stroke="#f472b6" strokeWidth="0.8" opacity="0.5"/>
+                stroke="#F4475A" strokeWidth="0.8" opacity="0.5"/>
           <line x1={handleX + 10} y1={handleY + 8} x2={handleX + 10} y2={handleY + 19}
-                stroke="#f472b6" strokeWidth="0.8" opacity="0.5"/>
+                stroke="#F4475A" strokeWidth="0.8" opacity="0.5"/>
           <line x1={handleX - 1} y1={handleY + 13} x2={handleX + 17} y2={handleY + 13}
-                stroke="#f472b6" strokeWidth="0.8" opacity="0.5"/>
+                stroke="#F4475A" strokeWidth="0.8" opacity="0.5"/>
           {/* Items in basket */}
-          <circle cx={handleX + 4}  cy={handleY + 12} r="2.5" fill="#ec4899" opacity="0.8"/>
+          <circle cx={handleX + 4}  cy={handleY + 12} r="2.5" fill="#E8203A" opacity="0.8"/>
           <rect   x={handleX + 8}  y={handleY + 10}  width="5" height="6" rx="1" fill="#be185d" opacity="0.7"/>
           {/* Bottom chassis */}
           <line x1={handleX - 2} y1={handleY + 19} x2={handleX + 18} y2={handleY + 19}
-                stroke="#f472b6" strokeWidth="2" strokeLinecap="round"/>
+                stroke="#F4475A" strokeWidth="2" strokeLinecap="round"/>
           {/* Wheels */}
-          <circle cx={handleX + 2}  cy={handleY + 22} r="3.5" fill="none" stroke="#f472b6" strokeWidth="1.8"/>
-          <circle cx={handleX + 14} cy={handleY + 22} r="3.5" fill="none" stroke="#f472b6" strokeWidth="1.8"/>
+          <circle cx={handleX + 2}  cy={handleY + 22} r="3.5" fill="none" stroke="#F4475A" strokeWidth="1.8"/>
+          <circle cx={handleX + 14} cy={handleY + 22} r="3.5" fill="none" stroke="#F4475A" strokeWidth="1.8"/>
           {/* Wheel spokes */}
-          <line x1={handleX + 2}  y1={handleY + 18.5} x2={handleX + 2}  y2={handleY + 25.5} stroke="#f472b6" strokeWidth="0.9"/>
-          <line x1={handleX - 1.5} y1={handleY + 22}  x2={handleX + 5.5} y2={handleY + 22}  stroke="#f472b6" strokeWidth="0.9"/>
-          <line x1={handleX + 14} y1={handleY + 18.5} x2={handleX + 14} y2={handleY + 25.5} stroke="#f472b6" strokeWidth="0.9"/>
-          <line x1={handleX + 10.5} y1={handleY + 22} x2={handleX + 17.5} y2={handleY + 22} stroke="#f472b6" strokeWidth="0.9"/>
+          <line x1={handleX + 2}  y1={handleY + 18.5} x2={handleX + 2}  y2={handleY + 25.5} stroke="#F4475A" strokeWidth="0.9"/>
+          <line x1={handleX - 1.5} y1={handleY + 22}  x2={handleX + 5.5} y2={handleY + 22}  stroke="#F4475A" strokeWidth="0.9"/>
+          <line x1={handleX + 14} y1={handleY + 18.5} x2={handleX + 14} y2={handleY + 25.5} stroke="#F4475A" strokeWidth="0.9"/>
+          <line x1={handleX + 10.5} y1={handleY + 22} x2={handleX + 17.5} y2={handleY + 22} stroke="#F4475A" strokeWidth="0.9"/>
         </g>
       </svg>
     </div>
@@ -540,7 +540,7 @@ function OtechySparkle({ progress }: { progress: number }) {
           color: active ? `rgba(255,210,230,${0.8 + intensity * 0.2})` : "rgba(255,182,218,0.5)",
           fontWeight: active ? 700 : 500,
           textShadow: active
-            ? `0 0 ${7 + intensity * 14}px #ec4899, 0 0 ${15 + intensity * 22}px rgba(236,72,153,0.5)`
+            ? `0 0 ${7 + intensity * 14}px #E8203A, 0 0 ${15 + intensity * 22}px rgba(232,32,58,0.5)`
             : "none",
           transition: "color 0.15s, text-shadow 0.15s",
         }}>
@@ -573,10 +573,10 @@ function SparkDot({ dx, dy, delay, intensity }: {
       position: "absolute",
       left: `calc(50% + ${dx}px)`, top: `calc(50% + ${dy}px)`,
       width: 3, height: 3, borderRadius: "50%",
-      background: "#f9a8d4",
+      background: "#FF8A8A",
       opacity: intensity * 0.9,
       transform: `scale(${0.4 + intensity * 0.75})`,
-      boxShadow: `0 0 ${3 + intensity * 5}px #ec4899`,
+      boxShadow: `0 0 ${3 + intensity * 5}px #E8203A`,
       animation: `sparkle-pulse 0.58s ease-in-out ${delay}s infinite`,
       pointerEvents: "none",
     }} />

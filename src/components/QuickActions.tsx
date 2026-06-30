@@ -55,9 +55,9 @@ export default function QuickActions({
         {/* Message Button */}
         <button
           onClick={onMessage}
-          className="flex flex-col items-center gap-2 p-3 rounded-xl border border-pink-500/20 hover:border-pink-500/50 hover:bg-pink-500/5 transition-all duration-200 group"
+          className="flex flex-col items-center gap-2 p-3 rounded-xl border border-red-500/20 hover:border-red-500/50 hover:bg-red-500/5 transition-all duration-200 group"
         >
-          <MessageCircle size={18} className="text-pink-500 group-hover:scale-110 transition-transform" />
+          <MessageCircle size={18} className="text-red-500 group-hover:scale-110 transition-transform" />
           <span className="text-[10px] font-bold text-foreground">Message</span>
         </button>
 
@@ -72,7 +72,7 @@ export default function QuickActions({
         >
           <Heart
             size={18}
-            className={saved ? "fill-pink-500 text-pink-500" : "text-foreground group-hover:text-pink-500"}
+            className={saved ? "fill-red-500 text-red-500" : "text-foreground group-hover:text-red-500"}
             strokeWidth={saved ? 0 : 2}
           />
           <span className="text-[10px] font-bold" style={{ color: saved ? "rgb(244, 63, 94)" : "currentColor" }}>
@@ -84,39 +84,39 @@ export default function QuickActions({
         <div className="relative">
           <button
             onClick={() => setShareMenuOpen(!shareMenuOpen)}
-            className="flex flex-col items-center gap-2 p-3 rounded-xl border border-pink-500/20 hover:border-pink-500/50 hover:bg-pink-500/5 transition-all duration-200 group w-full"
+            className="flex flex-col items-center gap-2 p-3 rounded-xl border border-red-500/20 hover:border-red-500/50 hover:bg-red-500/5 transition-all duration-200 group w-full"
           >
-            <Share2 size={18} className="text-pink-500 group-hover:scale-110 transition-transform" />
+            <Share2 size={18} className="text-red-500 group-hover:scale-110 transition-transform" />
             <span className="text-[10px] font-bold text-foreground">Share</span>
           </button>
 
           {/* Share Menu */}
           {shareMenuOpen && (
-            <div className="absolute top-full mt-2 right-0 bg-card border border-pink-500/20 rounded-xl shadow-xl z-50 min-w-[180px] overflow-hidden">
+            <div className="absolute top-full mt-2 right-0 bg-card border border-red-500/20 rounded-xl shadow-xl z-50 min-w-[180px] overflow-hidden">
               <button
                 onClick={() => handleShare("whatsapp")}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-pink-500/10 transition-colors text-sm font-semibold text-foreground border-b border-border"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-500/10 transition-colors text-sm font-semibold text-foreground border-b border-border"
               >
                 <span className="text-lg">💬</span>
                 WhatsApp
               </button>
               <button
                 onClick={() => handleShare("facebook")}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-pink-500/10 transition-colors text-sm font-semibold text-foreground border-b border-border"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-500/10 transition-colors text-sm font-semibold text-foreground border-b border-border"
               >
                 <span className="text-lg">👍</span>
                 Facebook
               </button>
               <button
                 onClick={() => handleShare("twitter")}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-pink-500/10 transition-colors text-sm font-semibold text-foreground border-b border-border"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-500/10 transition-colors text-sm font-semibold text-foreground border-b border-border"
               >
                 <span className="text-lg">𝕏</span>
                 Twitter
               </button>
               <button
                 onClick={() => handleShare("copy")}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-pink-500/10 transition-colors text-sm font-semibold text-foreground"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-500/10 transition-colors text-sm font-semibold text-foreground"
               >
                 {copied ? (
                   <>

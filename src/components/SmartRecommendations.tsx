@@ -88,7 +88,7 @@ export default function SmartRecommendations({
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <TrendingUp size={18} className="text-pink-500" />
+            <TrendingUp size={18} className="text-red-500" />
             <h3 className="font-black text-lg">{title}</h3>
           </div>
           <p className="text-xs text-muted-foreground">Based on your viewing history</p>
@@ -103,7 +103,7 @@ export default function SmartRecommendations({
           .map((item, i) => (
             <Link key={item.id} href={`/marketplace/${item.id}`}>
               <div
-                className="bg-card border border-pink-500/20 hover:border-pink-500/50 rounded-xl overflow-hidden card-hover cursor-pointer group relative"
+                className="bg-card border border-red-500/20 hover:border-red-500/50 rounded-xl overflow-hidden card-hover cursor-pointer group relative"
                 style={{ animationDelay: `${i * 30}ms` }}
               >
                 {/* Sale Badge */}
@@ -133,7 +133,7 @@ export default function SmartRecommendations({
                   >
                     <Heart
                       size={13}
-                      className={wishlist.has(item.id) ? "text-pink-400 fill-pink-400" : "text-white"}
+                      className={wishlist.has(item.id) ? "text-red-400 fill-red-400" : "text-white"}
                       strokeWidth={2}
                     />
                   </button>
@@ -141,13 +141,13 @@ export default function SmartRecommendations({
 
                 {/* Content */}
                 <div className="p-3">
-                  <h4 className="text-xs font-bold line-clamp-2 mb-1.5 group-hover:text-pink-500 transition-colors">
+                  <h4 className="text-xs font-bold line-clamp-2 mb-1.5 group-hover:text-red-500 transition-colors">
                     {item.title}
                   </h4>
 
                   {/* Price Section */}
                   <div className="mb-2">
-                    <div className="text-sm font-black text-pink-500">
+                    <div className="text-sm font-black text-red-500">
                       {(item.price / 1000).toFixed(0)}k MK
                     </div>
                     {item.discount && (
@@ -159,7 +159,7 @@ export default function SmartRecommendations({
 
                   {/* Meta Info */}
                   <div className="flex items-center justify-between text-[10px]">
-                    <span className="px-1.5 py-0.5 rounded-full bg-pink-500/10 text-pink-600 font-semibold">
+                    <span className="px-1.5 py-0.5 rounded-full bg-red-500/10 text-red-600 font-semibold">
                       {item.category}
                     </span>
                     {item.rating && (
@@ -183,8 +183,8 @@ export default function SmartRecommendations({
 
       {/* Browse More CTA */}
       <Link href="/marketplace" className="block">
-        <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20 hover:border-pink-500/40 rounded-lg p-4 text-center transition-all duration-200 cursor-pointer group">
-          <p className="font-bold text-foreground group-hover:text-pink-500 transition-colors">
+        <div className="bg-gradient-to-r from-red-500/10 to-purple-500/10 border border-red-500/20 hover:border-red-500/40 rounded-lg p-4 text-center transition-all duration-200 cursor-pointer group">
+          <p className="font-bold text-foreground group-hover:text-red-500 transition-colors">
             Browse all similar items →
           </p>
         </div>

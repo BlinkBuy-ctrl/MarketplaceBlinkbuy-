@@ -30,7 +30,7 @@ export default function TrustSafety({
       {variant === "full" && (
         <>
           {/* Seller Info Card */}
-          <div className="bg-card border border-pink-500/20 rounded-xl p-5">
+          <div className="bg-card border border-red-500/20 rounded-xl p-5">
             <div className="flex items-start justify-between mb-4">
               <div>
                 <div className="flex items-center gap-2 mb-1">
@@ -56,7 +56,7 @@ export default function TrustSafety({
                   <span className="text-xs text-muted-foreground">({sellerInfo.reviews} reviews)</span>
                 </div>
               </div>
-              <Award size={20} className="text-pink-500" />
+              <Award size={20} className="text-red-500" />
             </div>
 
             <div className="grid grid-cols-2 gap-3 text-xs">
@@ -72,26 +72,26 @@ export default function TrustSafety({
           </div>
 
           {/* Buyer Protection */}
-          <div className="bg-card border border-pink-500/20 rounded-xl p-5">
+          <div className="bg-card border border-red-500/20 rounded-xl p-5">
             <div className="flex items-start gap-3">
-              <Shield size={20} className="text-pink-500 shrink-0 mt-0.5" />
+              <Shield size={20} className="text-red-500 shrink-0 mt-0.5" />
               <div>
                 <h4 className="font-bold text-sm mb-2">Buyer Protection Guaranteed</h4>
                 <ul className="text-xs text-muted-foreground space-y-1.5">
                   <li className="flex items-start gap-2">
-                    <span className="text-pink-500 font-bold mt-0.5">✓</span>
+                    <span className="text-red-500 font-bold mt-0.5">✓</span>
                     <span>Secure payment escrow system</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-pink-500 font-bold mt-0.5">✓</span>
+                    <span className="text-red-500 font-bold mt-0.5">✓</span>
                     <span>Dispute resolution within 7 days</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-pink-500 font-bold mt-0.5">✓</span>
+                    <span className="text-red-500 font-bold mt-0.5">✓</span>
                     <span>Full refund if item not received</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-pink-500 font-bold mt-0.5">✓</span>
+                    <span className="text-red-500 font-bold mt-0.5">✓</span>
                     <span>Verified seller identity</span>
                   </li>
                 </ul>
@@ -103,7 +103,7 @@ export default function TrustSafety({
 
       {variant === "compact" && (
         <div className="flex flex-wrap gap-3">
-          <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-pink-500/10 border border-pink-500/20">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-red-500/10 border border-red-500/20">
             <Star size={14} className="fill-yellow-400 text-yellow-400" />
             <span className="text-xs font-bold">{sellerInfo.rating} ({sellerInfo.reviews})</span>
           </div>

@@ -53,7 +53,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* ── PWA Install Banner ── */}
       {showBanner && (
-        <div className="sticky top-0 z-[60] bg-gradient-to-r from-pink-600 to-pink-500 text-white px-4 py-2.5 flex items-center justify-between gap-3 shadow-lg">
+        <div className="sticky top-0 z-[60] bg-gradient-to-r from-red-600 to-red-500 text-white px-4 py-2.5 flex items-center justify-between gap-3 shadow-lg">
           <div className="flex items-center gap-2 min-w-0">
             <Download size={14} strokeWidth={2.5} className="shrink-0" />
             <span className="text-xs font-bold truncate">Install Market Hub Malawi on your phone</span>
@@ -61,7 +61,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={handleInstall}
-              className="bg-white text-pink-600 px-3 py-1 rounded-lg text-xs font-black hover:bg-pink-50 transition-all"
+              className="bg-white text-red-600 px-3 py-1 rounded-lg text-xs font-black hover:bg-red-50 transition-all"
             >
               Install
             </button>
@@ -73,18 +73,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       )}
 
       {/* ── Header ── */}
-      <header className="sticky top-0 z-50 bg-[#0f0f0f] text-white shadow-2xl border-b border-pink-500/20">
+      <header className="sticky top-0 z-50 bg-[#0f0f0f] text-white shadow-2xl border-b border-red-500/20">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-              <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg group-hover:shadow-pink-500/50 transition-all duration-300">
+              <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg group-hover:shadow-red-500/50 transition-all duration-300">
                 <img src="/icon.svg" alt="Market Hub Malawi" className="w-full h-full object-cover" />
               </div>
               <div className="flex flex-col leading-none">
-                <span className="font-black text-lg tracking-tight text-white group-hover:text-pink-400 transition-colors">Market Hub</span>
-                <span className="text-[10px] font-bold text-pink-400 tracking-wider">MALAWI</span>
+                <span className="font-black text-lg tracking-tight text-white group-hover:text-red-400 transition-colors">Market Hub</span>
+                <span className="text-[10px] font-bold text-red-400 tracking-wider">MALAWI</span>
               </div>
             </Link>
 
@@ -98,7 +98,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     href={n.href}
                     className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${
                       active
-                        ? "text-pink-400 bg-pink-500/15 border border-pink-500/30"
+                        ? "text-red-400 bg-red-500/15 border border-red-500/30"
                         : "text-white/70 hover:text-white hover:bg-white/8"
                     }`}
                   >
@@ -113,7 +113,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
-                className="p-2.5 text-white/60 hover:text-pink-400 hover:bg-pink-500/10 rounded-lg transition-all duration-200 border border-white/10 hover:border-pink-500/30"
+                className="p-2.5 text-white/60 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all duration-200 border border-white/10 hover:border-red-500/30"
                 aria-label="Toggle theme"
               >
                 {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
@@ -122,7 +122,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               {/* Sell Button — desktop */}
               <Link
                 href="/post-item"
-                className="hidden sm:flex items-center gap-1.5 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold transition-all duration-200 shadow-lg hover:shadow-pink-500/50"
+                className="hidden sm:flex items-center gap-1.5 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold transition-all duration-200 shadow-lg hover:shadow-red-500/50"
               >
                 <Plus size={14} strokeWidth={3} />
                 Sell Item
@@ -131,7 +131,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               {/* Mobile hamburger */}
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="lg:hidden p-2.5 text-white/60 hover:text-pink-400 hover:bg-pink-500/10 rounded-lg transition-all border border-white/10 hover:border-pink-500/30"
+                className="lg:hidden p-2.5 text-white/60 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all border border-white/10 hover:border-red-500/30"
               >
                 {menuOpen ? <X size={18} strokeWidth={2.5} /> : <Menu size={18} strokeWidth={2} />}
               </button>
@@ -141,7 +141,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Mobile Drawer */}
         {menuOpen && (
-          <div className="lg:hidden border-t border-pink-500/20 bg-black/95 backdrop-blur-sm">
+          <div className="lg:hidden border-t border-red-500/20 bg-black/95 backdrop-blur-sm">
             <div className="px-4 py-4 flex flex-col gap-1">
               {TOP_NAV.map(n => {
                 const active = isActive(n.href);
@@ -151,7 +151,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     href={n.href}
                     className={`flex items-center gap-2.5 p-3 rounded-xl text-sm font-semibold transition-all ${
                       active
-                        ? "text-pink-400 bg-pink-500/20 border border-pink-500/40"
+                        ? "text-red-400 bg-red-500/20 border border-red-500/40"
                         : "text-white/70 hover:text-white hover:bg-white/10"
                     }`}
                   >
@@ -162,7 +162,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               })}
               <Link
                 href="/post-item"
-                className="flex items-center gap-2.5 p-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-pink-500 to-pink-600 mt-2 shadow-lg"
+                className="flex items-center gap-2.5 p-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-red-500 to-red-600 mt-2 shadow-lg"
               >
                 <Plus size={16} strokeWidth={3} />
                 Sell an Item
@@ -170,7 +170,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               {showBanner && (
                 <button
                   onClick={() => { handleInstall(); setMenuOpen(false); }}
-                  className="flex items-center gap-2.5 p-3 rounded-xl text-sm font-semibold text-pink-400 bg-pink-500/10 border border-pink-500/30 mt-1"
+                  className="flex items-center gap-2.5 p-3 rounded-xl text-sm font-semibold text-red-400 bg-red-500/10 border border-red-500/30 mt-1"
                 >
                   <Download size={16} />
                   Install App
@@ -190,7 +190,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </main>
 
       {/* ── MOBILE BOTTOM NAV ── */}
-      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-[#0f0f0f] border-t border-pink-500/20"
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-[#0f0f0f] border-t border-red-500/20"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         {/* 4-column grid: Home | Search | [SELL] | Settings — no empty 5th slot */}
@@ -206,12 +206,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex flex-col items-center justify-end pb-1" data-tour="nav-sell">
             <Link href="/post-item" className="flex flex-col items-center gap-0.5 group">
               <div className="relative -mt-7">
-                <div className="absolute inset-0 rounded-full bg-pink-500/30 blur-md scale-110" />
-                <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-pink-400 to-pink-700 flex items-center justify-center shadow-xl shadow-pink-500/50 border-4 border-[#0f0f0f] group-hover:scale-105 transition-transform duration-200">
+                <div className="absolute inset-0 rounded-full bg-red-500/30 blur-md scale-110" />
+                <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-red-400 to-red-700 flex items-center justify-center shadow-xl shadow-red-500/50 border-4 border-[#0f0f0f] group-hover:scale-105 transition-transform duration-200">
                   <Plus size={26} strokeWidth={2.5} className="text-white" />
                 </div>
               </div>
-              <span className="text-[9px] font-bold text-pink-400 mt-1 leading-none">Sell</span>
+              <span className="text-[9px] font-bold text-red-400 mt-1 leading-none">Sell</span>
             </Link>
           </div>
 
@@ -221,14 +221,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </nav>
 
       {/* ── Desktop Footer ── */}
-      <footer className="hidden lg:block border-t border-pink-500/20">
+      <footer className="hidden lg:block border-t border-red-500/20">
         <div className="bg-[#0f0f0f] py-3 text-center">
-          <Link href="/admin" className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-white/30 hover:text-pink-400 transition-colors">
+          <Link href="/admin" className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-white/30 hover:text-red-400 transition-colors">
             <ShieldCheck size={12} /> Admin Dashboard
           </Link>
         </div>
         <div
-          className="max-w-7xl mx-auto px-4 py-6 text-center bg-gradient-to-r from-pink-600 to-pink-500"
+          className="max-w-7xl mx-auto px-4 py-6 text-center bg-gradient-to-r from-red-600 to-red-500"
         >
           <p className="text-sm font-bold text-white">
             © {new Date().getFullYear()} Market Hub Malawi. All Rights Reserved.
@@ -246,20 +246,20 @@ function NavItem({
   return (
     <Link href={href} className="flex flex-col items-center justify-end gap-0.5 pb-2 group" data-tour={dataTour}>
       <div className={`w-8 h-8 flex items-center justify-center rounded-xl transition-all duration-200 ${
-        active ? "bg-pink-500/15" : "group-hover:bg-white/8"
+        active ? "bg-red-500/15" : "group-hover:bg-white/8"
       }`}>
         <Icon
           size={19}
           strokeWidth={active ? 2.5 : 1.8}
-          className={active ? "text-pink-400" : "text-white/40 group-hover:text-white/70"}
+          className={active ? "text-red-400" : "text-white/40 group-hover:text-white/70"}
         />
       </div>
       <span className={`text-[9px] font-bold leading-none transition-colors ${
-        active ? "text-pink-400" : "text-white/35 group-hover:text-white/60"
+        active ? "text-red-400" : "text-white/35 group-hover:text-white/60"
       }`}>
         {label}
       </span>
-      {active && <span className="w-1 h-1 rounded-full bg-pink-500 mt-0.5" />}
+      {active && <span className="w-1 h-1 rounded-full bg-red-500 mt-0.5" />}
     </Link>
   );
 }

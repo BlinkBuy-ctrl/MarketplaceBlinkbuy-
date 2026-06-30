@@ -120,12 +120,12 @@ export default function SmartSearchBar({ value, onChange, onSubmit, placeholder,
 
   const iconFor = (t: Suggestion["type"]) => {
     switch (t) {
-      case "product": return <ShoppingBag size={13} className="text-pink-400" />;
-      case "category": return <Tag size={13} className="text-pink-400" />;
-      case "brand": return <Tag size={13} className="text-pink-400" />;
-      case "location": return <MapPin size={13} className="text-pink-400" />;
+      case "product": return <ShoppingBag size={13} className="text-red-400" />;
+      case "category": return <Tag size={13} className="text-red-400" />;
+      case "brand": return <Tag size={13} className="text-red-400" />;
+      case "location": return <MapPin size={13} className="text-red-400" />;
       case "recent": return <Clock size={13} className="text-muted-foreground" />;
-      case "trending": return <TrendingUp size={13} className="text-pink-400" />;
+      case "trending": return <TrendingUp size={13} className="text-red-400" />;
     }
   };
 
@@ -143,7 +143,7 @@ export default function SmartSearchBar({ value, onChange, onSubmit, placeholder,
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder || "Search products, brands, categories, districts..."}
-          className={`w-full ${padding} rounded-xl border border-pink-500/20 bg-card text-foreground outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/10 font-medium transition-all`}
+          className={`w-full ${padding} rounded-xl border border-red-500/20 bg-card text-foreground outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/10 font-medium transition-all`}
         />
         {value && (
           <button
@@ -156,11 +156,11 @@ export default function SmartSearchBar({ value, onChange, onSubmit, placeholder,
       </div>
 
       {open && (suggestions.length > 0 || didYouMean) && (
-        <div className="absolute z-50 mt-2 w-full bg-card border border-pink-500/20 rounded-xl shadow-2xl shadow-black/30 overflow-hidden max-h-[60vh] overflow-y-auto">
+        <div className="absolute z-50 mt-2 w-full bg-card border border-red-500/20 rounded-xl shadow-2xl shadow-black/30 overflow-hidden max-h-[60vh] overflow-y-auto">
           {didYouMean && (
             <button
               onClick={() => commit(didYouMean)}
-              className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-pink-400 font-semibold hover:bg-pink-500/10 border-b border-pink-500/10"
+              className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-red-400 font-semibold hover:bg-red-500/10 border-b border-red-500/10"
             >
               Did you mean <span className="underline">{didYouMean}</span>?
             </button>
@@ -176,7 +176,7 @@ export default function SmartSearchBar({ value, onChange, onSubmit, placeholder,
               onMouseEnter={() => setActiveIdx(idx)}
               onClick={() => commit(s.label)}
               className={`w-full flex items-center justify-between gap-2 px-4 py-2.5 text-left text-sm transition-colors ${
-                activeIdx === idx ? "bg-pink-500/10" : "hover:bg-pink-500/5"
+                activeIdx === idx ? "bg-red-500/10" : "hover:bg-red-500/5"
               }`}
             >
               <span className="flex items-center gap-2.5 min-w-0">
@@ -186,8 +186,8 @@ export default function SmartSearchBar({ value, onChange, onSubmit, placeholder,
               </span>
               <span className="flex items-center gap-1 shrink-0">
                 {s.type === "recent" && <span className="text-[9px] text-muted-foreground">Recent</span>}
-                {s.type === "trending" && <span className="text-[9px] text-pink-400">Trending</span>}
-                {activeIdx === idx && <CornerDownLeft size={11} className="text-pink-400" />}
+                {s.type === "trending" && <span className="text-[9px] text-red-400">Trending</span>}
+                {activeIdx === idx && <CornerDownLeft size={11} className="text-red-400" />}
               </span>
             </button>
           ))}

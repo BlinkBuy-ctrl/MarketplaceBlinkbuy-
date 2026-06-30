@@ -39,8 +39,8 @@ export default function PaymentMethods({ onSelect, selectedMethod }: PaymentMeth
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center">
-          <span className="text-pink-600 font-black text-sm">💳</span>
+        <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center">
+          <span className="text-red-600 font-black text-sm">💳</span>
         </div>
         <h3 className="text-lg font-bold text-foreground">Payment Methods</h3>
       </div>
@@ -55,8 +55,8 @@ export default function PaymentMethods({ onSelect, selectedMethod }: PaymentMeth
               key={method.id}
               className={`relative overflow-hidden rounded-xl border-2 cursor-pointer transition-all duration-300 ${
                 isSelected
-                  ? "border-pink-500 bg-pink-500/10"
-                  : "border-pink-500/20 hover:border-pink-500/40 bg-card"
+                  ? "border-red-500 bg-red-500/10"
+                  : "border-red-500/20 hover:border-red-500/40 bg-card"
               }`}
               onClick={() => {
                 onSelect?.(method.id);
@@ -69,20 +69,20 @@ export default function PaymentMethods({ onSelect, selectedMethod }: PaymentMeth
                     <Icon size={18} className="text-white" strokeWidth={2} />
                   </div>
                   {isSelected && (
-                    <CheckCircle size={18} className="text-pink-500 fill-pink-500" />
+                    <CheckCircle size={18} className="text-red-500 fill-red-500" />
                   )}
                 </div>
                 <h4 className="font-bold text-sm mb-0.5">{method.name}</h4>
                 <p className="text-xs text-muted-foreground">{method.description}</p>
 
                 {expanded === method.id && (
-                  <div className="mt-3 pt-3 border-t border-pink-500/20">
+                  <div className="mt-3 pt-3 border-t border-red-500/20">
                     <p className="text-xs font-semibold text-muted-foreground mb-2">Available Providers:</p>
                     <div className="flex flex-wrap gap-1.5">
                       {method.providers.map((provider) => (
                         <span
                           key={provider}
-                          className="text-[10px] px-2 py-1 rounded-full bg-pink-500/10 text-pink-600 border border-pink-500/20 font-medium"
+                          className="text-[10px] px-2 py-1 rounded-full bg-red-500/10 text-red-600 border border-red-500/20 font-medium"
                         >
                           {provider}
                         </span>

@@ -191,7 +191,7 @@ export default function OnboardingTour() {
             width: rect.width + PADDING * 2,
             height: rect.height + PADDING * 2,
             boxShadow: "0 0 0 9999px rgba(0,0,0,0.55)",
-            border: "2px solid rgba(236,72,153,0.7)",
+            border: "2px solid rgba(206,17,38,0.7)",
             background: "transparent",
           }}
         />
@@ -203,7 +203,7 @@ export default function OnboardingTour() {
         <div className="fixed inset-0 z-[9002] flex items-center justify-center px-4 pointer-events-none">
           <div
             ref={tooltipRef}
-            className="pointer-events-auto w-full max-w-sm bg-[#1a0a1a] border border-pink-500/40 rounded-2xl shadow-2xl shadow-pink-500/20 p-6 animate-[fadeInScale_0.3s_ease]"
+            className="pointer-events-auto w-full max-w-sm bg-[#1a0a1a] border border-red-500/40 rounded-2xl shadow-2xl shadow-red-500/20 p-6 animate-[fadeInScale_0.3s_ease]"
           >
             <TourCard
               current={current}
@@ -220,7 +220,7 @@ export default function OnboardingTour() {
       ) : (
         <div
           ref={tooltipRef}
-          className={`fixed z-[9002] w-72 bg-[#1a0a1a] border border-pink-500/40 rounded-2xl shadow-2xl shadow-pink-500/20 p-4 pointer-events-auto before:absolute before:content-[''] before:w-0 before:h-0 ${arrowClass[pos] || ""} animate-[fadeInScale_0.25s_ease]`}
+          className={`fixed z-[9002] w-72 bg-[#1a0a1a] border border-red-500/40 rounded-2xl shadow-2xl shadow-red-500/20 p-4 pointer-events-auto before:absolute before:content-[''] before:w-0 before:h-0 ${arrowClass[pos] || ""} animate-[fadeInScale_0.25s_ease]`}
           style={{ top: tooltipPos.top, left: tooltipPos.left }}
         >
           <TourCard
@@ -251,8 +251,8 @@ function TourCard({
       {/* Header */}
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="flex items-center gap-1.5">
-          <Sparkles size={13} className="text-pink-400 shrink-0" />
-          <span className="text-[10px] font-black text-pink-400 uppercase tracking-widest">
+          <Sparkles size={13} className="text-red-400 shrink-0" />
+          <span className="text-[10px] font-black text-red-400 uppercase tracking-widest">
             Step {step + 1} of {total}
           </span>
         </div>
@@ -268,7 +268,7 @@ function TourCard({
       {/* Progress bar */}
       <div className="w-full h-1 bg-white/10 rounded-full mb-4 overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-pink-500 to-pink-400 rounded-full transition-all duration-500"
+          className="h-full bg-gradient-to-r from-red-500 to-red-400 rounded-full transition-all duration-500"
           style={{ width: `${((step + 1) / total) * 100}%` }}
         />
       </div>
@@ -285,9 +285,9 @@ function TourCard({
               key={i}
               className={`rounded-full transition-all duration-300 ${
                 i === step
-                  ? "w-4 h-2 bg-pink-500"
+                  ? "w-4 h-2 bg-red-500"
                   : i < step
-                  ? "w-2 h-2 bg-pink-500/50"
+                  ? "w-2 h-2 bg-red-500/50"
                   : "w-2 h-2 bg-white/20"
               }`}
             />
@@ -306,7 +306,7 @@ function TourCard({
           )}
           <button
             onClick={onNext}
-            className="flex items-center gap-1.5 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg transition-all shadow-lg shadow-pink-500/30"
+            className="flex items-center gap-1.5 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg transition-all shadow-lg shadow-red-500/30"
           >
             {isLast ? "Got it! 🎉" : <>Next <ChevronRight size={13} /></>}
           </button>
