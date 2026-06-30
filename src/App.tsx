@@ -1,7 +1,26 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import Layout from "@/components/Layout";
 import SplashScreen from "@/components/SplashScreen";
+
+// ── PWA install-prompt capture ──
+// The browser fires "beforeinstallprompt" once, early, and only if we call
+// preventDefault() do we get to keep the event around to trigger later from
+// our own "Install" button (Layout banner / Settings page).
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+}
+
+let deferredInstallPrompt: BeforeInstallPromptEvent | null = null;
+
+export function getInstallPrompt(): BeforeInstallPromptEvent | null {
+  return deferredInstallPrompt;
+}
+
+export function clearInstallPrompt(): void {
+  deferredInstallPrompt = null;
+}
 
 const HomePage          = lazy(() => import("@/pages/home"));
 const MarketplacePage   = lazy(() => import("@/pages/marketplace"));
@@ -34,6 +53,15 @@ function PageLoader() {
 
 export default function App() {
   const [splashDone, setSplashDone] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      deferredInstallPrompt = e as BeforeInstallPromptEvent;
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
 
   return (
     <>
