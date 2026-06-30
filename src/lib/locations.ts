@@ -114,3 +114,30 @@ export function formatDuration(minutes: number): string {
   const m = minutes % 60;
   return m === 0 ? `${h}h` : `${h}h ${m}m`;
 }
+
+/**
+ * Resolve the best-known GPS coordinate for a seller:
+ * 1. Explicit lat/lng captured when they posted the listing (most accurate).
+ * 2. Otherwise fall back to the district centroid parsed from their location text.
+ */
+export function resolveSellerCoord(seller: {
+  lat?: number | null;
+  lng?: number | null;
+  location?: string;
+}, fallbackLocationText?: string): DistrictCoord {
+  if (typeof seller.lat === "number" && typeof seller.lng === "number") {
+    return { lat: seller.lat, lng: seller.lng };
+  }
+  return getCoords(seller.location || fallbackLocationText || "Lilongwe");
+}
+
+/** Build a "Navigate with Google Maps" deep link between two coordinates. */
+export function googleMapsDirectionsUrl(
+  origin: DistrictCoord,
+  destination: DistrictCoord
+): string {
+  const o = `${origin.lat},${origin.lng}`;
+  const d = `${destination.lat},${destination.lng}`;
+  return `https://www.google.com/maps/dir/?api=1&origin=${o}&destination=${d}&travelmode=driving`;
+}
+
