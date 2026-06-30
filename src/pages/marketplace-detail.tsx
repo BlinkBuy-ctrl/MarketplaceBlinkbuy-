@@ -3,6 +3,7 @@ import { Link, useParams } from "wouter";
 import { MapPin, Phone, ArrowLeft, Tag, CheckCircle, Share2, Heart, MessageCircle, Star, Shield } from "lucide-react";
 import { MOCK_ITEMS } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
+import SellerBuyerMap from "@/components/SellerBuyerMap";
 
 export default function MarketplaceDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -216,6 +217,16 @@ export default function MarketplaceDetailPage() {
                 </p>
               </div>
             </div>
+          )}
+
+          {/* Route to seller */}
+          {seller && (
+            <SellerBuyerMap
+              mode="route"
+              sellerLocation={seller.location || item.location}
+              title="Route to this seller"
+              compact
+            />
           )}
 
           {/* Share */}
