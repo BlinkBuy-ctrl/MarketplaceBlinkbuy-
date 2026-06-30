@@ -13,6 +13,8 @@
   --color-card-border: hsl(var(--card-border));
   --color-primary: hsl(var(--primary));
   --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
   --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted-foreground));
   --color-destructive: hsl(var(--destructive));
@@ -23,49 +25,53 @@
 }
 
 :root {
-  /* Light Mode - Black & Pink Premium */
+  /* Light Mode - Black & Red (Malawi) Premium */
   --background: 0 0% 98%;
   --foreground: 0 0% 8%;
   --border: 0 0% 90%;
   --card: 0 0% 100%;
   --card-foreground: 0 0% 8%;
-  --card-border: 320 100% 45%;
-  --primary: 320 100% 50%;
+  --card-border: 353 85% 40%;
+  --primary: 353 85% 44%;
   --primary-foreground: 0 0% 100%;
+  --secondary: 150 100% 24%;
+  --secondary-foreground: 0 0% 100%;
   --muted: 0 0% 94%;
   --muted-foreground: 0 0% 45%;
   --destructive: 0 84% 55%;
   --destructive-foreground: 0 0% 100%;
   --input: 0 0% 92%;
-  --ring: 320 100% 50%;
+  --ring: 353 85% 44%;
   --app-font-sans: 'Inter', 'Segoe UI', system-ui, sans-serif;
   --radius: 0.75rem;
   --shadow-sm: 0px 4px 12px 0px rgba(0, 0, 0, 0.06);
   --shadow-md: 0px 8px 24px 0px rgba(0, 0, 0, 0.10);
   --shadow-lg: 0px 16px 40px 0px rgba(0, 0, 0, 0.14);
-  --shadow-pink: 0px 12px 32px 0px rgba(230, 25, 150, 0.20);
+  --shadow-pink: 0px 12px 32px 0px rgba(206, 17, 38, 0.20);
 }
 
 .dark {
-  /* Dark Mode - Black & Pink Premium */
+  /* Dark Mode - Black & Red (Malawi) Premium */
   --background: 0 0% 8%;
   --foreground: 0 0% 95%;
-  --border: 320 100% 25%;
+  --border: 353 70% 25%;
   --card: 0 0% 12%;
   --card-foreground: 0 0% 95%;
-  --card-border: 320 100% 35%;
-  --primary: 320 100% 55%;
+  --card-border: 353 80% 35%;
+  --primary: 353 85% 50%;
   --primary-foreground: 0 0% 100%;
+  --secondary: 150 90% 30%;
+  --secondary-foreground: 0 0% 100%;
   --muted: 0 0% 18%;
   --muted-foreground: 0 0% 55%;
   --destructive: 0 70% 50%;
   --destructive-foreground: 0 0% 100%;
   --input: 0 0% 16%;
-  --ring: 320 100% 55%;
+  --ring: 353 85% 50%;
   --shadow-sm: 0px 4px 12px 0px rgba(0, 0, 0, 0.40);
   --shadow-md: 0px 8px 24px 0px rgba(0, 0, 0, 0.50);
   --shadow-lg: 0px 16px 40px 0px rgba(0, 0, 0, 0.60);
-  --shadow-pink: 0px 12px 32px 0px rgba(230, 25, 150, 0.30);
+  --shadow-pink: 0px 12px 32px 0px rgba(206, 17, 38, 0.30);
 }
 
 @layer base {
@@ -244,7 +250,7 @@ p, span, div, h1, h2, h3, h4, h5, h6, li {
 
 .badge-new {
   @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold;
-  background: linear-gradient(135deg, hsl(320 100% 50%), hsl(320 100% 45%));
+  background: linear-gradient(135deg, hsl(150 100% 26%), hsl(150 100% 20%));
   color: white;
   box-shadow: var(--shadow-sm);
 }

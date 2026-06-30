@@ -35,7 +35,7 @@ function PageLoader() {
     <div className="flex items-center justify-center min-h-[60vh]">
       <div className="flex flex-col items-center gap-3">
         {/* App icon replaces the old "M" letter */}
-        <div className="w-12 h-12 rounded-xl animate-pulse shadow-lg shadow-pink-500/30 overflow-hidden">
+        <div className="w-12 h-12 rounded-xl animate-pulse shadow-lg shadow-red-500/30 overflow-hidden">
           <img
             src="/icon.svg"
             alt="Market Hub Malawi"
@@ -43,9 +43,9 @@ function PageLoader() {
           />
         </div>
         <div className="flex gap-1.5">
-          <span className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-          <span className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-          <span className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+          <span className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+          <span className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+          <span className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
         </div>
       </div>
     </div>
