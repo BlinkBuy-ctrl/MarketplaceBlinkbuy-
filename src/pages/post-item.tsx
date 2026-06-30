@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useLocation } from "wouter";
-import { Package, X, ImagePlus, CheckCircle, AlertCircle, Upload, Phone, User } from "lucide-react";
+import { Package, X, ImagePlus, CheckCircle, AlertCircle, Upload, Phone, User, LocateFixed, MapPin } from "lucide-react";
 import { CATEGORIES, CITIES, CONDITIONS } from "@/lib/mockData";
 
 export default function PostItemPage() {
@@ -8,6 +8,7 @@ export default function PostItemPage() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [locating, setLocating] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
@@ -20,9 +21,26 @@ export default function PostItemPage() {
     sellerName: "",
     sellerPhone: "",
     negotiable: false,
+    // GPS pin captured from the device, stored alongside the listing so
+    // buyers can see exactly how far away the seller is (see SellerBuyerMap).
+    lat: null as number | null,
+    lng: null as number | null,
   });
 
-  const set = (k: string, v: string | boolean) => setForm(p => ({ ...p, [k]: v }));
+  const set = (k: string, v: string | boolean | number | null) => setForm(p => ({ ...p, [k]: v }));
+
+  const handleUseMyLocation = () => {
+    if (!navigator.geolocation) return;
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        setForm(p => ({ ...p, lat: pos.coords.latitude, lng: pos.coords.longitude }));
+        setLocating(false);
+      },
+      () => setLocating(false),
+      { timeout: 8000 }
+    );
+  };
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -67,7 +85,7 @@ export default function PostItemPage() {
           <button
             onClick={() => {
               setSubmitted(false);
-              setForm({ title: "", description: "", category: CATEGORIES[1], price: "", location: "Lilongwe", condition: "Good", sellerName: "", sellerPhone: "", negotiable: false });
+              setForm({ title: "", description: "", category: CATEGORIES[1], price: "", location: "Lilongwe", condition: "Good", sellerName: "", sellerPhone: "", negotiable: false, lat: null, lng: null });
               setPreviews([]);
             }}
             className="px-5 py-3 rounded-xl border-2 border-red-500/30 text-red-600 font-bold hover:border-red-500 hover:bg-red-500/5 transition-all duration-200"
@@ -222,6 +240,20 @@ export default function PostItemPage() {
                 className="w-full px-4 py-3 rounded-xl border border-red-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-medium cursor-pointer">
                 {CITIES.map(c => <option key={c}>{c}</option>)}
               </select>
+              <button
+                type="button"
+                onClick={handleUseMyLocation}
+                disabled={locating}
+                className="mt-1.5 flex items-center gap-1 text-[11px] font-bold text-red-500 hover:text-red-600 disabled:opacity-50"
+              >
+                <LocateFixed size={11} className={locating ? "animate-pulse" : ""} />
+                {form.lat ? "GPS pin captured ✓" : locating ? "Detecting…" : "Use my exact GPS location"}
+              </button>
+              {form.lat && form.lng && (
+                <p className="text-[10px] text-muted-foreground mt-0.5 flex items-center gap-1">
+                  <MapPin size={9} /> {form.lat.toFixed(4)}, {form.lng.toFixed(4)} — buyers will see exactly how far you are
+                </p>
+              )}
             </div>
           </div>
 

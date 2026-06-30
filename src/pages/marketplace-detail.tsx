@@ -224,6 +224,8 @@ export default function MarketplaceDetailPage() {
             <SellerBuyerMap
               mode="route"
               sellerLocation={seller.location || item.location}
+              sellerLat={seller.lat}
+              sellerLng={seller.lng}
               title="Route to this seller"
               compact
             />
