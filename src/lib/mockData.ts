@@ -15,6 +15,9 @@ export interface MarketplaceItem {
     location: string;
     phone: string;
     whatsapp: string;
+    /** GPS coordinates captured when the seller posted the listing (optional — falls back to district centroid if absent). */
+    lat?: number;
+    lng?: number;
   };
 }
 
@@ -55,7 +58,7 @@ export const MOCK_ITEMS: MarketplaceItem[] = [
     images: ["https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=600"],
     is_featured: true,
     created_at: "2026-06-25T10:00:00Z",
-    seller: { id: "s1", name: "Chisomo Banda", location: "Area 25, Lilongwe", phone: "+265991234567", whatsapp: "+265991234567" },
+    seller: { id: "s1", name: "Chisomo Banda", location: "Area 25, Lilongwe", phone: "+265991234567", whatsapp: "+265991234567", lat: -13.974, lng: 33.789 },
   },
   {
     id: "2",
@@ -68,7 +71,7 @@ export const MOCK_ITEMS: MarketplaceItem[] = [
     images: ["https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600"],
     is_featured: true,
     created_at: "2026-06-24T08:30:00Z",
-    seller: { id: "s2", name: "Grace Phiri", location: "Nyambadwe, Blantyre", phone: "+265888112233", whatsapp: "+265888112233" },
+    seller: { id: "s2", name: "Grace Phiri", location: "Nyambadwe, Blantyre", phone: "+265888112233", whatsapp: "+265888112233", lat: -15.795, lng: 35.02 },
   },
   {
     id: "3",
@@ -81,7 +84,7 @@ export const MOCK_ITEMS: MarketplaceItem[] = [
     images: ["https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600"],
     is_featured: true,
     created_at: "2026-06-23T14:00:00Z",
-    seller: { id: "s3", name: "Daniel Mwale", location: "Mzuzu City Centre", phone: "+265995566778", whatsapp: "+265995566778" },
+    seller: { id: "s3", name: "Daniel Mwale", location: "Mzuzu City Centre", phone: "+265995566778", whatsapp: "+265995566778", lat: -11.451, lng: 34.021 },
   },
   {
     id: "4",
@@ -94,7 +97,7 @@ export const MOCK_ITEMS: MarketplaceItem[] = [
     images: ["https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600"],
     is_featured: true,
     created_at: "2026-06-22T09:15:00Z",
-    seller: { id: "s4", name: "Esther Kumwenda", location: "Zomba Town", phone: "+265992233445", whatsapp: "+265992233445" },
+    seller: { id: "s4", name: "Esther Kumwenda", location: "Zomba Town", phone: "+265992233445", whatsapp: "+265992233445", lat: -15.386, lng: 35.33 },
   },
   {
     id: "5",
@@ -107,7 +110,7 @@ export const MOCK_ITEMS: MarketplaceItem[] = [
     images: ["https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600"],
     is_featured: false,
     created_at: "2026-06-21T16:45:00Z",
-    seller: { id: "s5", name: "Patrick Nyirenda", location: "Area 47, Lilongwe", phone: "+265998877665", whatsapp: "+265998877665" },
+    seller: { id: "s5", name: "Patrick Nyirenda", location: "Area 47, Lilongwe", phone: "+265998877665", whatsapp: "+265998877665", lat: -13.95, lng: 33.76 },
   },
   {
     id: "6",
@@ -120,7 +123,7 @@ export const MOCK_ITEMS: MarketplaceItem[] = [
     images: ["https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=600"],
     is_featured: false,
     created_at: "2026-06-20T07:00:00Z",
-    seller: { id: "s6", name: "Joseph Tembo", location: "Kasungu Boma", phone: "+265993344556", whatsapp: "+265993344556" },
+    seller: { id: "s6", name: "Joseph Tembo", location: "Kasungu Boma", phone: "+265993344556", whatsapp: "+265993344556", lat: -13.03, lng: 33.48 },
   },
   {
     id: "7",
@@ -133,7 +136,7 @@ export const MOCK_ITEMS: MarketplaceItem[] = [
     images: ["https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=600"],
     is_featured: false,
     created_at: "2026-06-19T11:30:00Z",
-    seller: { id: "s7", name: "Mphatso Chirwa", location: "Limbe, Blantyre", phone: "+265996655443", whatsapp: "+265996655443" },
+    seller: { id: "s7", name: "Mphatso Chirwa", location: "Limbe, Blantyre", phone: "+265996655443", whatsapp: "+265996655443", lat: -15.8, lng: 35.05 },
   },
   {
     id: "8",
@@ -146,6 +149,6 @@ export const MOCK_ITEMS: MarketplaceItem[] = [
     images: ["https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=600"],
     is_featured: false,
     created_at: "2026-06-18T13:20:00Z",
-    seller: { id: "s8", name: "Linda Gondwe", location: "Mangochi Town", phone: "+265994433221", whatsapp: "+265994433221" },
+    seller: { id: "s8", name: "Linda Gondwe", location: "Mangochi Town", phone: "+265994433221", whatsapp: "+265994433221", lat: -14.48, lng: 35.26 },
   },
 ];
