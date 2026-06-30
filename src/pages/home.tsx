@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { ShoppingBag, ArrowRight, Tag, MapPin, Zap, TrendingUp, Heart, ChevronRight, Star, Shield, Users } from "lucide-react";
 import { MOCK_ITEMS, CATEGORIES } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
+import SmartSearchBar from "@/components/SmartSearchBar";
 
 const CATEGORY_ICONS: Record<string, string> = {
   "Electronics": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=128&h=128&fit=crop",
@@ -18,6 +19,7 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 export default function HomePage() {
+  const [heroSearch, setHeroSearch] = useState("");
   const [wishlist, setWishlist] = useState<Set<string>>(() => {
     try { return new Set(JSON.parse(localStorage.getItem("wishlist") || "[]")); }
     catch { return new Set(); }
@@ -57,6 +59,10 @@ export default function HomePage() {
           <p className="text-white/65 text-sm md:text-base mb-7 max-w-xl font-light">
             Discover thousands of items from trusted local sellers. Fast, safe, and exclusively for Malawi.
           </p>
+
+          <div className="mb-5 max-w-xl">
+            <SmartSearchBar value={heroSearch} onChange={setHeroSearch} size="lg" placeholder="Search 'iPhone', 'Sofa', 'Lilongwe'..." />
+          </div>
 
           <div className="flex gap-3 flex-wrap">
             <Link

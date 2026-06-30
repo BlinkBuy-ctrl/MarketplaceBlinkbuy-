@@ -196,7 +196,7 @@ export default function SettingsPage() {
         {settingRow(<HelpCircle size={15} />, "Help Center", "Get help and FAQs", undefined, () => {})}
         {settingRow(<Shield size={15} />, "Safety Tips", "Stay safe when buying & selling", undefined, () => {})}
         {settingRow(<Star size={15} />, "Rate the App", "Share your feedback", undefined, () => {})}
-        {settingRow(<Info size={15} />, "About", "Marketplace Malawi v1.0.0", undefined, () => {})}
+        {settingRow(<Info size={15} />, "About", "Market Hub Malawi v1.0.0", undefined, () => {})}
       </>)}
 
       {/* Safety Tips */}
@@ -244,9 +244,9 @@ export default function SettingsPage() {
       {/* App Info */}
       <div className="text-center mt-8 mb-4">
         <div className="w-14 h-14 rounded-2xl overflow-hidden mx-auto mb-3 shadow-lg shadow-pink-500/30">
-          <img src="/icon.svg" alt="Marketplace Malawi" className="w-full h-full object-cover" />
+          <img src="/icon.svg" alt="Market Hub Malawi" className="w-full h-full object-cover" />
         </div>
-        <p className="font-black text-base">Marketplace Malawi</p>
+        <p className="font-black text-base">Market Hub Malawi</p>
         <p className="text-xs text-muted-foreground mt-1">Version 1.0.0 · Built for Malawi 🇲🇼</p>
         <p className="text-xs text-muted-foreground mt-1">Connecting buyers &amp; sellers across all 28 districts</p>
       </div>

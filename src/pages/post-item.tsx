@@ -60,7 +60,7 @@ export default function PostItemPage() {
 
         <h2 className="text-3xl font-black mb-2 text-foreground">🎉 Listing Posted!</h2>
         <p className="text-muted-foreground text-base mb-8 max-w-sm mx-auto leading-relaxed">
-          Your item has been listed on Marketplace Malawi. Buyers will reach you on <strong>{form.sellerPhone}</strong>!
+          Your item has been listed on Market Hub Malawi. Buyers will reach you on <strong>{form.sellerPhone}</strong>!
         </p>
 
         <div className="grid grid-cols-2 gap-3">
@@ -95,7 +95,7 @@ export default function PostItemPage() {
         <div>
           <h1 className="text-3xl font-black text-foreground mb-1">Sell an Item</h1>
           <p className="text-muted-foreground text-sm font-medium">
-            List your items on Marketplace Malawi and reach buyers across Malawi
+            List your items on Market Hub Malawi and reach buyers across Malawi
           </p>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Link, useSearch } from "wouter";
 import { Search, ShoppingBag, MapPin, X, Heart, SlidersHorizontal, ArrowUpDown } from "lucide-react";
+import SmartSearchBar from "@/components/SmartSearchBar";
 import { MOCK_ITEMS, CATEGORIES, CITIES } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
 
@@ -117,20 +118,13 @@ export default function MarketplacePage() {
 
       {/* Single Search Bar + Controls Row */}
       <div className="flex gap-2 mb-4">
-        <div className="flex-1 relative">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-          <input
-            type="text"
+        <div className="flex-1">
+          <SmartSearchBar
             value={search}
-            onChange={e => handleSearch(e.target.value)}
-            placeholder="Search items, brands, models..."
-            className="w-full pl-10 pr-4 py-3 rounded-xl border border-pink-500/20 bg-card text-sm outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/10 font-medium transition-all"
+            onChange={handleSearch}
+            onSubmit={handleSearch}
+            placeholder="Search items, brands, models, districts..."
           />
-          {search && (
-            <button onClick={() => handleSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-              <X size={14} />
-            </button>
-          )}
         </div>
 
         {/* Sort */}

@@ -57,7 +57,7 @@ export default function MarketplaceDetailPage() {
     }
   };
 
-  const whatsappMsg = encodeURIComponent(`Hi, I saw your listing on Marketplace Malawi: "${item.title}" for ${formatMK(item.price)}. Is it still available?`);
+  const whatsappMsg = encodeURIComponent(`Hi, I saw your listing on Market Hub Malawi: "${item.title}" for ${formatMK(item.price)}. Is it still available?`);
   const whatsappUrl = `https://wa.me/265${seller.whatsapp.replace(/^0/, "")}?text=${whatsappMsg}`;
 
   const related = MOCK_ITEMS.filter(i => i.id !== item.id && i.category === item.category).slice(0, 4);
