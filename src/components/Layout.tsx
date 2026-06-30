@@ -3,8 +3,8 @@ import { getInstallPrompt, clearInstallPrompt } from "@/App";
 import { Link, useLocation } from "wouter";
 import { useTheme } from "@/hooks/useTheme";
 import {
-  Home, Search, Settings, Sun, Moon, Plus, Store,
-  Menu, X, Download, ShoppingBag,
+  Home, Search, Settings, Sun, Moon, Plus,
+  Menu, X, Download, ShoppingBag, ShieldCheck,
 } from "lucide-react";
 
 
@@ -56,7 +56,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="sticky top-0 z-[60] bg-gradient-to-r from-pink-600 to-pink-500 text-white px-4 py-2.5 flex items-center justify-between gap-3 shadow-lg">
           <div className="flex items-center gap-2 min-w-0">
             <Download size={14} strokeWidth={2.5} className="shrink-0" />
-            <span className="text-xs font-bold truncate">Install Marketplace Malawi on your phone</span>
+            <span className="text-xs font-bold truncate">Install Market Hub Malawi on your phone</span>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <button
@@ -79,11 +79,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-pink-700 flex items-center justify-center shadow-lg group-hover:shadow-pink-500/50 transition-all duration-300">
-                <Store size={18} className="text-white" strokeWidth={2.5} />
+              <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg group-hover:shadow-pink-500/50 transition-all duration-300">
+                <img src="/icon.svg" alt="Market Hub Malawi" className="w-full h-full object-cover" />
               </div>
               <div className="flex flex-col leading-none">
-                <span className="font-black text-lg tracking-tight text-white group-hover:text-pink-400 transition-colors">Marketplace</span>
+                <span className="font-black text-lg tracking-tight text-white group-hover:text-pink-400 transition-colors">Market Hub</span>
                 <span className="text-[10px] font-bold text-pink-400 tracking-wider">MALAWI</span>
               </div>
             </Link>
@@ -222,14 +222,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* ── Desktop Footer ── */}
       <footer className="hidden lg:block border-t border-pink-500/20">
+        <div className="bg-[#0f0f0f] py-3 text-center">
+          <Link href="/admin" className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-white/30 hover:text-pink-400 transition-colors">
+            <ShieldCheck size={12} /> Admin Dashboard
+          </Link>
+        </div>
         <div
-          className="max-w-7xl mx-auto px-4 py-6 text-center"
-          style={{
-            background: "linear-gradient(90deg, #ec4899 50%, #3b82f6 50%)",
-          }}
+          className="max-w-7xl mx-auto px-4 py-6 text-center bg-gradient-to-r from-pink-600 to-pink-500"
         >
-          <p className="text-sm font-bold text-blue-900">
-            © OTECHY. All Rights Reserved.
+          <p className="text-sm font-bold text-white">
+            © {new Date().getFullYear()} Market Hub Malawi. All Rights Reserved.
           </p>
         </div>
       </footer>

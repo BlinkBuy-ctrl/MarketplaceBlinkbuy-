@@ -14,7 +14,7 @@ interface Step {
 const STEPS: Step[] = [
   {
     target: "",
-    title: "Welcome to Marketplace Malawi! 🇲🇼",
+    title: "Welcome to Market Hub Malawi! 🇲🇼",
     description: "Your one-stop local marketplace to buy and sell across all 28 districts. Let us show you around — it only takes a minute!",
     position: "center",
   },
