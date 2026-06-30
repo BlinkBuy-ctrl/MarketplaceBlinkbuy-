@@ -66,7 +66,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="sticky top-0 z-[60] bg-gradient-to-r from-red-600 to-red-500 text-white px-4 py-2.5 flex items-center justify-between gap-3 shadow-lg">
           <div className="flex items-center gap-2 min-w-0">
             <Download size={14} strokeWidth={2.5} className="shrink-0" />
-            <span className="text-xs font-bold truncate">Install Market Hub Malawi on your phone</span>
+            <span className="text-xs font-bold truncate">Install Otechy MW on your phone</span>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <button
@@ -90,11 +90,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {/* Logo */}
             <Link href="/" onClick={handleLogoClick} className="flex items-center gap-2.5 shrink-0 group" title="Tip: triple-click to open the Admin Dashboard">
               <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg group-hover:shadow-red-500/50 transition-all duration-300">
-                <img src="/icon.svg" alt="Market Hub Malawi" className="w-full h-full object-cover" />
+                <img src="/icon.svg" alt="Otechy MW" className="w-full h-full object-cover" />
               </div>
               <div className="flex flex-col leading-none">
-                <span className="font-black text-lg tracking-tight text-white group-hover:text-red-400 transition-colors">Market Hub</span>
-                <span className="text-[10px] font-bold text-red-400 tracking-wider">MALAWI</span>
+                <span className="font-black text-lg tracking-tight text-white group-hover:text-red-400 transition-colors">Otechy</span>
+                <span className="text-[10px] font-bold text-red-400 tracking-wider">MW</span>
               </div>
             </Link>
 
@@ -236,7 +236,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           className="max-w-7xl mx-auto px-4 py-6 text-center bg-gradient-to-r from-red-600 to-red-500"
         >
           <p className="text-sm font-bold text-white">
-            © {new Date().getFullYear()} Market Hub Malawi. All Rights Reserved.
+            © {new Date().getFullYear()} Otechy MW. All Rights Reserved.
           </p>
         </div>
       </footer>
