@@ -6,15 +6,28 @@ import { MOCK_ITEMS } from "@/lib/mockData";
 import { resolveDistrict } from "@/lib/locations";
 
 export default function MapPage() {
-  // Aggregate every listing's seller into a count-per-district list,
-  // so producers show up on the map even if several of them share a town.
+  // Aggregate every listing's seller into a count-per-district list (with an
+  // averaged GPS pin when sellers provided precise coordinates), so producers
+  // show up on the map even if several of them share a town.
   const sellerDistricts = useMemo(() => {
-    const counts = new Map<string, number>();
+    const groups = new Map<string, { count: number; latSum: number; lngSum: number; gpsCount: number }>();
     for (const item of MOCK_ITEMS) {
       const district = resolveDistrict(item.seller?.location || item.location);
-      counts.set(district, (counts.get(district) ?? 0) + 1);
+      const g = groups.get(district) ?? { count: 0, latSum: 0, lngSum: 0, gpsCount: 0 };
+      g.count += 1;
+      if (typeof item.seller?.lat === "number" && typeof item.seller?.lng === "number") {
+        g.latSum += item.seller.lat;
+        g.lngSum += item.seller.lng;
+        g.gpsCount += 1;
+      }
+      groups.set(district, g);
     }
-    return Array.from(counts.entries()).map(([district, count]) => ({ district, count }));
+    return Array.from(groups.entries()).map(([district, g]) => ({
+      district,
+      count: g.count,
+      lat: g.gpsCount > 0 ? g.latSum / g.gpsCount : undefined,
+      lng: g.gpsCount > 0 ? g.lngSum / g.gpsCount : undefined,
+    }));
   }, []);
 
   const totalSellers = sellerDistricts.reduce((sum, s) => sum + s.count, 0);
