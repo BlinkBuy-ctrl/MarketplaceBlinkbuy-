@@ -4,6 +4,8 @@ import { MapPin, Phone, ArrowLeft, Tag, CheckCircle, Share2, Heart, MessageCircl
 import { MOCK_ITEMS } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
 import SellerBuyerMap from "@/components/SellerBuyerMap";
+import RateSeller from "@/components/RateSeller";
+import ReportListing from "@/components/ReportListing";
 
 export default function MarketplaceDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -230,6 +232,14 @@ export default function MarketplaceDetailPage() {
               compact
             />
           )}
+
+          {/* Rate this seller */}
+          {seller && (
+            <RateSeller sellerId={seller.id} sellerName={seller.name} itemId={item.id} />
+          )}
+
+          {/* Report a problem to admin */}
+          <ReportListing itemId={item.id} itemTitle={item.title} sellerName={seller?.name ?? "Unknown seller"} />
 
           {/* Share */}
           <button

@@ -1,12 +1,14 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "wouter";
 import {
   LayoutDashboard, Package, Users, Flag, TrendingUp, DollarSign,
   CheckCircle2, Trash2, Eye, Search, ShieldCheck, ArrowLeft,
-  Star, MapPin,
+  Star, MapPin, XCircle, Phone, Clock,
 } from "lucide-react";
 import { MOCK_ITEMS } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
+import { getReports, updateReportStatus, REPORT_REASONS, type ListingReport } from "@/lib/reports";
+import { getSellerRatingSummary } from "@/lib/ratings";
 
 type Tab = "overview" | "listings" | "sellers" | "reports";
 
@@ -14,6 +16,18 @@ export default function AdminPage() {
   const [tab, setTab] = useState<Tab>("overview");
   const [search, setSearch] = useState("");
   const [listings, setListings] = useState(MOCK_ITEMS);
+  const [reports, setReports] = useState<ListingReport[]>([]);
+
+  useEffect(() => {
+    setReports(getReports());
+  }, []);
+
+  const refreshReports = () => setReports(getReports());
+
+  const resolveReport = (id: string) => { updateReportStatus(id, "resolved"); refreshReports(); };
+  const dismissReport = (id: string) => { updateReportStatus(id, "dismissed"); refreshReports(); };
+
+  const pendingReports = reports.filter(r => r.status === "pending");
 
   const sellers = useMemo(() => {
     const map = new Map<string, { id: string; name: string; location: string; count: number; verified: boolean }>();
@@ -38,7 +52,7 @@ export default function AdminPage() {
     { label: "Total Listings", value: listings.length, icon: Package },
     { label: "Active Sellers", value: sellers.length, icon: Users },
     { label: "Featured Items", value: listings.filter(i => i.is_featured).length, icon: Star },
-    { label: "Districts Covered", value: new Set(listings.map(i => i.location)).size, icon: MapPin },
+    { label: "Pending Reports", value: pendingReports.length, icon: Flag },
   ];
 
   return (
@@ -76,6 +90,11 @@ export default function AdminPage() {
             }`}
           >
             <t.icon size={14} /> {t.label}
+            {t.id === "reports" && pendingReports.length > 0 && (
+              <span className="ml-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[9px] font-black">
+                {pendingReports.length}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -196,37 +215,106 @@ export default function AdminPage() {
       {/* Sellers */}
       {tab === "sellers" && (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {sellers.map(s => (
-            <div key={s.id} className="bg-card border border-red-500/20 rounded-xl p-4">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white font-black text-sm shrink-0">
-                  {s.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
+          {sellers.map(s => {
+            const rating = getSellerRatingSummary(s.id);
+            return (
+              <div key={s.id} className="bg-card border border-red-500/20 rounded-xl p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white font-black text-sm shrink-0">
+                    {s.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-bold text-sm truncate flex items-center gap-1">
+                      {s.name}
+                      {s.verified && <ShieldCheck size={12} className="text-red-500 shrink-0" />}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground truncate">{s.location}</p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="font-bold text-sm truncate flex items-center gap-1">
-                    {s.name}
-                    {s.verified && <ShieldCheck size={12} className="text-red-500 shrink-0" />}
-                  </p>
-                  <p className="text-[11px] text-muted-foreground truncate">{s.location}</p>
+                <div className="flex items-center justify-between text-xs mb-2">
+                  <span className="text-muted-foreground font-medium">{s.count} listing{s.count !== 1 ? "s" : ""}</span>
+                  <span className="flex items-center gap-1 font-bold">
+                    <Star size={12} className="fill-yellow-400 text-yellow-400" /> {rating.avg}
+                    <span className="text-muted-foreground font-medium">({rating.count})</span>
+                  </span>
                 </div>
+                <button className="text-red-500 font-bold hover:text-red-600 text-xs">View profile</button>
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground font-medium">{s.count} listing{s.count !== 1 ? "s" : ""}</span>
-                <button className="text-red-500 font-bold hover:text-red-600">View profile</button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
       {/* Reports */}
       {tab === "reports" && (
-        <div className="bg-card border border-red-500/20 rounded-xl p-10 text-center">
-          <Flag size={32} className="text-red-500 mx-auto mb-3" />
-          <h2 className="font-black text-base mb-1">No reports yet</h2>
-          <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-            Reported listings and flagged sellers will show up here for review once buyers start using the report button on listing pages.
-          </p>
+        <div className="space-y-3">
+          {reports.length === 0 ? (
+            <div className="bg-card border border-red-500/20 rounded-xl p-10 text-center">
+              <Flag size={32} className="text-red-500 mx-auto mb-3" />
+              <h2 className="font-black text-base mb-1">No reports yet</h2>
+              <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+                Reported listings and flagged sellers will show up here for review once buyers start using the report button on listing pages.
+              </p>
+            </div>
+          ) : (
+            reports.map(r => {
+              const reasonLabel = REPORT_REASONS.find(x => x.value === r.reason)?.label ?? r.reason;
+              const listing = listings.find(i => i.id === r.itemId);
+              return (
+                <div key={r.id} className="bg-card border border-red-500/20 rounded-xl p-4">
+                  <div className="flex items-start justify-between gap-3 mb-2 flex-wrap">
+                    <div>
+                      <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full mb-1.5 ${
+                        r.status === "pending" ? "bg-amber-500/15 text-amber-600" :
+                        r.status === "resolved" ? "bg-green-500/15 text-green-600" :
+                        "bg-muted text-muted-foreground"
+                      }`}>
+                        {r.status === "pending" && <Flag size={10} />} {r.status.toUpperCase()}
+                      </span>
+                      <p className="font-bold text-sm">{reasonLabel}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        "{r.itemTitle}" &middot; Seller: {r.sellerName}
+                      </p>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground flex items-center gap-1 shrink-0">
+                      <Clock size={10} /> {new Date(r.createdAt).toLocaleString()}
+                    </span>
+                  </div>
+
+                  <p className="text-sm bg-background border border-red-500/10 rounded-lg p-3 mb-2">{r.message}</p>
+
+                  {r.reporterContact && (
+                    <p className="text-xs text-muted-foreground flex items-center gap-1 mb-3">
+                      <Phone size={11} /> Reporter contact: {r.reporterContact}
+                    </p>
+                  )}
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {listing && (
+                      <Link href={`/marketplace/${r.itemId}`} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold border border-red-500/20 text-muted-foreground hover:text-red-500 hover:bg-red-500/5">
+                        <Eye size={12} /> View listing
+                      </Link>
+                    )}
+                    {r.status === "pending" && (
+                      <>
+                        <button onClick={() => resolveReport(r.id)} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-green-500/10 text-green-600 hover:bg-green-500/20">
+                          <CheckCircle2 size={12} /> Mark resolved
+                        </button>
+                        <button onClick={() => dismissReport(r.id)} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-muted text-muted-foreground hover:bg-muted/70">
+                          <XCircle size={12} /> Dismiss
+                        </button>
+                        {listing && (
+                          <button onClick={() => { removeListing(r.itemId); resolveReport(r.id); }} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-red-500/10 text-red-500 hover:bg-red-500/20">
+                            <Trash2 size={12} /> Remove listing
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       )}
     </div>
