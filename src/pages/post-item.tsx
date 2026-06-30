@@ -52,8 +52,8 @@ export default function PostItemPage() {
     return (
       <div className="max-w-lg mx-auto px-4 py-16 text-center page-enter">
         <div className="relative mb-6">
-          <div className="absolute inset-0 bg-pink-500/20 blur-2xl rounded-full" />
-          <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center mx-auto">
+          <div className="absolute inset-0 bg-red-500/20 blur-2xl rounded-full" />
+          <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center mx-auto">
             <CheckCircle size={40} className="text-white" strokeWidth={1.5} />
           </div>
         </div>
@@ -70,13 +70,13 @@ export default function PostItemPage() {
               setForm({ title: "", description: "", category: CATEGORIES[1], price: "", location: "Lilongwe", condition: "Good", sellerName: "", sellerPhone: "", negotiable: false });
               setPreviews([]);
             }}
-            className="px-5 py-3 rounded-xl border-2 border-pink-500/30 text-pink-600 font-bold hover:border-pink-500 hover:bg-pink-500/5 transition-all duration-200"
+            className="px-5 py-3 rounded-xl border-2 border-red-500/30 text-red-600 font-bold hover:border-red-500 hover:bg-red-500/5 transition-all duration-200"
           >
             Post Another
           </button>
           <button
             onClick={() => setLocation("/marketplace")}
-            className="px-5 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold hover:from-pink-600 hover:to-pink-700 transition-all duration-200 shadow-lg hover:shadow-pink-500/50 border border-pink-400/30"
+            className="px-5 py-3 rounded-xl bg-gradient-to-r from-red-500 to-red-600 text-white font-bold hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-red-500/50 border border-red-400/30"
           >
             Browse Marketplace
           </button>
@@ -89,7 +89,7 @@ export default function PostItemPage() {
     <div className="max-w-2xl mx-auto px-4 py-8 page-enter">
       {/* Header */}
       <div className="flex items-start gap-4 mb-8">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shrink-0">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center shrink-0">
           <Package size={20} className="text-white" strokeWidth={2} />
         </div>
         <div>
@@ -101,19 +101,19 @@ export default function PostItemPage() {
       </div>
 
       {/* Demo Alert */}
-      <div className="bg-pink-50 dark:bg-pink-950/30 border border-pink-200 dark:border-pink-800 rounded-xl px-4 py-4 mb-6 flex gap-3">
-        <AlertCircle size={18} className="text-pink-600 dark:text-pink-400 shrink-0 mt-0.5" />
-        <p className="text-pink-700 dark:text-pink-300 text-sm font-medium">
+      <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl px-4 py-4 mb-6 flex gap-3">
+        <AlertCircle size={18} className="text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+        <p className="text-red-700 dark:text-red-300 text-sm font-medium">
           🔒 Demo Mode — Listings are not saved. Connect a backend to enable real submissions.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Section 1: Item Details */}
-        <div className="bg-card border border-pink-500/20 rounded-xl p-6 space-y-5">
+        <div className="bg-card border border-red-500/20 rounded-xl p-6 space-y-5">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center">
-              <span className="text-pink-600 font-black text-sm">1</span>
+            <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center">
+              <span className="text-red-600 font-black text-sm">1</span>
             </div>
             <h2 className="text-lg font-bold text-foreground">Item Details</h2>
           </div>
@@ -121,7 +121,7 @@ export default function PostItemPage() {
           {/* Title */}
           <div>
             <label className="text-sm font-bold mb-2 block text-foreground">
-              Item Title <span className="text-pink-500">*</span>
+              Item Title <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -130,7 +130,7 @@ export default function PostItemPage() {
               required
               placeholder="e.g. Samsung Galaxy A53 — Excellent Condition"
               maxLength={80}
-              className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium placeholder:text-muted-foreground"
+              className="w-full px-4 py-3 rounded-xl border border-red-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-medium placeholder:text-muted-foreground"
             />
             <p className="text-xs text-muted-foreground mt-1">{form.title.length}/80 characters</p>
           </div>
@@ -138,16 +138,16 @@ export default function PostItemPage() {
           {/* Category & Condition */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">Category <span className="text-pink-500">*</span></label>
+              <label className="text-sm font-bold mb-2 block text-foreground">Category <span className="text-red-500">*</span></label>
               <select value={form.category} onChange={e => set("category", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium cursor-pointer">
+                className="w-full px-4 py-3 rounded-xl border border-red-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-medium cursor-pointer">
                 {CATEGORIES.filter(c => c !== "All Categories").map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">Condition <span className="text-pink-500">*</span></label>
+              <label className="text-sm font-bold mb-2 block text-foreground">Condition <span className="text-red-500">*</span></label>
               <select value={form.condition} onChange={e => set("condition", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium cursor-pointer">
+                className="w-full px-4 py-3 rounded-xl border border-red-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-medium cursor-pointer">
                 {CONDITIONS.map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
@@ -156,7 +156,7 @@ export default function PostItemPage() {
           {/* Description */}
           <div>
             <label className="text-sm font-bold mb-2 block text-foreground">
-              Description <span className="text-pink-500">*</span>
+              Description <span className="text-red-500">*</span>
             </label>
             <textarea
               value={form.description}
@@ -165,7 +165,7 @@ export default function PostItemPage() {
               rows={5}
               placeholder="Describe the item — condition, age, reason for selling, any defects, special features..."
               maxLength={500}
-              className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium placeholder:text-muted-foreground resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-red-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-medium placeholder:text-muted-foreground resize-none"
             />
             <p className="text-xs text-muted-foreground mt-1">{form.description.length}/500 characters</p>
           </div>
@@ -173,12 +173,12 @@ export default function PostItemPage() {
           {/* Image Upload — up to 5 */}
           <div>
             <label className="text-sm font-bold mb-3 block text-foreground">
-              Photos <span className="text-pink-500">*</span>
+              Photos <span className="text-red-500">*</span>
               <span className="text-xs font-normal text-muted-foreground ml-1">(up to 5) — {previews.length}/5</span>
             </label>
             <div className="flex gap-3 flex-wrap">
               {previews.map((src, i) => (
-                <div key={i} className="relative w-24 h-24 rounded-xl overflow-hidden border-2 border-pink-500/30 group hover:border-pink-500 transition-all duration-200">
+                <div key={i} className="relative w-24 h-24 rounded-xl overflow-hidden border-2 border-red-500/30 group hover:border-red-500 transition-all duration-200">
                   <img src={src} alt="" className="w-full h-full object-cover" />
                   <button type="button" onClick={() => removeImage(i)}
                     className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -188,7 +188,7 @@ export default function PostItemPage() {
               ))}
               {previews.length < 5 && (
                 <button type="button" onClick={() => fileInputRef.current?.click()}
-                  className="w-24 h-24 rounded-xl border-2 border-dashed border-pink-500/40 hover:border-pink-500 hover:bg-pink-500/5 flex flex-col items-center justify-center gap-1 text-muted-foreground hover:text-pink-500 transition-all duration-200">
+                  className="w-24 h-24 rounded-xl border-2 border-dashed border-red-500/40 hover:border-red-500 hover:bg-red-500/5 flex flex-col items-center justify-center gap-1 text-muted-foreground hover:text-red-500 transition-all duration-200">
                   <ImagePlus size={20} strokeWidth={2} />
                   <span className="text-xs font-bold">Add</span>
                 </button>
@@ -199,69 +199,69 @@ export default function PostItemPage() {
         </div>
 
         {/* Section 2: Price & Location */}
-        <div className="bg-card border border-pink-500/20 rounded-xl p-6 space-y-5">
+        <div className="bg-card border border-red-500/20 rounded-xl p-6 space-y-5">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center">
-              <span className="text-pink-600 font-black text-sm">2</span>
+            <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center">
+              <span className="text-red-600 font-black text-sm">2</span>
             </div>
             <h2 className="text-lg font-bold text-foreground">Price & Location</h2>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">Price (MK) <span className="text-pink-500">*</span></label>
+              <label className="text-sm font-bold mb-2 block text-foreground">Price (MK) <span className="text-red-500">*</span></label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">MK</span>
                 <input type="number" value={form.price} onChange={e => set("price", e.target.value)} required placeholder="e.g. 120000"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium" />
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-red-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-medium" />
               </div>
             </div>
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">Location <span className="text-pink-500">*</span></label>
+              <label className="text-sm font-bold mb-2 block text-foreground">Location <span className="text-red-500">*</span></label>
               <select value={form.location} onChange={e => set("location", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium cursor-pointer">
+                className="w-full px-4 py-3 rounded-xl border border-red-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-medium cursor-pointer">
                 {CITIES.map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
           </div>
 
           {/* Negotiable toggle */}
-          <div className="flex items-center justify-between p-3 rounded-xl bg-background border border-pink-500/15">
+          <div className="flex items-center justify-between p-3 rounded-xl bg-background border border-red-500/15">
             <div>
               <p className="text-sm font-semibold">Price Negotiable</p>
               <p className="text-xs text-muted-foreground">Let buyers know the price can be discussed</p>
             </div>
             <button type="button" onClick={() => set("negotiable", !form.negotiable)}
-              className={`relative w-11 h-6 rounded-full transition-all duration-300 ${form.negotiable ? "bg-pink-500" : "bg-muted border border-border"}`}>
+              className={`relative w-11 h-6 rounded-full transition-all duration-300 ${form.negotiable ? "bg-red-500" : "bg-muted border border-border"}`}>
               <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${form.negotiable ? "left-5.5" : "left-0.5"}`} />
             </button>
           </div>
         </div>
 
         {/* Section 3: Seller Contact */}
-        <div className="bg-card border border-pink-500/20 rounded-xl p-6 space-y-5">
+        <div className="bg-card border border-red-500/20 rounded-xl p-6 space-y-5">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center">
-              <span className="text-pink-600 font-black text-sm">3</span>
+            <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center">
+              <span className="text-red-600 font-black text-sm">3</span>
             </div>
             <h2 className="text-lg font-bold text-foreground">Your Contact Info</h2>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">Your Name <span className="text-pink-500">*</span></label>
+              <label className="text-sm font-bold mb-2 block text-foreground">Your Name <span className="text-red-500">*</span></label>
               <div className="relative">
                 <User size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input type="text" value={form.sellerName} onChange={e => set("sellerName", e.target.value)} required placeholder="e.g. Chisomo Banda"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium placeholder:text-muted-foreground" />
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-red-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-medium placeholder:text-muted-foreground" />
               </div>
             </div>
             <div>
-              <label className="text-sm font-bold mb-2 block text-foreground">Phone / WhatsApp <span className="text-pink-500">*</span></label>
+              <label className="text-sm font-bold mb-2 block text-foreground">Phone / WhatsApp <span className="text-red-500">*</span></label>
               <div className="relative">
                 <Phone size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input type="tel" value={form.sellerPhone} onChange={e => set("sellerPhone", e.target.value)} required placeholder="e.g. 0999123456"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-pink-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 font-medium placeholder:text-muted-foreground" />
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-red-500/20 bg-background text-sm outline-none transition-all duration-200 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 font-medium placeholder:text-muted-foreground" />
               </div>
             </div>
           </div>
@@ -272,7 +272,7 @@ export default function PostItemPage() {
         <button
           type="submit"
           disabled={loading || !isValid}
-          className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 disabled:from-pink-400 disabled:to-pink-500 disabled:cursor-not-allowed text-white py-4 rounded-xl font-bold text-base transition-all duration-300 shadow-lg hover:shadow-pink-500/50 border border-pink-400/30 flex items-center justify-center gap-2"
+          className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-red-400 disabled:to-red-500 disabled:cursor-not-allowed text-white py-4 rounded-xl font-bold text-base transition-all duration-300 shadow-lg hover:shadow-red-500/50 border border-red-400/30 flex items-center justify-center gap-2"
         >
           {loading ? (
             <>

@@ -18,12 +18,12 @@ export default function MarketplaceDetailPage() {
   if (!item) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-16 text-center page-enter">
-        <div className="w-16 h-16 rounded-full bg-pink-500/10 border border-pink-500/30 flex items-center justify-center mx-auto mb-4">
+        <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center mx-auto mb-4">
           <Tag size={28} className="text-muted-foreground opacity-50" />
         </div>
         <h2 className="text-xl font-bold mb-2">Item not found</h2>
         <p className="text-muted-foreground text-sm mb-6">This listing may have been removed.</p>
-        <Link href="/marketplace" className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold">
+        <Link href="/marketplace" className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold">
           <ArrowLeft size={14} /> Browse Marketplace
         </Link>
       </div>
@@ -96,7 +96,7 @@ export default function MarketplaceDetailPage() {
                 onClick={toggleWishlist}
                 className="w-9 h-9 rounded-xl bg-black/50 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all"
               >
-                <Heart size={16} className={inWishlist ? "text-pink-400 fill-pink-400" : "text-white"} strokeWidth={2} />
+                <Heart size={16} className={inWishlist ? "text-red-400 fill-red-400" : "text-white"} strokeWidth={2} />
               </button>
               <button
                 onClick={handleShare}
@@ -112,7 +112,7 @@ export default function MarketplaceDetailPage() {
                 <button
                   key={i}
                   onClick={() => setSelectedImage(i)}
-                  className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${i === selectedImage ? "border-pink-500 shadow-md shadow-pink-500/30" : "border-border opacity-70 hover:opacity-100"}`}
+                  className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${i === selectedImage ? "border-red-500 shadow-md shadow-red-500/30" : "border-border opacity-70 hover:opacity-100"}`}
                 >
                   <img src={img} alt="" className="w-full h-full object-cover" />
                 </button>
@@ -124,26 +124,26 @@ export default function MarketplaceDetailPage() {
         {/* Details */}
         <div className="space-y-4">
           {/* Item Info Card */}
-          <div className="bg-card border border-pink-500/20 rounded-2xl p-5">
+          <div className="bg-card border border-red-500/20 rounded-2xl p-5">
             <div className="flex items-start justify-between gap-3 mb-3">
               <h1 className="text-xl font-black leading-tight flex-1">{item.title}</h1>
             </div>
 
-            <div className="text-3xl font-black text-pink-500 mb-4">{formatMK(item.price)}</div>
+            <div className="text-3xl font-black text-red-500 mb-4">{formatMK(item.price)}</div>
 
             <div className="flex items-center gap-3 flex-wrap mb-4">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <MapPin size={12} className="text-pink-400" />
+                <MapPin size={12} className="text-red-400" />
                 <span className="font-semibold">{item.location}</span>
               </div>
               {item.category && (
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Tag size={12} className="text-pink-400" />
+                  <Tag size={12} className="text-red-400" />
                   <span className="font-semibold">{item.category}</span>
                 </div>
               )}
               {item.condition && (
-                <div className="inline-flex items-center gap-1 bg-pink-500/10 text-pink-600 text-xs px-2.5 py-1 rounded-full border border-pink-500/20 font-semibold">
+                <div className="inline-flex items-center gap-1 bg-red-500/10 text-red-600 text-xs px-2.5 py-1 rounded-full border border-red-500/20 font-semibold">
                   <CheckCircle size={10} /> {item.condition}
                 </div>
               )}
@@ -169,9 +169,9 @@ export default function MarketplaceDetailPage() {
 
           {/* Contact Seller */}
           {seller && (
-            <div className="bg-card border border-pink-500/20 rounded-2xl p-4">
+            <div className="bg-card border border-red-500/20 rounded-2xl p-4">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500/20 to-pink-700/20 border border-pink-500/30 flex items-center justify-center text-lg font-black text-pink-500 shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500/20 to-red-700/20 border border-red-500/30 flex items-center justify-center text-lg font-black text-red-500 shrink-0">
                   {seller.name?.charAt(0)}
                 </div>
                 <div>
@@ -200,7 +200,7 @@ export default function MarketplaceDetailPage() {
                 {seller.phone && (
                   <a
                     href={`tel:${seller.phone}`}
-                    className="w-full flex items-center justify-center gap-2.5 border-2 border-pink-500/30 text-pink-500 hover:bg-pink-500/10 py-3 rounded-xl text-sm font-bold transition-all"
+                    className="w-full flex items-center justify-center gap-2.5 border-2 border-red-500/30 text-red-500 hover:bg-red-500/10 py-3 rounded-xl text-sm font-bold transition-all"
                   >
                     <Phone size={15} strokeWidth={2.5} />
                     Call: {seller.phone}
@@ -221,7 +221,7 @@ export default function MarketplaceDetailPage() {
           {/* Share */}
           <button
             onClick={handleShare}
-            className="w-full flex items-center justify-center gap-2 border border-border py-2.5 rounded-xl text-sm text-muted-foreground hover:bg-muted hover:border-pink-500/30 transition-all font-medium"
+            className="w-full flex items-center justify-center gap-2 border border-border py-2.5 rounded-xl text-sm text-muted-foreground hover:bg-muted hover:border-red-500/30 transition-all font-medium"
           >
             <Share2 size={14} />
             {copied ? "Link copied! ✓" : "Share this listing"}
@@ -236,7 +236,7 @@ export default function MarketplaceDetailPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {related.map(rel => (
               <Link key={rel.id} href={`/marketplace/${rel.id}`}>
-                <div className="bg-card border border-pink-500/20 hover:border-pink-500/50 rounded-xl overflow-hidden card-hover cursor-pointer group">
+                <div className="bg-card border border-red-500/20 hover:border-red-500/50 rounded-xl overflow-hidden card-hover cursor-pointer group">
                   <div className="aspect-square overflow-hidden">
                     <img
                       src={rel.images[0]}
@@ -246,8 +246,8 @@ export default function MarketplaceDetailPage() {
                     />
                   </div>
                   <div className="p-3">
-                    <h4 className="text-xs font-bold line-clamp-2 mb-1 group-hover:text-pink-500 transition-colors">{rel.title}</h4>
-                    <div className="text-sm font-black text-pink-500">{formatMK(rel.price)}</div>
+                    <h4 className="text-xs font-bold line-clamp-2 mb-1 group-hover:text-red-500 transition-colors">{rel.title}</h4>
+                    <div className="text-sm font-black text-red-500">{formatMK(rel.price)}</div>
                   </div>
                 </div>
               </Link>

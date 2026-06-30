@@ -110,7 +110,7 @@ export default function MarketplacePage() {
         </div>
         <Link
           href="/post-item"
-          className="hidden sm:inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 shadow-lg hover:shadow-pink-500/50"
+          className="hidden sm:inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 shadow-lg hover:shadow-red-500/50"
         >
           + Sell Something
         </Link>
@@ -132,7 +132,7 @@ export default function MarketplacePage() {
           <select
             value={sortBy}
             onChange={e => { setSortBy(e.target.value); setPage(1); }}
-            className="appearance-none pl-9 pr-4 py-3 rounded-xl border border-pink-500/20 bg-card text-sm font-semibold outline-none focus:border-pink-500 cursor-pointer hidden sm:block"
+            className="appearance-none pl-9 pr-4 py-3 rounded-xl border border-red-500/20 bg-card text-sm font-semibold outline-none focus:border-red-500 cursor-pointer hidden sm:block"
           >
             {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
@@ -142,18 +142,18 @@ export default function MarketplacePage() {
         <button
           onClick={() => setShowFilters(!showFilters)}
           className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-sm font-semibold transition-all ${
-            hasFilters ? "border-pink-500 text-pink-500 bg-pink-500/10" : "border-border text-foreground hover:border-pink-500/40"
+            hasFilters ? "border-red-500 text-red-500 bg-red-500/10" : "border-border text-foreground hover:border-red-500/40"
           }`}
         >
           <SlidersHorizontal size={15} />
           <span className="hidden sm:inline">Filters</span>
-          {hasFilters && <span className="w-2 h-2 rounded-full bg-pink-500" />}
+          {hasFilters && <span className="w-2 h-2 rounded-full bg-red-500" />}
         </button>
       </div>
 
       {/* Filters Dropdown */}
       {showFilters && (
-        <div className="bg-card border border-pink-500/20 rounded-xl p-4 mb-4 space-y-4">
+        <div className="bg-card border border-red-500/20 rounded-xl p-4 mb-4 space-y-4">
           {/* Category Filter */}
           <div>
             <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Category</p>
@@ -164,8 +164,8 @@ export default function MarketplacePage() {
                   onClick={() => handleCategory(cat)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 ${
                     category === cat
-                      ? "border-pink-500 bg-pink-500/15 text-pink-500"
-                      : "border-border text-muted-foreground hover:border-pink-500/40 hover:text-foreground"
+                      ? "border-red-500 bg-red-500/15 text-red-500"
+                      : "border-border text-muted-foreground hover:border-red-500/40 hover:text-foreground"
                   }`}
                 >
                   {CATEGORY_ICONS[cat]} {cat}
@@ -184,8 +184,8 @@ export default function MarketplacePage() {
                   onClick={() => { setPriceRange(i); setPage(1); }}
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 ${
                     priceRange === i
-                      ? "border-pink-500 bg-pink-500/15 text-pink-500"
-                      : "border-border text-muted-foreground hover:border-pink-500/40 hover:text-foreground"
+                      ? "border-red-500 bg-red-500/15 text-red-500"
+                      : "border-border text-muted-foreground hover:border-red-500/40 hover:text-foreground"
                   }`}
                 >
                   {r.label}
@@ -199,31 +199,31 @@ export default function MarketplacePage() {
             <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">District</p>
             <div className="relative">
               <div
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-pink-500/20 bg-background text-sm cursor-pointer hover:border-pink-500/40 font-medium"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-500/20 bg-background text-sm cursor-pointer hover:border-red-500/40 font-medium"
                 onClick={() => setShowLocDropdown(!showLocDropdown)}
               >
                 <MapPin size={13} className="text-muted-foreground shrink-0" />
                 <span className={loc ? "text-foreground" : "text-muted-foreground"}>{loc || "All Districts"}</span>
               </div>
               {showLocDropdown && (
-                <div className="absolute top-full mt-2 left-0 right-0 bg-card border border-pink-500/30 rounded-xl shadow-xl z-50 overflow-hidden">
+                <div className="absolute top-full mt-2 left-0 right-0 bg-card border border-red-500/30 rounded-xl shadow-xl z-50 overflow-hidden">
                   <div className="p-2 border-b border-border">
                     <input
                       type="text"
                       value={locSearch}
                       onChange={e => setLocSearch(e.target.value)}
                       placeholder="Search district..."
-                      className="w-full px-3 py-2 rounded-lg border border-pink-500/20 bg-background text-xs outline-none focus:border-pink-500"
+                      className="w-full px-3 py-2 rounded-lg border border-red-500/20 bg-background text-xs outline-none focus:border-red-500"
                       autoFocus
                     />
                   </div>
                   <div className="max-h-48 overflow-y-auto">
-                    <button onClick={() => handleLoc("")} className="w-full text-left px-4 py-2.5 text-sm hover:bg-pink-500/10 text-muted-foreground font-medium">All Districts</button>
+                    <button onClick={() => handleLoc("")} className="w-full text-left px-4 py-2.5 text-sm hover:bg-red-500/10 text-muted-foreground font-medium">All Districts</button>
                     {filteredCities.map(c => (
                       <button
                         key={c}
                         onClick={() => handleLoc(c)}
-                        className={`w-full text-left px-4 py-2.5 text-sm hover:bg-pink-500/10 font-medium ${loc === c ? "text-pink-500 font-bold" : "text-foreground"}`}
+                        className={`w-full text-left px-4 py-2.5 text-sm hover:bg-red-500/10 font-medium ${loc === c ? "text-red-500 font-bold" : "text-foreground"}`}
                       >{c}</button>
                     ))}
                   </div>
@@ -239,7 +239,7 @@ export default function MarketplacePage() {
               {SORT_OPTIONS.map(o => (
                 <button key={o.value} onClick={() => { setSortBy(o.value); setPage(1); }}
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-                    sortBy === o.value ? "border-pink-500 bg-pink-500/15 text-pink-500" : "border-border text-muted-foreground"
+                    sortBy === o.value ? "border-red-500 bg-red-500/15 text-red-500" : "border-border text-muted-foreground"
                   }`}
                 >{o.label}</button>
               ))}
@@ -247,7 +247,7 @@ export default function MarketplacePage() {
           </div>
 
           {hasFilters && (
-            <button onClick={clearAll} className="flex items-center gap-1.5 text-xs text-pink-500 font-bold hover:text-pink-600 transition-colors">
+            <button onClick={clearAll} className="flex items-center gap-1.5 text-xs text-red-500 font-bold hover:text-red-600 transition-colors">
               <X size={12} /> Clear all filters
             </button>
           )}
@@ -258,27 +258,27 @@ export default function MarketplacePage() {
       {hasFilters && !showFilters && (
         <div className="flex items-center gap-2 flex-wrap mb-4">
           {search && (
-            <div className="inline-flex items-center gap-1.5 bg-pink-500/10 text-pink-600 text-xs px-3 py-1.5 rounded-full border border-pink-500/30 font-medium">
+            <div className="inline-flex items-center gap-1.5 bg-red-500/10 text-red-600 text-xs px-3 py-1.5 rounded-full border border-red-500/30 font-medium">
               <Search size={10} /> "{search}"
-              <button onClick={() => handleSearch("")} className="ml-1 hover:text-pink-800">×</button>
+              <button onClick={() => handleSearch("")} className="ml-1 hover:text-red-800">×</button>
             </div>
           )}
           {category !== "All Categories" && (
-            <div className="inline-flex items-center gap-1.5 bg-pink-500/10 text-pink-600 text-xs px-3 py-1.5 rounded-full border border-pink-500/30 font-medium">
+            <div className="inline-flex items-center gap-1.5 bg-red-500/10 text-red-600 text-xs px-3 py-1.5 rounded-full border border-red-500/30 font-medium">
               {CATEGORY_ICONS[category]} {category}
-              <button onClick={() => handleCategory("All Categories")} className="ml-1 hover:text-pink-800">×</button>
+              <button onClick={() => handleCategory("All Categories")} className="ml-1 hover:text-red-800">×</button>
             </div>
           )}
           {loc && (
-            <div className="inline-flex items-center gap-1.5 bg-pink-500/10 text-pink-600 text-xs px-3 py-1.5 rounded-full border border-pink-500/30 font-medium">
+            <div className="inline-flex items-center gap-1.5 bg-red-500/10 text-red-600 text-xs px-3 py-1.5 rounded-full border border-red-500/30 font-medium">
               <MapPin size={10} /> {loc}
-              <button onClick={() => handleLoc("")} className="ml-1 hover:text-pink-800">×</button>
+              <button onClick={() => handleLoc("")} className="ml-1 hover:text-red-800">×</button>
             </div>
           )}
           {priceRange > 0 && (
-            <div className="inline-flex items-center gap-1.5 bg-pink-500/10 text-pink-600 text-xs px-3 py-1.5 rounded-full border border-pink-500/30 font-medium">
+            <div className="inline-flex items-center gap-1.5 bg-red-500/10 text-red-600 text-xs px-3 py-1.5 rounded-full border border-red-500/30 font-medium">
               💰 {PRICE_RANGES[priceRange].label}
-              <button onClick={() => setPriceRange(0)} className="ml-1 hover:text-pink-800">×</button>
+              <button onClick={() => setPriceRange(0)} className="ml-1 hover:text-red-800">×</button>
             </div>
           )}
         </div>
@@ -287,14 +287,14 @@ export default function MarketplacePage() {
       {/* PRODUCTS GRID */}
       {items.length === 0 ? (
         <div className="text-center py-20">
-          <div className="w-16 h-16 rounded-full bg-pink-500/10 border border-pink-500/30 flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center mx-auto mb-4">
             <ShoppingBag size={28} className="text-muted-foreground opacity-50" />
           </div>
           <h3 className="text-lg font-bold mb-2">No items found</h3>
           <p className="text-muted-foreground text-sm max-w-sm mx-auto mb-6">Try adjusting your search or filters.</p>
           <button
             onClick={clearAll}
-            className="inline-flex items-center gap-2 bg-pink-500/10 text-pink-600 hover:bg-pink-500/20 px-4 py-2.5 rounded-xl text-sm font-bold transition-all border border-pink-500/30"
+            className="inline-flex items-center gap-2 bg-red-500/10 text-red-600 hover:bg-red-500/20 px-4 py-2.5 rounded-xl text-sm font-bold transition-all border border-red-500/30"
           >
             <X size={14} /> Clear Filters
           </button>
@@ -309,7 +309,7 @@ export default function MarketplacePage() {
             {items.map((item, i) => (
               <Link key={item.id} href={`/marketplace/${item.id}`}>
                 <div
-                  className="bg-card border border-pink-500/20 hover:border-pink-500/50 rounded-xl overflow-hidden card-hover cursor-pointer group relative"
+                  className="bg-card border border-red-500/20 hover:border-red-500/50 rounded-xl overflow-hidden card-hover cursor-pointer group relative"
                   style={{ animationDelay: `${(i % 6) * 30}ms` }}
                 >
                   <div className="aspect-square bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center overflow-hidden relative">
@@ -337,15 +337,15 @@ export default function MarketplacePage() {
                     >
                       <Heart
                         size={12}
-                        className={wishlist.has(item.id) ? "text-pink-400 fill-pink-400" : "text-white"}
+                        className={wishlist.has(item.id) ? "text-red-400 fill-red-400" : "text-white"}
                         strokeWidth={2}
                       />
                     </button>
                   </div>
 
                   <div className="p-3">
-                    <h3 className="text-xs font-bold line-clamp-2 mb-1.5 group-hover:text-pink-500 transition-colors">{item.title}</h3>
-                    <div className="text-sm font-black text-pink-500 mb-1">{formatMK(item.price)}</div>
+                    <h3 className="text-xs font-bold line-clamp-2 mb-1.5 group-hover:text-red-500 transition-colors">{item.title}</h3>
+                    <div className="text-sm font-black text-red-500 mb-1">{formatMK(item.price)}</div>
                     <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
                       <MapPin size={9} />
                       <span className="line-clamp-1">{item.location}</span>
@@ -361,7 +361,7 @@ export default function MarketplacePage() {
               <button
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="px-4 py-2.5 rounded-xl border border-pink-500/20 text-sm font-bold hover:border-pink-500 hover:text-pink-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                className="px-4 py-2.5 rounded-xl border border-red-500/20 text-sm font-bold hover:border-red-500 hover:text-red-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               >
                 ← Prev
               </button>
@@ -374,8 +374,8 @@ export default function MarketplacePage() {
                       onClick={() => setPage(pn)}
                       className={`w-9 h-9 rounded-xl font-bold text-sm transition-all ${
                         page === pn
-                          ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white"
-                          : "border border-border hover:border-pink-500 hover:text-pink-500"
+                          ? "bg-gradient-to-r from-red-500 to-red-600 text-white"
+                          : "border border-border hover:border-red-500 hover:text-red-500"
                       }`}
                     >{pn}</button>
                   );
@@ -384,7 +384,7 @@ export default function MarketplacePage() {
               <button
                 onClick={() => setPage(p => p + 1)}
                 disabled={page >= totalPages}
-                className="px-4 py-2.5 rounded-xl border border-pink-500/20 text-sm font-bold hover:border-pink-500 hover:text-pink-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                className="px-4 py-2.5 rounded-xl border border-red-500/20 text-sm font-bold hover:border-red-500 hover:text-red-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               >
                 Next →
               </button>

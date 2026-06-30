@@ -59,7 +59,7 @@ export default function SettingsPage() {
   const settingSection = (title: string, children: React.ReactNode) => (
     <div className="mb-6">
       <p className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-2 px-1">{title}</p>
-      <div className="bg-card border border-pink-500/15 rounded-2xl overflow-hidden divide-y divide-border">
+      <div className="bg-card border border-red-500/15 rounded-2xl overflow-hidden divide-y divide-border">
         {children}
       </div>
     </div>
@@ -73,10 +73,10 @@ export default function SettingsPage() {
     onClick?: () => void,
   ) => (
     <div
-      className={`flex items-center gap-3 px-4 py-3.5 ${onClick ? "cursor-pointer hover:bg-pink-500/5 transition-colors" : ""}`}
+      className={`flex items-center gap-3 px-4 py-3.5 ${onClick ? "cursor-pointer hover:bg-red-500/5 transition-colors" : ""}`}
       onClick={onClick}
     >
-      <div className="w-8 h-8 rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center shrink-0 text-pink-500">
+      <div className="w-8 h-8 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0 text-red-500">
         {icon}
       </div>
       <div className="flex-1 min-w-0">
@@ -102,13 +102,13 @@ export default function SettingsPage() {
           theme === "dark" ? "Dark mode" : "Light mode",
           <button
             onClick={toggleTheme}
-            className={`relative w-11 h-6 rounded-full transition-all duration-300 ${theme === "dark" ? "bg-pink-500" : "bg-muted border border-border"}`}
+            className={`relative w-11 h-6 rounded-full transition-all duration-300 ${theme === "dark" ? "bg-red-500" : "bg-muted border border-border"}`}
           >
             <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${theme === "dark" ? "left-5.5 translate-x-0" : "left-0.5"}`} />
           </button>
         )}
         {settingRow(<Globe size={15} />, "Language", language, <span className="text-xs text-muted-foreground font-medium">{language}</span>)}
-        {settingRow(<Store size={15} />, "Currency", "Malawian Kwacha", <span className="text-xs font-bold text-pink-500">{currency}</span>)}
+        {settingRow(<Store size={15} />, "Currency", "Malawian Kwacha", <span className="text-xs font-bold text-red-500">{currency}</span>)}
       </>)}
 
       {/* Notifications */}
@@ -119,7 +119,7 @@ export default function SettingsPage() {
           notifications ? "Enabled" : "Disabled",
           <button
             onClick={() => setNotifications(!notifications)}
-            className={`relative w-11 h-6 rounded-full transition-all duration-300 ${notifications ? "bg-pink-500" : "bg-muted border border-border"}`}
+            className={`relative w-11 h-6 rounded-full transition-all duration-300 ${notifications ? "bg-red-500" : "bg-muted border border-border"}`}
           >
             <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${notifications ? "left-5.5 translate-x-0" : "left-0.5"}`} />
           </button>
@@ -140,24 +140,24 @@ export default function SettingsPage() {
             </div>
           )}
           {installState === "prompt" && (
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-pink-500/8 border border-pink-500/25">
-              <Smartphone size={18} className="text-pink-500 shrink-0" />
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-red-500/8 border border-red-500/25">
+              <Smartphone size={18} className="text-red-500 shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold">Install App</p>
                 <p className="text-xs text-muted-foreground">Add to your home screen for the best experience</p>
               </div>
               <button
                 onClick={handleInstall}
-                className="shrink-0 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-md shadow-pink-500/30 active:scale-95"
+                className="shrink-0 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-md shadow-red-500/30 active:scale-95"
               >
                 Install
               </button>
             </div>
           )}
           {installState === "ios" && (
-            <div className="p-3 rounded-xl bg-pink-500/8 border border-pink-500/25 space-y-2">
+            <div className="p-3 rounded-xl bg-red-500/8 border border-red-500/25 space-y-2">
               <div className="flex items-center gap-2">
-                <Smartphone size={16} className="text-pink-500 shrink-0" />
+                <Smartphone size={16} className="text-red-500 shrink-0" />
                 <p className="text-sm font-bold">Install on iPhone / iPad</p>
               </div>
               <ol className="text-xs text-muted-foreground space-y-1 pl-1">
@@ -181,7 +181,7 @@ export default function SettingsPage() {
           <Heart size={15} />,
           "Saved Items",
           `${wishlistCount} item${wishlistCount !== 1 ? "s" : ""} saved`,
-          <Link href="/marketplace" className="text-xs text-pink-500 font-bold hover:text-pink-600 transition-colors">Browse →</Link>
+          <Link href="/marketplace" className="text-xs text-red-500 font-bold hover:text-red-600 transition-colors">Browse →</Link>
         )}
         {settingRow(
           <Download size={15} />,
@@ -224,14 +224,14 @@ export default function SettingsPage() {
       {/* Payment Methods */}
       {settingSection("Payment Methods", <>
         <div className="px-4 py-4 space-y-3">
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-pink-500/5 border border-pink-500/15">
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-red-500/5 border border-red-500/15">
             <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center text-sm font-bold text-red-500 shrink-0">A</div>
             <div>
               <p className="text-sm font-bold">Airtel Money</p>
               <p className="text-xs text-muted-foreground">Widely accepted across Malawi</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-pink-500/5 border border-pink-500/15">
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-red-500/5 border border-red-500/15">
             <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-sm font-bold text-blue-500 shrink-0">T</div>
             <div>
               <p className="text-sm font-bold">TNM Mpamba</p>
@@ -243,7 +243,7 @@ export default function SettingsPage() {
 
       {/* App Info */}
       <div className="text-center mt-8 mb-4">
-        <div className="w-14 h-14 rounded-2xl overflow-hidden mx-auto mb-3 shadow-lg shadow-pink-500/30">
+        <div className="w-14 h-14 rounded-2xl overflow-hidden mx-auto mb-3 shadow-lg shadow-red-500/30">
           <img src="/icon.svg" alt="Market Hub Malawi" className="w-full h-full object-cover" />
         </div>
         <p className="font-black text-base">Market Hub Malawi</p>
