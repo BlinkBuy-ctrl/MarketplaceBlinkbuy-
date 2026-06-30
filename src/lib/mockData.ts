@@ -32,6 +32,17 @@ export const CITIES = [
 
 export const CONDITIONS = ["New","Like New","Good","Fair","For Parts"];
 
+export const BRANDS = [
+  "Samsung","Apple","Tecno","Infinix","Itel","Huawei","Toyota","Nissan",
+  "Honda","Sony","LG","Dell","HP","Lenovo","Nike","Adidas","Bata",
+];
+
+export const TRENDING_SEARCHES = [
+  "iPhone 13", "Toyota Vitz", "Sofa set", "Maize bags", "Smart TV",
+  "Laptop", "Land for sale", "Plot in Lilongwe", "Generator", "Solar panel",
+];
+
+
 export const MOCK_ITEMS: MarketplaceItem[] = [
   {
     id: "1",
