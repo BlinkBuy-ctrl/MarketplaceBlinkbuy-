@@ -27,6 +27,7 @@ const MarketplacePage   = lazy(() => import("@/pages/marketplace"));
 const MarketplaceDetail = lazy(() => import("@/pages/marketplace-detail"));
 const PostItemPage      = lazy(() => import("@/pages/post-item"));
 const SettingsPage      = lazy(() => import("@/pages/settings"));
+const AdminPage         = lazy(() => import("@/pages/admin"));
 const NotFound          = lazy(() => import("@/pages/not-found"));
 
 function PageLoader() {
@@ -37,7 +38,7 @@ function PageLoader() {
         <div className="w-12 h-12 rounded-xl animate-pulse shadow-lg shadow-pink-500/30 overflow-hidden">
           <img
             src="/icon.svg"
-            alt="Marketplace Malawi"
+            alt="Market Hub Malawi"
             className="w-full h-full object-cover"
           />
         </div>
@@ -76,6 +77,7 @@ export default function App() {
                 <Route path="/marketplace/:id"    component={MarketplaceDetail} />
                 <Route path="/post-item"          component={PostItemPage} />
                 <Route path="/settings"           component={SettingsPage} />
+                <Route path="/admin"              component={AdminPage} />
                 <Route                            component={NotFound} />
               </Switch>
             </Suspense>
