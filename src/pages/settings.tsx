@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "@/hooks/useTheme";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import {
   Sun, Moon, Bell, Shield, Info, ChevronRight, Store,
-  Globe, HelpCircle, Star, Download, Smartphone, Heart, CheckCircle,
+  Globe, HelpCircle, Star, Download, Smartphone, Heart, CheckCircle, Map,
 } from "lucide-react";
 import { getInstallPrompt, clearInstallPrompt } from "@/App";
 import airtelLogo from "@/assets/airtel.svg";
@@ -13,6 +13,7 @@ type InstallState = "prompt" | "installed" | "ios" | "unavailable";
 
 export default function SettingsPage() {
   const { theme, toggleTheme } = useTheme();
+  const [, setLocation] = useLocation();
   const [notifications, setNotifications] = useState(true);
   const [currency] = useState("MWK");
   const [language] = useState("English");
@@ -195,6 +196,7 @@ export default function SettingsPage() {
 
       {/* Support */}
       {settingSection("Support & Info", <>
+        {settingRow(<Map size={15} />, "Buyer–Seller Coverage Map", "See where listings are relative to you", undefined, () => setLocation("/map"))}
         {settingRow(<HelpCircle size={15} />, "Help Center", "Get help and FAQs", undefined, () => {})}
         {settingRow(<Shield size={15} />, "Safety Tips", "Stay safe when buying & selling", undefined, () => {})}
         {settingRow(<Star size={15} />, "Rate the App", "Share your feedback", undefined, () => {})}
