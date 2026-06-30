@@ -1,6 +1,6 @@
 {
-  "name": "Marketplace Malawi",
-  "short_name": "Marketplace",
+  "name": "Market Hub Malawi",
+  "short_name": "Market Hub",
   "description": "Buy and sell locally across all 28 districts of Malawi",
   "start_url": "/",
   "scope": "/",
@@ -31,7 +31,7 @@
       "sizes": "512x512",
       "type": "image/svg+xml",
       "form_factor": "narrow",
-      "label": "Marketplace Malawi home screen"
+      "label": "Market Hub Malawi home screen"
     }
   ],
   "shortcuts": [
