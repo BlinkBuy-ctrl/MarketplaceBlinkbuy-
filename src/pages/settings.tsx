@@ -6,6 +6,8 @@ import {
   Globe, HelpCircle, Star, Download, Smartphone, Heart, CheckCircle,
 } from "lucide-react";
 import { getInstallPrompt, clearInstallPrompt } from "@/App";
+import airtelLogo from "@/assets/airtel.svg";
+import tnmLogo from "@/assets/tnm.svg";
 
 type InstallState = "prompt" | "installed" | "ios" | "unavailable";
 
@@ -225,14 +227,18 @@ export default function SettingsPage() {
       {settingSection("Payment Methods", <>
         <div className="px-4 py-4 space-y-3">
           <div className="flex items-center gap-3 p-3 rounded-xl bg-red-500/5 border border-red-500/15">
-            <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center text-sm font-bold text-red-500 shrink-0">A</div>
+            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shrink-0 overflow-hidden">
+              <img src={airtelLogo} alt="Airtel Money" className="w-full h-full object-contain" />
+            </div>
             <div>
               <p className="text-sm font-bold">Airtel Money</p>
               <p className="text-xs text-muted-foreground">Widely accepted across Malawi</p>
             </div>
           </div>
           <div className="flex items-center gap-3 p-3 rounded-xl bg-red-500/5 border border-red-500/15">
-            <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-sm font-bold text-blue-500 shrink-0">T</div>
+            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shrink-0 overflow-hidden">
+              <img src={tnmLogo} alt="TNM Mpamba" className="w-full h-full object-contain" />
+            </div>
             <div>
               <p className="text-sm font-bold">TNM Mpamba</p>
               <p className="text-xs text-muted-foreground">Fast and reliable mobile money</p>
