@@ -4,7 +4,7 @@ import { Link, useLocation } from "wouter";
 import { useTheme } from "@/hooks/useTheme";
 import {
   Home, Search, Settings, Sun, Moon, Plus,
-  Menu, X, Download, ShoppingBag, ShieldCheck,
+  Menu, X, Download, ShoppingBag,
 } from "lucide-react";
 
 
@@ -16,7 +16,7 @@ const TOP_NAV = [
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { theme, toggleTheme } = useTheme();
-  const [loc] = useLocation();
+  const [loc, navigate] = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [pageVisible, setPageVisible] = useState(true);
@@ -48,6 +48,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const isActive = (href: string) =>
     href === "/" ? loc === "/" : loc === href || loc.startsWith(href + "/");
 
+  // Triple-click the logo to open the Admin Dashboard.
+  // MouseEvent.detail counts sequential clicks (1 = single, 2 = double, 3 = triple).
+  const handleLogoClick = (e: React.MouseEvent) => {
+    if (e.detail >= 3) {
+      e.preventDefault();
+      navigate("/admin");
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
 
@@ -78,7 +88,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center justify-between h-16">
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+            <Link href="/" onClick={handleLogoClick} className="flex items-center gap-2.5 shrink-0 group" title="Tip: triple-click to open the Admin Dashboard">
               <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg group-hover:shadow-red-500/50 transition-all duration-300">
                 <img src="/icon.svg" alt="Market Hub Malawi" className="w-full h-full object-cover" />
               </div>
@@ -222,11 +232,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* ── Desktop Footer ── */}
       <footer className="hidden lg:block border-t border-red-500/20">
-        <div className="bg-[#0f0f0f] py-3 text-center">
-          <Link href="/admin" className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-white/30 hover:text-red-400 transition-colors">
-            <ShieldCheck size={12} /> Admin Dashboard
-          </Link>
-        </div>
         <div
           className="max-w-7xl mx-auto px-4 py-6 text-center bg-gradient-to-r from-red-600 to-red-500"
         >
