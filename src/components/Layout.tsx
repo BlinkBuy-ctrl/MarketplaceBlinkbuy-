@@ -4,13 +4,14 @@ import { Link, useLocation } from "wouter";
 import { useTheme } from "@/hooks/useTheme";
 import {
   Home, Search, Settings, Sun, Moon, Plus,
-  Menu, X, Download, ShoppingBag,
+  Menu, X, Download, ShoppingBag, Map,
 } from "lucide-react";
 
 
 const TOP_NAV = [
   { label: "Home",        href: "/",            icon: Home },
   { label: "Marketplace", href: "/marketplace", icon: ShoppingBag },
+  { label: "Map",         href: "/map",         icon: Map },
   { label: "Settings",    href: "/settings",    icon: Settings },
 ];
 
