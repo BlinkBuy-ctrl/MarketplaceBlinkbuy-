@@ -10,6 +10,7 @@ import {
 import { getInstallPrompt, clearInstallPrompt } from "@/App";
 import airtelLogo from "@/assets/airtel.svg";
 import tnmLogo from "@/assets/tnm.svg";
+import otechyLogo from "@/assets/otechy-logo.png";
 
 const WHATSAPP_NUMBER = "265996111555"; // 0996 111 555 in international format
 const ABOUT_TEXT =
@@ -310,30 +311,37 @@ export default function SettingsPage() {
           onClick={() => setShowAbout(false)}
         >
           <div
-            className="w-full max-w-sm bg-card border border-red-500/20 rounded-2xl shadow-2xl shadow-red-500/10 p-6 animate-[fadeInScale_0.25s_ease]"
+            className="relative w-full max-w-sm rounded-2xl shadow-2xl shadow-red-500/10 p-6 animate-[fadeInScale_0.25s_ease] overflow-hidden border border-red-500/20 bg-[#050b16]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500">
-                  <Info size={15} />
+            {/* Logo watermark background */}
+            <div
+              className="absolute inset-0 opacity-[0.12] bg-center bg-no-repeat bg-contain pointer-events-none"
+              style={{ backgroundImage: `url(${otechyLogo})` }}
+            />
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-xl bg-white/5 border border-red-500/20 flex items-center justify-center overflow-hidden shrink-0">
+                    <img src={otechyLogo} alt="Otechy logo" className="w-full h-full object-cover" />
+                  </div>
+                  <p className="font-black text-base text-white">About</p>
                 </div>
-                <p className="font-black text-base">About</p>
+                <button
+                  onClick={() => setShowAbout(false)}
+                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors text-white"
+                >
+                  <X size={16} />
+                </button>
               </div>
+              <p className="text-sm text-white/90 leading-relaxed">{ABOUT_TEXT}</p>
               <button
                 onClick={() => setShowAbout(false)}
-                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
+                className="mt-5 w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-md shadow-red-500/30 active:scale-95"
               >
-                <X size={16} />
+                Close
               </button>
             </div>
-            <p className="text-sm text-foreground leading-relaxed">{ABOUT_TEXT}</p>
-            <button
-              onClick={() => setShowAbout(false)}
-              className="mt-5 w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-md shadow-red-500/30 active:scale-95"
-            >
-              Close
-            </button>
           </div>
         </div>,
         document.body
