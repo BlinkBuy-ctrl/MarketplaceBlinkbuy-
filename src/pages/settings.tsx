@@ -251,6 +251,13 @@ export default function SettingsPage() {
             "Use Airtel Money or TNM Mpamba for safe payments",
             "Never send money in advance to unknown sellers",
             "Trust your instincts — if it seems too good to be true, be cautious",
+            "Bring a friend or family member along when meeting a stranger",
+            "Avoid sharing personal details like your home address or ID numbers in chat",
+            "Verify the seller's profile, ratings, and reviews before committing",
+            "Keep all communication and payment records within the app",
+            "Never share OTPs, PINs, or mobile money passwords with anyone",
+            "Report suspicious listings or users instead of engaging further",
+            "Prefer daytime meetups over late-night exchanges",
           ].map(tip => (
             <li key={tip} className="flex items-start gap-2">
               <span className="shrink-0 mt-0.5">•</span>
