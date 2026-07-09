@@ -16,6 +16,20 @@ const WHATSAPP_NUMBER = "265996111555"; // 0996 111 555 in international format
 const ABOUT_TEXT =
   "OTECHY IS ONE OF THE MALAWIAN DIGITAL COMPANY WHICH AIMS AT DIGITALIZING MALAWI TOWARDS ITS VISION 2063. " +
   "Founded by Mr Peter Mlandula, Otechy builds digital tools that make everyday trade and services in Malawi simpler, safer, and more accessible for everyone.";
+const SAFETY_TIPS = [
+  "Always meet in a public, well-lit place",
+  "Inspect items thoroughly before paying",
+  "Use Airtel Money or TNM Mpamba for safe payments",
+  "Never send money in advance to unknown sellers",
+  "Trust your instincts — if it seems too good to be true, be cautious",
+  "Bring a friend or family member along when meeting a stranger",
+  "Avoid sharing personal details like your home address or ID numbers in chat",
+  "Verify the seller's profile, ratings, and reviews before committing",
+  "Keep all communication and payment records within the app",
+  "Never share OTPs, PINs, or mobile money passwords with anyone",
+  "Report suspicious listings or users instead of engaging further",
+  "Prefer daytime meetups over late-night exchanges",
+];
 
 type InstallState = "prompt" | "installed" | "ios" | "unavailable";
 
@@ -29,6 +43,7 @@ export default function SettingsPage() {
   const [wishlistCount, setWishlistCount] = useState(0);
   const [showAbout, setShowAbout] = useState(false);
   const [showHelpCenter, setShowHelpCenter] = useState(false);
+  const [showSafetyTips, setShowSafetyTips] = useState(false);
   const [helpName, setHelpName] = useState("");
   const [helpEmail, setHelpEmail] = useState("");
   const [helpSubject, setHelpSubject] = useState("");
@@ -236,39 +251,10 @@ export default function SettingsPage() {
       {settingSection("Support & Info", <>
         {settingRow(<Map size={15} />, "Buyer–Seller Coverage Map", "See where listings are relative to you", undefined, () => setLocation("/map"))}
         {settingRow(<HelpCircle size={15} />, "Help Center", "Get help and FAQs", undefined, () => setShowHelpCenter(true))}
-        {settingRow(<Shield size={15} />, "Safety Tips", "Stay safe when buying & selling", undefined, () => {})}
+        {settingRow(<Shield size={15} />, "Safety Tips", "Stay safe when buying & selling", undefined, () => setShowSafetyTips(true))}
         {settingRow(<Star size={15} />, "Rate the App", "Share your feedback", undefined, () => {})}
         {settingRow(<Info size={15} />, "About", "Otechy MW v1.0.0", undefined, () => setShowAbout(true))}
       </>)}
-
-      {/* Safety Tips */}
-      <div className="mb-6 bg-amber-500/8 border border-amber-500/20 rounded-2xl p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Shield size={16} className="text-amber-500" />
-          <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Safety Tips for Buyers & Sellers</p>
-        </div>
-        <ul className="space-y-2 text-xs text-amber-700 dark:text-amber-400">
-          {[
-            "Always meet in a public, well-lit place",
-            "Inspect items thoroughly before paying",
-            "Use Airtel Money or TNM Mpamba for safe payments",
-            "Never send money in advance to unknown sellers",
-            "Trust your instincts — if it seems too good to be true, be cautious",
-            "Bring a friend or family member along when meeting a stranger",
-            "Avoid sharing personal details like your home address or ID numbers in chat",
-            "Verify the seller's profile, ratings, and reviews before committing",
-            "Keep all communication and payment records within the app",
-            "Never share OTPs, PINs, or mobile money passwords with anyone",
-            "Report suspicious listings or users instead of engaging further",
-            "Prefer daytime meetups over late-night exchanges",
-          ].map(tip => (
-            <li key={tip} className="flex items-start gap-2">
-              <span className="shrink-0 mt-0.5">•</span>
-              {tip}
-            </li>
-          ))}
-        </ul>
-      </div>
 
       {/* Payment Methods */}
       {settingSection("Payment Methods", <>
@@ -446,6 +432,50 @@ export default function SettingsPage() {
                 </button>
               </>
             )}
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Safety Tips Modal */}
+      {showSafetyTips && createPortal(
+        <div
+          className="fixed inset-0 z-[9000] flex items-center justify-center px-4 bg-black/60"
+          onClick={() => setShowSafetyTips(false)}
+        >
+          <div
+            className="w-full max-w-sm bg-card border border-amber-500/25 rounded-2xl shadow-2xl shadow-amber-500/10 p-6 animate-[fadeInScale_0.25s_ease] max-h-[85vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center shrink-0 text-amber-500">
+                  <Shield size={16} />
+                </div>
+                <p className="font-black text-base">Safety Tips</p>
+              </div>
+              <button
+                onClick={() => setShowSafetyTips(false)}
+                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">For Buyers & Sellers</p>
+            <ul className="space-y-2.5 text-xs text-amber-700 dark:text-amber-400">
+              {SAFETY_TIPS.map(tip => (
+                <li key={tip} className="flex items-start gap-2">
+                  <span className="shrink-0 mt-0.5">•</span>
+                  {tip}
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={() => setShowSafetyTips(false)}
+              className="mt-5 w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-md shadow-red-500/30 active:scale-95"
+            >
+              Close
+            </button>
           </div>
         </div>,
         document.body
