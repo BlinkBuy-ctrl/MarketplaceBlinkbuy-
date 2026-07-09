@@ -4,10 +4,15 @@ import { Link, useLocation } from "wouter";
 import {
   Sun, Moon, Bell, Shield, Info, ChevronRight, Store,
   Globe, HelpCircle, Star, Download, Smartphone, Heart, CheckCircle, Map,
+  X, Send, Mail,
 } from "lucide-react";
 import { getInstallPrompt, clearInstallPrompt } from "@/App";
 import airtelLogo from "@/assets/airtel.svg";
 import tnmLogo from "@/assets/tnm.svg";
+
+const HELP_CENTER_EMAIL = "otechy8@gmail.com";
+const ABOUT_TEXT =
+  "OTECHY IS ONE OF THE MALAWIAN DIGITAL COMPANY WHICH AIMS AT DIGITALIZING MALAWI TOWARDS ITS VISION 2063.";
 
 type InstallState = "prompt" | "installed" | "ios" | "unavailable";
 
@@ -19,6 +24,13 @@ export default function SettingsPage() {
   const [language] = useState("English");
   const [installState, setInstallState] = useState<InstallState>("unavailable");
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [showAbout, setShowAbout] = useState(false);
+  const [showHelpCenter, setShowHelpCenter] = useState(false);
+  const [helpName, setHelpName] = useState("");
+  const [helpEmail, setHelpEmail] = useState("");
+  const [helpSubject, setHelpSubject] = useState("");
+  const [helpMessage, setHelpMessage] = useState("");
+  const [helpSent, setHelpSent] = useState(false);
 
   useEffect(() => {
     // Already running as installed PWA
@@ -57,6 +69,28 @@ export default function SettingsPage() {
       clearInstallPrompt();
       setInstallState("installed");
     }
+  };
+
+  const handleSendQuery = () => {
+    const subject = encodeURIComponent(helpSubject || "Otechy MW – Support Query");
+    const bodyLines = [
+      `Name: ${helpName || "-"}`,
+      `Email: ${helpEmail || "-"}`,
+      "",
+      helpMessage || "",
+    ];
+    const body = encodeURIComponent(bodyLines.join("\n"));
+    window.location.href = `mailto:${HELP_CENTER_EMAIL}?subject=${subject}&body=${body}`;
+    setHelpSent(true);
+  };
+
+  const closeHelpCenter = () => {
+    setShowHelpCenter(false);
+    setHelpSent(false);
+    setHelpName("");
+    setHelpEmail("");
+    setHelpSubject("");
+    setHelpMessage("");
   };
 
   const settingSection = (title: string, children: React.ReactNode) => (
@@ -197,10 +231,10 @@ export default function SettingsPage() {
       {/* Support */}
       {settingSection("Support & Info", <>
         {settingRow(<Map size={15} />, "Buyer–Seller Coverage Map", "See where listings are relative to you", undefined, () => setLocation("/map"))}
-        {settingRow(<HelpCircle size={15} />, "Help Center", "Get help and FAQs", undefined, () => {})}
+        {settingRow(<HelpCircle size={15} />, "Help Center", "Get help and FAQs", undefined, () => setShowHelpCenter(true))}
         {settingRow(<Shield size={15} />, "Safety Tips", "Stay safe when buying & selling", undefined, () => {})}
         {settingRow(<Star size={15} />, "Rate the App", "Share your feedback", undefined, () => {})}
-        {settingRow(<Info size={15} />, "About", "Market Hub Malawi v1.0.0", undefined, () => {})}
+        {settingRow(<Info size={15} />, "About", "Otechy MW v1.0.0", undefined, () => setShowAbout(true))}
       </>)}
 
       {/* Safety Tips */}
@@ -258,6 +292,144 @@ export default function SettingsPage() {
         <p className="text-xs text-muted-foreground mt-1">Version 1.0.0 · Built for Malawi 🇲🇼</p>
         <p className="text-xs text-muted-foreground mt-1">Connecting buyers &amp; sellers across all 28 districts</p>
       </div>
+
+      {/* About Modal */}
+      {showAbout && (
+        <div
+          className="fixed inset-0 z-[9000] flex items-center justify-center px-4 bg-black/60"
+          onClick={() => setShowAbout(false)}
+        >
+          <div
+            className="w-full max-w-sm bg-card border border-red-500/20 rounded-2xl shadow-2xl shadow-red-500/10 p-6 animate-[fadeInScale_0.25s_ease]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500">
+                  <Info size={15} />
+                </div>
+                <p className="font-black text-base">About</p>
+              </div>
+              <button
+                onClick={() => setShowAbout(false)}
+                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <p className="text-sm text-foreground leading-relaxed">{ABOUT_TEXT}</p>
+            <button
+              onClick={() => setShowAbout(false)}
+              className="mt-5 w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-md shadow-red-500/30 active:scale-95"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Help Center Modal */}
+      {showHelpCenter && (
+        <div
+          className="fixed inset-0 z-[9000] flex items-center justify-center px-4 bg-black/60"
+          onClick={closeHelpCenter}
+        >
+          <div
+            className="w-full max-w-sm bg-card border border-red-500/20 rounded-2xl shadow-2xl shadow-red-500/10 p-6 animate-[fadeInScale_0.25s_ease] max-h-[85vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500">
+                  <HelpCircle size={15} />
+                </div>
+                <p className="font-black text-base">Help Center</p>
+              </div>
+              <button
+                onClick={closeHelpCenter}
+                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {helpSent ? (
+              <div className="text-center py-4">
+                <div className="w-12 h-12 rounded-full bg-green-500/10 border border-green-500/25 flex items-center justify-center mx-auto mb-3">
+                  <CheckCircle size={22} className="text-green-500" />
+                </div>
+                <p className="text-sm font-bold mb-1">Your email app should now be open</p>
+                <p className="text-xs text-muted-foreground">
+                  Send it to reach us at <span className="font-semibold text-foreground">{HELP_CENTER_EMAIL}</span>
+                </p>
+                <button
+                  onClick={closeHelpCenter}
+                  className="mt-5 w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-md shadow-red-500/30 active:scale-95"
+                >
+                  Done
+                </button>
+              </div>
+            ) : (
+              <>
+                <p className="text-xs text-muted-foreground mb-4 flex items-center gap-1.5">
+                  <Mail size={13} className="shrink-0" />
+                  Your query will be sent to {HELP_CENTER_EMAIL}
+                </p>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-semibold text-muted-foreground mb-1 block">Your Name</label>
+                    <input
+                      type="text"
+                      value={helpName}
+                      onChange={(e) => setHelpName(e.target.value)}
+                      placeholder="e.g. Chisomo Banda"
+                      className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-500/40"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-muted-foreground mb-1 block">Your Email</label>
+                    <input
+                      type="email"
+                      value={helpEmail}
+                      onChange={(e) => setHelpEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-500/40"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-muted-foreground mb-1 block">Subject</label>
+                    <input
+                      type="text"
+                      value={helpSubject}
+                      onChange={(e) => setHelpSubject(e.target.value)}
+                      placeholder="What is this about?"
+                      className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-500/40"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-muted-foreground mb-1 block">Your Query</label>
+                    <textarea
+                      value={helpMessage}
+                      onChange={(e) => setHelpMessage(e.target.value)}
+                      placeholder="Describe your question or issue..."
+                      rows={4}
+                      className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-500/40"
+                    />
+                  </div>
+                </div>
+                <button
+                  onClick={handleSendQuery}
+                  disabled={!helpMessage.trim()}
+                  className="mt-5 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-md shadow-red-500/30 active:scale-95"
+                >
+                  <Send size={14} />
+                  Send Query
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
