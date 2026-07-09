@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useTheme } from "@/hooks/useTheme";
 import { Link, useLocation } from "wouter";
 import {
@@ -294,7 +295,7 @@ export default function SettingsPage() {
       </div>
 
       {/* About Modal */}
-      {showAbout && (
+      {showAbout && createPortal(
         <div
           className="fixed inset-0 z-[9000] flex items-center justify-center px-4 bg-black/60"
           onClick={() => setShowAbout(false)}
@@ -325,11 +326,12 @@ export default function SettingsPage() {
               Close
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Help Center Modal */}
-      {showHelpCenter && (
+      {showHelpCenter && createPortal(
         <div
           className="fixed inset-0 z-[9000] flex items-center justify-center px-4 bg-black/60"
           onClick={closeHelpCenter}
@@ -428,7 +430,8 @@ export default function SettingsPage() {
               </>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
