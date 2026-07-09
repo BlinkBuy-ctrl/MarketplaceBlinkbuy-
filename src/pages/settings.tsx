@@ -5,15 +5,16 @@ import { Link, useLocation } from "wouter";
 import {
   Sun, Moon, Bell, Shield, Info, ChevronRight, Store,
   Globe, HelpCircle, Star, Download, Smartphone, Heart, CheckCircle, Map,
-  X, Send, Mail,
+  X, MessageCircle,
 } from "lucide-react";
 import { getInstallPrompt, clearInstallPrompt } from "@/App";
 import airtelLogo from "@/assets/airtel.svg";
 import tnmLogo from "@/assets/tnm.svg";
 
-const HELP_CENTER_EMAIL = "otechy8@gmail.com";
+const WHATSAPP_NUMBER = "265996111555"; // 0996 111 555 in international format
 const ABOUT_TEXT =
-  "OTECHY IS ONE OF THE MALAWIAN DIGITAL COMPANY WHICH AIMS AT DIGITALIZING MALAWI TOWARDS ITS VISION 2063.";
+  "OTECHY IS ONE OF THE MALAWIAN DIGITAL COMPANY WHICH AIMS AT DIGITALIZING MALAWI TOWARDS ITS VISION 2063. " +
+  "Founded by Mr Peter Mlandula, Otechy builds digital tools that make everyday trade and services in Malawi simpler, safer, and more accessible for everyone.";
 
 type InstallState = "prompt" | "installed" | "ios" | "unavailable";
 
@@ -72,16 +73,17 @@ export default function SettingsPage() {
     }
   };
 
-  const handleSendQuery = () => {
-    const subject = encodeURIComponent(helpSubject || "Otechy MW – Support Query");
-    const bodyLines = [
+  const handleTalkToUs = () => {
+    const messageLines = [
+      `Hi Otechy MW, I have a question.`,
       `Name: ${helpName || "-"}`,
-      `Email: ${helpEmail || "-"}`,
+      helpEmail ? `Email: ${helpEmail}` : null,
+      helpSubject ? `Subject: ${helpSubject}` : null,
       "",
       helpMessage || "",
-    ];
-    const body = encodeURIComponent(bodyLines.join("\n"));
-    window.location.href = `mailto:${HELP_CENTER_EMAIL}?subject=${subject}&body=${body}`;
+    ].filter(Boolean);
+    const text = encodeURIComponent(messageLines.join("\n"));
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, "_blank");
     setHelpSent(true);
   };
 
@@ -367,9 +369,9 @@ export default function SettingsPage() {
                 <div className="w-12 h-12 rounded-full bg-green-500/10 border border-green-500/25 flex items-center justify-center mx-auto mb-3">
                   <CheckCircle size={22} className="text-green-500" />
                 </div>
-                <p className="text-sm font-bold mb-1">Your email app should now be open</p>
+                <p className="text-sm font-bold mb-1">WhatsApp should now be open</p>
                 <p className="text-xs text-muted-foreground">
-                  Send it to reach us at <span className="font-semibold text-foreground">{HELP_CENTER_EMAIL}</span>
+                  Send the message to reach us at <span className="font-semibold text-foreground">0996 111 555</span>
                 </p>
                 <button
                   onClick={closeHelpCenter}
@@ -381,8 +383,8 @@ export default function SettingsPage() {
             ) : (
               <>
                 <p className="text-xs text-muted-foreground mb-4 flex items-center gap-1.5">
-                  <Mail size={13} className="shrink-0" />
-                  Your query will be sent to {HELP_CENTER_EMAIL}
+                  <MessageCircle size={13} className="shrink-0" />
+                  Chat with us on WhatsApp at 0996 111 555
                 </p>
                 <div className="space-y-3">
                   <div>
@@ -427,12 +429,12 @@ export default function SettingsPage() {
                   </div>
                 </div>
                 <button
-                  onClick={handleSendQuery}
+                  onClick={handleTalkToUs}
                   disabled={!helpMessage.trim()}
                   className="mt-5 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-md shadow-red-500/30 active:scale-95"
                 >
-                  <Send size={14} />
-                  Send Query
+                  <MessageCircle size={14} />
+                  Talk to Us
                 </button>
               </>
             )}
