@@ -2,6 +2,7 @@ import { lazy, Suspense, useState, useEffect } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import Layout from "@/components/Layout";
 import SplashScreen from "@/components/SplashScreen";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // ── PWA install-prompt capture ──
 // The browser fires "beforeinstallprompt" once, early, and only if we call
@@ -71,18 +72,20 @@ export default function App() {
       <div style={{ opacity: splashDone ? 1 : 0, transition: "opacity 0.4s ease" }}>
         <WouterRouter base="">
           <Layout>
-            <Suspense fallback={<PageLoader />}>
-              <Switch>
-                <Route path="/"                   component={HomePage} />
-                <Route path="/marketplace"        component={MarketplacePage} />
-                <Route path="/marketplace/:id"    component={MarketplaceDetail} />
-                <Route path="/post-item"          component={PostItemPage} />
-                <Route path="/map"                component={MapPage} />
-                <Route path="/settings"           component={SettingsPage} />
-                <Route path="/admin"              component={AdminPage} />
-                <Route                            component={NotFound} />
-              </Switch>
-            </Suspense>
+            <ErrorBoundary>
+              <Suspense fallback={<PageLoader />}>
+                <Switch>
+                  <Route path="/"                   component={HomePage} />
+                  <Route path="/marketplace"        component={MarketplacePage} />
+                  <Route path="/marketplace/:id"    component={MarketplaceDetail} />
+                  <Route path="/post-item"          component={PostItemPage} />
+                  <Route path="/map"                component={MapPage} />
+                  <Route path="/settings"           component={SettingsPage} />
+                  <Route path="/admin"              component={AdminPage} />
+                  <Route                            component={NotFound} />
+                </Switch>
+              </Suspense>
+            </ErrorBoundary>
           </Layout>
         </WouterRouter>
       </div>
