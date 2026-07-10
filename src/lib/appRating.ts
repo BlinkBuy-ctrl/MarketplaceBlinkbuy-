@@ -29,6 +29,7 @@ export interface RatingSummary {
 
 /** Submit or update this device's star rating (1–5) for the app. */
 export async function submitAppRating(stars: number): Promise<void> {
+  if (!supabase) throw new Error("Ratings are not configured yet.");
   const device_id = getDeviceId();
   const { error } = await supabase
     .from(TABLE)
@@ -38,6 +39,7 @@ export async function submitAppRating(stars: number): Promise<void> {
 
 /** This device's previously submitted rating, if any. */
 export async function getMyAppRating(): Promise<number | null> {
+  if (!supabase) return null;
   const device_id = getDeviceId();
   const { data, error } = await supabase
     .from(TABLE)
@@ -50,6 +52,7 @@ export async function getMyAppRating(): Promise<number | null> {
 
 /** Average rating + total number of ratings across all devices. */
 export async function getAppRatingSummary(): Promise<RatingSummary> {
+  if (!supabase) return { average: 0, count: 0 };
   const { data, error } = await supabase.from(TABLE).select("stars");
   if (error || !data || data.length === 0) return { average: 0, count: 0 };
   const sum = data.reduce((acc, r) => acc + (r.stars as number), 0);
