@@ -105,8 +105,9 @@ export default function SettingsPage() {
         const [mine, summary] = await Promise.all([getMyAppRating(), getAppRatingSummary()]);
         if (mine) setRatingStars(mine);
         setRatingSummary(summary);
-      } catch {
-        setRatingError("Couldn't load ratings right now. Check your connection and try again.");
+      } catch (err: any) {
+        console.error("[Rate the App] load failed:", err);
+        setRatingError(`Couldn't load ratings: ${err?.message || String(err)}`);
       }
     })();
   }, [showRateApp]);
@@ -120,8 +121,9 @@ export default function SettingsPage() {
       const summary = await getAppRatingSummary();
       setRatingSummary(summary);
       setRatingSubmitted(true);
-    } catch {
-      setRatingError("Couldn't submit your rating. Please try again.");
+    } catch (err: any) {
+      console.error("[Rate the App] submit failed:", err);
+      setRatingError(`Couldn't submit: ${err?.message || String(err)}`);
     } finally {
       setRatingSubmitting(false);
     }
