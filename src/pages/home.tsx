@@ -4,6 +4,7 @@ import { ShoppingBag, ArrowRight, Tag, MapPin, Zap, TrendingUp, Heart, ChevronRi
 import { MOCK_ITEMS, CATEGORIES } from "@/lib/mockData";
 import { formatMK } from "@/lib/utils";
 import SmartSearchBar from "@/components/SmartSearchBar";
+import AppRatingBadge from "@/components/AppRatingBadge";
 
 const CATEGORY_ICONS: Record<string, string> = {
   "Electronics": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=128&h=128&fit=crop",
@@ -49,6 +50,7 @@ export default function HomePage() {
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-red-700/20 rounded-full blur-3xl opacity-30" />
 
         <div className="relative px-6 md:px-10 py-10 text-white" data-tour="hero-search">
+          <AppRatingBadge />
           <h1 className="text-3xl md:text-5xl font-black mb-3 leading-tight">
             Buy &amp; Sell Across<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">
