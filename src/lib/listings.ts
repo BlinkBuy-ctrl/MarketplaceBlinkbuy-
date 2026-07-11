@@ -58,6 +58,7 @@ function mapRowToItem(row: ListingRow): MarketplaceItem {
     images: row.images ?? [],
     is_featured: row.is_featured,
     created_at: row.created_at,
+    status: row.status,
     seller: {
       id: row.device_id,
       name: row.seller_name,
@@ -113,6 +114,33 @@ export async function uploadListingImages(files: File[], listingId: string): Pro
   return urls;
 }
 
+/**
+ * ADMIN — every listing regardless of status (active/sold/removed), newest
+ * first. Only meant to be used from the admin dashboard.
+ */
+export async function fetchAllListingsAdmin(): Promise<MarketplaceItem[]> {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error || !data) return [];
+  return (data as ListingRow[]).map(mapRowToItem);
+}
+
+/** ADMIN — set a listing's status (active / sold / removed). */
+export async function setListingStatus(id: string, status: "active" | "sold" | "removed"): Promise<void> {
+  if (!supabase) throw new Error("Listings are not configured yet.");
+  const { error } = await supabase.from(TABLE).update({ status }).eq("id", id);
+  if (error) throw error;
+}
+
+/** ADMIN — toggle whether a listing is featured. */
+export async function setListingFeatured(id: string, is_featured: boolean): Promise<void> {
+  if (!supabase) throw new Error("Listings are not configured yet.");
+  const { error } = await supabase.from(TABLE).update({ is_featured }).eq("id", id);
+  if (error) throw error;
+}
 /**
  * Create a new listing: uploads any photos to storage first (keyed under a
  * client-generated id), then inserts the row with the resulting image URLs.
