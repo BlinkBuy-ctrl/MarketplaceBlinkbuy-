@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import { Search, X, Clock, TrendingUp, Tag, MapPin, ShoppingBag, CornerDownLeft } from "lucide-react";
-import { MOCK_ITEMS, CATEGORIES, CITIES, BRANDS, TRENDING_SEARCHES } from "@/lib/mockData";
+import { CATEGORIES, CITIES, BRANDS, TRENDING_SEARCHES, type MarketplaceItem } from "@/lib/mockData";
+import { fetchActiveListings } from "@/lib/listings";
 
 const RECENT_KEY = "mh_recent_searches";
 
@@ -45,9 +46,11 @@ export default function SmartSearchBar({ value, onChange, onSubmit, placeholder,
   const [open, setOpen] = useState(false);
   const [recent, setRecent] = useState<string[]>([]);
   const [activeIdx, setActiveIdx] = useState(-1);
+  const [items, setItems] = useState<MarketplaceItem[]>([]);
   const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setRecent(getRecent()); }, [open]);
+  useEffect(() => { fetchActiveListings().then(setItems); }, []);
 
   useEffect(() => {
     function onClick(e: MouseEvent) {
@@ -68,7 +71,7 @@ export default function SmartSearchBar({ value, onChange, onSubmit, placeholder,
     }
     const out: Suggestion[] = [];
 
-    MOCK_ITEMS.filter(i => i.title.toLowerCase().includes(q)).slice(0, 4)
+    items.filter(i => i.title.toLowerCase().includes(q)).slice(0, 4)
       .forEach(i => out.push({ type: "product", label: i.title, meta: i.location }));
 
     CATEGORIES.filter(c => c !== "All Categories" && c.toLowerCase().includes(q)).slice(0, 3)
@@ -81,7 +84,7 @@ export default function SmartSearchBar({ value, onChange, onSubmit, placeholder,
       .forEach(c => out.push({ type: "location", label: c, meta: "District" }));
 
     return out.slice(0, 10);
-  }, [q, recent]);
+  }, [q, recent, items]);
 
   // "Did you mean" — only when there are zero matches and query is reasonably long
   const didYouMean = useMemo(() => {
@@ -89,7 +92,7 @@ export default function SmartSearchBar({ value, onChange, onSubmit, placeholder,
     const pool = [
       ...CATEGORIES.filter(c => c !== "All Categories"),
       ...CITIES, ...BRANDS,
-      ...MOCK_ITEMS.map(i => i.title),
+      ...items.map(i => i.title),
     ];
     let best: { word: string; dist: number } | null = null;
     for (const word of pool) {
@@ -98,7 +101,7 @@ export default function SmartSearchBar({ value, onChange, onSubmit, placeholder,
     }
     if (best && best.dist <= 3 && best.word.toLowerCase() !== q) return best.word;
     return null;
-  }, [q, suggestions.length]);
+  }, [q, suggestions.length, items]);
 
   const commit = (v: string) => {
     pushRecent(v);
