@@ -1,17 +1,24 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { ArrowLeft, MapPin, Truck } from "lucide-react";
 import SellerBuyerMap from "@/components/SellerBuyerMap";
-import { MOCK_ITEMS } from "@/lib/mockData";
+import type { MarketplaceItem } from "@/lib/mockData";
+import { fetchActiveListings } from "@/lib/listings";
 import { resolveDistrict } from "@/lib/locations";
 
 export default function MapPage() {
+  const [items, setItems] = useState<MarketplaceItem[]>([]);
+
+  useEffect(() => {
+    fetchActiveListings().then(setItems);
+  }, []);
+
   // Aggregate every listing's seller into a count-per-district list (with an
   // averaged GPS pin when sellers provided precise coordinates), so producers
   // show up on the map even if several of them share a town.
   const sellerDistricts = useMemo(() => {
     const groups = new Map<string, { count: number; latSum: number; lngSum: number; gpsCount: number }>();
-    for (const item of MOCK_ITEMS) {
+    for (const item of items) {
       const district = resolveDistrict(item.seller?.location || item.location);
       const g = groups.get(district) ?? { count: 0, latSum: 0, lngSum: 0, gpsCount: 0 };
       g.count += 1;
@@ -28,7 +35,7 @@ export default function MapPage() {
       lat: g.gpsCount > 0 ? g.latSum / g.gpsCount : undefined,
       lng: g.gpsCount > 0 ? g.lngSum / g.gpsCount : undefined,
     }));
-  }, []);
+  }, [items]);
 
   const totalSellers = sellerDistricts.reduce((sum, s) => sum + s.count, 0);
 

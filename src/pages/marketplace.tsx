@@ -2,7 +2,8 @@ import { useState, useMemo, useEffect } from "react";
 import { Link, useSearch } from "wouter";
 import { Search, ShoppingBag, MapPin, X, Heart, SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import SmartSearchBar from "@/components/SmartSearchBar";
-import { MOCK_ITEMS, CATEGORIES, CITIES } from "@/lib/mockData";
+import { CATEGORIES, CITIES, type MarketplaceItem } from "@/lib/mockData";
+import { fetchActiveListings } from "@/lib/listings";
 import { formatMK } from "@/lib/utils";
 
 const PAGE_SIZE = 12;
@@ -46,6 +47,14 @@ export default function MarketplacePage() {
     try { return new Set(JSON.parse(localStorage.getItem("wishlist") || "[]")); }
     catch { return new Set(); }
   });
+  const [allItems, setAllItems] = useState<MarketplaceItem[]>([]);
+  const [loadingItems, setLoadingItems] = useState(true);
+
+  useEffect(() => {
+    fetchActiveListings()
+      .then(setAllItems)
+      .finally(() => setLoadingItems(false));
+  }, []);
 
   useEffect(() => {
     const q = params.get("q") || "";
@@ -69,7 +78,7 @@ export default function MarketplacePage() {
 
   const filtered = useMemo(() => {
     const range = PRICE_RANGES[priceRange];
-    let result = MOCK_ITEMS.filter(item => {
+    let result = allItems.filter(item => {
       if (search && !item.title.toLowerCase().includes(search.toLowerCase()) &&
           !item.description.toLowerCase().includes(search.toLowerCase())) return false;
       if (category !== "All Categories" && item.category !== category) return false;
@@ -85,7 +94,7 @@ export default function MarketplacePage() {
     else result = [...result].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
     return result;
-  }, [search, category, loc, sortBy, priceRange]);
+  }, [allItems, search, category, loc, sortBy, priceRange]);
 
   const total = filtered.length;
   const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -285,7 +294,19 @@ export default function MarketplacePage() {
       )}
 
       {/* PRODUCTS GRID */}
-      {items.length === 0 ? (
+      {loadingItems ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3.5 mb-8">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i} className="bg-card border border-red-500/10 rounded-xl overflow-hidden animate-pulse">
+              <div className="aspect-square bg-muted/60" />
+              <div className="p-3 space-y-2">
+                <div className="h-3 bg-muted/60 rounded w-4/5" />
+                <div className="h-3 bg-muted/60 rounded w-2/5" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : items.length === 0 ? (
         <div className="text-center py-20">
           <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center mx-auto mb-4">
             <ShoppingBag size={28} className="text-muted-foreground opacity-50" />

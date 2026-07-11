@@ -2,12 +2,16 @@ import { useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { Package, X, ImagePlus, CheckCircle, AlertCircle, Upload, Phone, User, LocateFixed, MapPin } from "lucide-react";
 import { CATEGORIES, CITIES, CONDITIONS } from "@/lib/mockData";
+import { createListing } from "@/lib/listings";
+import { isSupabaseConfigured } from "@/lib/supabaseClient";
 
 export default function PostItemPage() {
   const [, setLocation] = useLocation();
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
   const [locating, setLocating] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -43,28 +47,50 @@ export default function PostItemPage() {
   };
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+    const selected = Array.from(e.target.files || []);
     const remaining = 5 - previews.length;
-    const allowed = files.slice(0, remaining);
+    const allowed = selected.slice(0, remaining);
     const newPreviews = allowed.map(f => URL.createObjectURL(f));
     setPreviews(prev => [...prev, ...newPreviews]);
+    setFiles(prev => [...prev, ...allowed]);
     e.target.value = "";
   };
 
   const removeImage = (index: number) => {
     setPreviews(prev => prev.filter((_, i) => i !== index));
+    setFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await createListing(
+        {
+          title: form.title,
+          description: form.description,
+          category: form.category,
+          price: form.price ? Number(form.price) : null,
+          location: form.location,
+          condition: form.condition,
+          sellerName: form.sellerName,
+          sellerPhone: form.sellerPhone,
+          negotiable: form.negotiable,
+          lat: form.lat,
+          lng: form.lng,
+        },
+        files
+      );
       setSubmitted(true);
-    }, 1200);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const isValid = form.title && form.description && form.price && form.sellerName && form.sellerPhone;
+  const isValid = form.title && form.description && form.price && form.sellerName && form.sellerPhone && previews.length > 0;
 
   if (submitted) {
     return (
@@ -87,6 +113,7 @@ export default function PostItemPage() {
               setSubmitted(false);
               setForm({ title: "", description: "", category: CATEGORIES[1], price: "", location: "Lilongwe", condition: "Good", sellerName: "", sellerPhone: "", negotiable: false, lat: null, lng: null });
               setPreviews([]);
+              setFiles([]);
             }}
             className="px-5 py-3 rounded-xl border-2 border-red-500/30 text-red-600 font-bold hover:border-red-500 hover:bg-red-500/5 transition-all duration-200"
           >
@@ -118,13 +145,21 @@ export default function PostItemPage() {
         </div>
       </div>
 
-      {/* Demo Alert */}
-      <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl px-4 py-4 mb-6 flex gap-3">
-        <AlertCircle size={18} className="text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
-        <p className="text-red-700 dark:text-red-300 text-sm font-medium">
-          🔒 Demo Mode — Listings are not saved. Connect a backend to enable real submissions.
-        </p>
-      </div>
+      {!isSupabaseConfigured && (
+        <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl px-4 py-4 mb-6 flex gap-3">
+          <AlertCircle size={18} className="text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+          <p className="text-red-700 dark:text-red-300 text-sm font-medium">
+            🔒 Backend isn't configured on this deployment yet — listings can't be saved right now.
+          </p>
+        </div>
+      )}
+
+      {error && (
+        <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl px-4 py-4 mb-6 flex gap-3">
+          <AlertCircle size={18} className="text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+          <p className="text-red-700 dark:text-red-300 text-sm font-medium">{error}</p>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Section 1: Item Details */}

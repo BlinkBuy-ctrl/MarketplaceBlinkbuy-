@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "wouter";
 import { MapPin, Phone, ArrowLeft, Tag, CheckCircle, Share2, Heart, MessageCircle, Star, Shield } from "lucide-react";
-import { MOCK_ITEMS } from "@/lib/mockData";
+import type { MarketplaceItem } from "@/lib/mockData";
+import { fetchListingById, fetchActiveListings } from "@/lib/listings";
 import { formatMK } from "@/lib/utils";
 import SellerBuyerMap from "@/components/SellerBuyerMap";
 import RateSeller from "@/components/RateSeller";
@@ -16,7 +17,34 @@ export default function MarketplaceDetailPage() {
     catch { return new Set(); }
   });
 
-  const item = MOCK_ITEMS.find(i => i.id === id);
+  const [item, setItem] = useState<MarketplaceItem | null | undefined>(undefined); // undefined = loading
+  const [related, setRelated] = useState<MarketplaceItem[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    setItem(undefined);
+    setSelectedImage(0);
+    if (!id) return;
+    fetchListingById(id).then(found => {
+      if (cancelled) return;
+      setItem(found);
+      if (found) {
+        fetchActiveListings().then(all => {
+          if (cancelled) return;
+          setRelated(all.filter(i => i.id !== found.id && i.category === found.category).slice(0, 4));
+        });
+      }
+    });
+    return () => { cancelled = true; };
+  }, [id]);
+
+  if (item === undefined) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-16 text-center page-enter">
+        <div className="w-10 h-10 border-2 border-red-500/30 border-t-red-500 rounded-full animate-spin mx-auto" />
+      </div>
+    );
+  }
 
   if (!item) {
     return (
@@ -62,8 +90,6 @@ export default function MarketplaceDetailPage() {
 
   const whatsappMsg = encodeURIComponent(`Hi, I saw your listing on Market Hub Malawi: "${item.title}" for ${formatMK(item.price)}. Is it still available?`);
   const whatsappUrl = `https://wa.me/265${seller.whatsapp.replace(/^0/, "")}?text=${whatsappMsg}`;
-
-  const related = MOCK_ITEMS.filter(i => i.id !== item.id && i.category === item.category).slice(0, 4);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 page-enter">

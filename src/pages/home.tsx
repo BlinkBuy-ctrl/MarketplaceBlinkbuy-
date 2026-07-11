@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ShoppingBag, ArrowRight, Tag, MapPin, Zap, TrendingUp, Heart, ChevronRight, Star, Shield, Users } from "lucide-react";
-import { MOCK_ITEMS, CATEGORIES } from "@/lib/mockData";
+import { CATEGORIES, type MarketplaceItem } from "@/lib/mockData";
+import { fetchActiveListings } from "@/lib/listings";
 import { formatMK } from "@/lib/utils";
 import SmartSearchBar from "@/components/SmartSearchBar";
 import AppRatingBadge from "@/components/AppRatingBadge";
@@ -26,6 +27,12 @@ export default function HomePage() {
     catch { return new Set(); }
   });
 
+  const [items, setItems] = useState<MarketplaceItem[]>([]);
+
+  useEffect(() => {
+    fetchActiveListings().then(setItems);
+  }, []);
+
   const toggleWishlist = (id: string, e: React.MouseEvent) => {
     e.preventDefault();
     setWishlist(prev => {
@@ -36,8 +43,8 @@ export default function HomePage() {
     });
   };
 
-  const featured = MOCK_ITEMS.filter(i => i.is_featured).slice(0, 4);
-  const recent = MOCK_ITEMS.slice(0, 8);
+  const featured = items.filter(i => i.is_featured).slice(0, 4);
+  const recent = items.slice(0, 8);
   const categories = CATEGORIES.filter(c => c !== "All Categories");
 
   return (
@@ -150,6 +157,7 @@ export default function HomePage() {
       </div>
 
       {/* FEATURED */}
+      {featured.length > 0 && (
       <div className="mb-10 slide-up" data-tour="featured">
         <div className="flex items-center justify-between mb-5">
           <div>
@@ -199,8 +207,10 @@ export default function HomePage() {
           ))}
         </div>
       </div>
+      )}
 
       {/* RECENTLY LISTED */}
+      {recent.length > 0 && (
       <div className="slide-up">
         <div className="flex items-center justify-between mb-5">
           <div>
@@ -256,6 +266,7 @@ export default function HomePage() {
           ))}
         </div>
       </div>
+      )}
 
       {/* HOW IT WORKS */}
       <div className="mt-14 mb-10">
