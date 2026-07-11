@@ -9,6 +9,8 @@ export interface MarketplaceItem {
   images: string[];
   is_featured: boolean;
   created_at: string;
+  /** Only populated for admin-facing fetches (active/sold/removed); absent elsewhere. */
+  status?: "active" | "sold" | "removed";
   seller: {
     id: string;
     name: string;
