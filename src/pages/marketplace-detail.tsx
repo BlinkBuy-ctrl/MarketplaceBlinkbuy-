@@ -5,8 +5,9 @@ import type { MarketplaceItem } from "@/lib/mockData";
 import { fetchListingById, fetchActiveListings } from "@/lib/listings";
 import { formatMK } from "@/lib/utils";
 import SellerBuyerMap from "@/components/SellerBuyerMap";
-import RateSeller from "@/components/RateSeller";
+import SellerComments from "@/components/SellerComments";
 import ReportListing from "@/components/ReportListing";
+import LikeButton from "@/components/LikeButton";
 
 export default function MarketplaceDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -156,6 +157,7 @@ export default function MarketplaceDetailPage() {
           <div className="bg-card border border-red-500/20 rounded-2xl p-5">
             <div className="flex items-start justify-between gap-3 mb-3">
               <h1 className="text-xl font-black leading-tight flex-1">{item.title}</h1>
+              <LikeButton itemId={item.id} size={15} className="shrink-0 bg-red-500/8 border border-red-500/20 rounded-full px-2.5 py-1" />
             </div>
 
             <div className="text-3xl font-black text-red-500 mb-4">{formatMK(item.price)}</div>
@@ -259,9 +261,9 @@ export default function MarketplaceDetailPage() {
             />
           )}
 
-          {/* Rate this seller */}
+          {/* Comment on this seller */}
           {seller && (
-            <RateSeller sellerId={seller.id} sellerName={seller.name} itemId={item.id} />
+            <SellerComments sellerId={seller.id} sellerName={seller.name} itemId={item.id} />
           )}
 
           {/* Report a problem to admin */}

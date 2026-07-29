@@ -5,6 +5,7 @@ import SmartSearchBar from "@/components/SmartSearchBar";
 import { CATEGORIES, CITIES, type MarketplaceItem } from "@/lib/mockData";
 import { fetchActiveListings } from "@/lib/listings";
 import { formatMK } from "@/lib/utils";
+import LikeButton from "@/components/LikeButton";
 
 const PAGE_SIZE = 12;
 
@@ -367,9 +368,12 @@ export default function MarketplacePage() {
                   <div className="p-3">
                     <h3 className="text-xs font-bold line-clamp-2 mb-1.5 group-hover:text-red-500 transition-colors">{item.title}</h3>
                     <div className="text-sm font-black text-red-500 mb-1">{formatMK(item.price)}</div>
-                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
-                      <MapPin size={9} />
-                      <span className="line-clamp-1">{item.location}</span>
+                    <div className="flex items-center justify-between gap-1">
+                      <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-medium min-w-0">
+                        <MapPin size={9} className="shrink-0" />
+                        <span className="line-clamp-1">{item.location}</span>
+                      </div>
+                      <LikeButton itemId={item.id} size={11} className="shrink-0" />
                     </div>
                   </div>
                 </div>
